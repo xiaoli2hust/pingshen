@@ -238,4 +238,48 @@
 
 台账一度被我的插入式编辑弄出重复行（R-68/R-69 各两行）与错位行，已用只读审计脚本定位、删重复（保留首次出现）并复核：现 62 条裁定行 R-15~R-76 无重复、续跑表 7 行完整。教训登记为 R-76 的执行注记：对同一 Markdown 表格做锚点插入前，必须先 grep 确认锚点唯一。
 
+## 12. 代码交付到远端仓库（2026-10-23）
+
+用户裁定「数据无所谓，关键是代码」，要求把成果推到 `https://github.com/xiaoli2hust/pingshen`。
+
+### 12.1 为什么不推历史
+
+`git log --oneline` 有 6 个提交在 `review-platform/` 下跟踪过 `deploy_review_platform.zip`（39,198,763 B）。实测该压缩包内含 `config.json`（真实 DeepSeek key + REPORT_SECRET）与 `data/review.db`。推完整历史等于把这两样东西的**每一版**送进远端对象库，删工作区文件并不能撤回已入站的 blob。
+
+处置：不动本地历史（回滚与改动归属仍靠它），改用 `git commit-tree` 从当前 HEAD 的树造一个**无父的单提交快照**，推送的只有这一个提交。快照树对 `\.zip$|config\.json$|\.db$|^review-platform/data/|^\.superpowers/|^review-platform/\.bak_` 的命中数实测为 **0**；zip 留在磁盘、由 `.gitignore:56` 规则挡住（`git check-ignore -v` 确认），本地 6 条提交照常保留。
+
+顺带一条未消的风险：仓库 `docs/` 与 `tests/realdata/` 里仍有真实商机编号与客户项目名，`review-platform/shots/*.png` 是含真实项目信息的界面截图（`.gitignore` 只挡 `tests/shots/`，没挡顶层 `shots/`）。按用户口径这批属「数据」，随代码一并入库；**若日后要对外开源，先删 `shots/` 与 `tests/realdata/` 再造快照**。
+
+### 12.2 推送被 HTTP 302 挡住的真因与修法
+
+读路径一直正常（`ls-remote`、`push --dry-run` 都能拿到 refs），真推每次都断在 `RPC failed; HTTP 302 … send-pack: unexpected disconnect`。两条实测排除了常见猜测：
+
+- 代理 `127.0.0.1:7890` 在听（`netstat` 有 PID 34128 的 LISTENING 行）；绕开代理直连时 curl 报 schannel `0x80096004` 证书无法验证——所以**代理是必需的，不是病灶**。
+- 快照单独打包含体积实测 **21,310,784 B ≈ 20.3 MB**（`git rev-list --objects 19a42fe4 | git pack-objects --stdout | wc -c`），远低于 GitHub 上限。此前我按 `HEAD` 算出的 90.29 MB 把整条历史和 zip blob 一起算了，属测量口径错误，已作废。
+
+真因是 git 的 `http.postBuffer` 默认 1 MiB，20 MB 的包体走 chunked 传输，被链路中间的代理打断成 302。修法只在命令行临时覆盖、不写进任何配置文件（铁律 5）：
+
+```
+GIT_TERMINAL_PROMPT=0 git -c http.postBuffer=524288000 push origin <快照sha>:refs/heads/main
+```
+
+结果：`* [new branch] 19a42fe4cfb008003cff8c14ebf6ad8dcba8e69c -> main`，逐字节头日志留档
+`.superpowers/sdd/2026-10-20-business-flow-remediation/logs/push_attempt_postbuffer.txt`。
+
+### 12.3 远端落地复核
+
+| 复核项 | 实测 |
+|---|---|
+| 远端分支头 | `git ls-remote --heads origin` → `19a42fe4…  refs/heads/main`，与本地快照 sha 逐字相同 |
+| 对象清单完整性 | GitHub API 递归树 `truncated: false`，1317 条目（1299 个 blob + 中间目录树） |
+| 密钥态路径 | 上述模式命中 **0**；再扫 `\.env$|secret|credential|id_rsa|\.key$` 亦 **0** |
+| 顶层结构 | `.gitignore`、`.workbuddy`、`AGENTS.md`、`iron-laws`、`review-platform`、`项目评审线上化方案.html` |
+| 本地是否被误删 | `review-platform/deploy_review_platform.zip` 仍在磁盘（39,198,763 B）、状态为已忽略 |
+
+`keepawake` 状态显示 `reason logon`、启动 0.5 分钟前，属用户登录任务自己拉起的常驻断言，不是我的残留，故未停。计划任务表已无本任务遗留项。
+
+### 12.4 建议（未执行，需用户点头）
+
+`config.json` 里的 DeepSeek key 与 REPORT_SECRET 曾经进入 git 对象库，虽然远端拿不到那段历史，本地仓库与多个 `.bak_*` 副本里仍可挖出。**换到公司外渠道前建议先轮换这两枚密钥**——这是一次凭证侧动作，我不代做。
+
 
