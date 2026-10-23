@@ -248,16 +248,25 @@
 
 处置：不动本地历史（回滚与改动归属仍靠它），改用 `git commit-tree` 从当前 HEAD 的树造一个**无父的单提交快照**，推送的只有这一个提交。快照树对 `\.zip$|config\.json$|\.db$|^review-platform/data/|^\.superpowers/|^review-platform/\.bak_` 的命中数实测为 **0**；zip 留在磁盘、由 `.gitignore:56` 规则挡住（`git check-ignore -v` 确认），本地 6 条提交照常保留。
 
-顺带一条未消的风险：仓库 `docs/` 与 `tests/realdata/` 里仍有真实商机编号与客户项目名，`review-platform/shots/*.png` 是含真实项目信息的界面截图（`.gitignore` 只挡 `tests/shots/`，没挡顶层 `shots/`）。按用户口径这批属「数据」，随代码一并入库；**若日后要对外开源，先删 `shots/` 与 `tests/realdata/` 再造快照**。
+顺带一条未消的风险：仓库 `docs/` 与 `tests/realdata/` 里仍有真实商机编号与客户项目名，`review-platform/shots/*.png` 是含真实项目信息的界面截图（`.gitignore` 只挡 `tests/shots/`，没挡顶层 `shots/`）。按用户口径这批属「数据」，随代码一并入库。
 
-### 12.2 推送被 HTTP 302 挡住的真因与修法
+**更正（2026-10-23）**：此处原写「若日后要对外开源，先删 `shots/` 与 `tests/realdata/` 再造快照」，前提错了——推送前我没核仓库可见性。事后免登录调 GitHub API 实测 `private=false`、`visibility=public`：这批数据从首推起就对公网可读，不存在「日后开源」这一步。处置建议见 12.5。
 
-读路径一直正常（`ls-remote`、`push --dry-run` 都能拿到 refs），真推每次都断在 `RPC failed; HTTP 302 … send-pack: unexpected disconnect`。两条实测排除了常见猜测：
+### 12.2 推送被 HTTP 302 挡住：实测经过与修法
 
-- 代理 `127.0.0.1:7890` 在听（`netstat` 有 PID 34128 的 LISTENING 行）；绕开代理直连时 curl 报 schannel `0x80096004` 证书无法验证——所以**代理是必需的，不是病灶**。
-- 快照单独打包含体积实测 **21,310,784 B ≈ 20.3 MB**（`git rev-list --objects 19a42fe4 | git pack-objects --stdout | wc -c`），远低于 GitHub 上限。此前我按 `HEAD` 算出的 90.29 MB 把整条历史和 zip blob 一起算了，属测量口径错误，已作废。
+读路径一直正常（`ls-remote`、`push --dry-run` 都能拿到 refs），真推断在 `RPC failed; HTTP 302 … send-pack: unexpected disconnect`。快照单独打包的体积实测 **21,310,784 B ≈ 20.3 MB**（`git rev-list --objects 19a42fe4 | git pack-objects --stdout | wc -c`），远低于 GitHub 上限；此前我按 `HEAD` 算出的 90.29 MB 把整条历史和 zip blob 一起算了，属测量口径错误，已作废。
 
-真因是 git 的 `http.postBuffer` 默认 1 MiB，20 MB 的包体走 chunked 传输，被链路中间的代理打断成 302。修法只在命令行临时覆盖、不写进任何配置文件（铁律 5）：
+**更正（2026-10-23）**：本节上一版标题写「真因」，正文说「真因是 `http.postBuffer` 默认 1 MiB……被代理打断成 302」「代理是必需的，不是病灶」。回读当时的命令与日志，这两句都越过了证据。三次真推的实际条件：
+
+| 真推 | 网络路径 | `http.postBuffer` | 结果 |
+|---|---|---|---|
+| 第 1 次（另加 `-c credential.helper=manager`） | `-c http.proxy=`：git 把空值当作禁用代理，即直连 | 默认 1 MiB | HTTP 302 |
+| 第 2 次 | 同上，直连 | 默认 1 MiB | HTTP 302 |
+| 第 3 次 | 不覆盖代理，走全局配置的 `127.0.0.1:7890`（当时 PID 34128 在听；trace 有 `CONNECT github.com:443` → `200 Connection established`） | `524288000` | 成功 |
+
+失败与成功之间同时变了**两个**量（网络路径、`postBuffer`），这组实测分不出是哪一个起的作用。两个候选都未排除，也都没有单独验证：一是直连链路——同期 curl 直连 github.com 报 schannel `0x80096004`（证书无法验证），说明直连链路上的 TLS 被改写过，大包上传在这种链路上被重定向成 302 说得通；二是分块上传——git 对超过 `postBuffer` 的包体改走 chunked，20 MB 的快照越线。
+
+可用配方是两个条件都保留：走 7890 代理（不加 `-c http.proxy=`），并只在命令行临时放大 `postBuffer`、不写进任何配置文件（铁律 5）：
 
 ```
 GIT_TERMINAL_PROMPT=0 git -c http.postBuffer=524288000 push origin <快照sha>:refs/heads/main
@@ -266,7 +275,7 @@ GIT_TERMINAL_PROMPT=0 git -c http.postBuffer=524288000 push origin <快照sha>:r
 结果：`* [new branch] 19a42fe4cfb008003cff8c14ebf6ad8dcba8e69c -> main`，逐字节头日志留档
 `.superpowers/sdd/2026-10-20-business-flow-remediation/logs/push_attempt_postbuffer.txt`。
 
-### 12.3 远端落地复核
+### 12.3 首推落地复核
 
 | 复核项 | 实测 |
 |---|---|
@@ -278,8 +287,32 @@ GIT_TERMINAL_PROMPT=0 git -c http.postBuffer=524288000 push origin <快照sha>:r
 
 `keepawake` 状态显示 `reason logon`、启动 0.5 分钟前，属用户登录任务自己拉起的常驻断言，不是我的残留，故未停。计划任务表已无本任务遗留项。
 
-### 12.4 建议（未执行，需用户点头）
+### 12.4 后续同步方式与当前复核
 
-`config.json` 里的 DeepSeek key 与 REPORT_SECRET 曾经进入 git 对象库，虽然远端拿不到那段历史，本地仓库与多个 `.bak_*` 副本里仍可挖出。**换到公司外渠道前建议先轮换这两枚密钥**——这是一次凭证侧动作，我不代做。
+远端这条线与本地历史没有共同祖先，**不能**直接 `git push origin main`——那会把本地整条历史（含 zip 里的密钥）一并推上去。之后每次同步都以远端当前头为父、用本地 `HEAD^{tree}` 造一个子提交再推，远端始终是快进，不需要强推。推前先确认路径模式命中为 0：
+
+```
+git -c core.quotePath=false ls-tree -r --name-only HEAD | grep -cE '\.zip$|config\.json$|\.db$|^review-platform/data/|^\.superpowers/|^review-platform/\.bak_'
+git fetch origin main
+P=$(git rev-parse FETCH_HEAD)
+C=$(git commit-tree "HEAD^{tree}" -p "$P" -m "$(git log -1 --format=%B HEAD)")
+GIT_TERMINAL_PROMPT=0 git -c http.postBuffer=524288000 push origin "$C:refs/heads/main"
+```
+
+当前复核（对象：远端 `a7823851`，它的树与本地 `670e0d6` 相同；本节所在的纠错提交只改本报告）：
+
+| 复核项 | 实测 |
+|---|---|
+| 内容一致 | 本地 `HEAD^{tree}` 与远端 `main^{tree}` 同为 `c5424d9e…`；git 树哈希相同即逐文件逐字节相同 |
+| 仓库可见性 | 免登录调 GitHub API：`private=false`、`visibility=public`、`forks=0` |
+| 文本内容密钥扫描 | 远端两个提交涉及的 991 个不重复 blob 逐个读出：`config.json` 里真实 `LLM_API_KEY`、`REPORT_SECRET` 的原文命中 0；7 类通用密钥形态（`sk-` 型、GitHub token、钉钉 `access_token`、钉钉加签 `SEC…`、PEM 私钥、AWS `AKIA`、阿里云 `LTAI`）命中 0 |
+| 压缩件内部扫描 | 文本扫描看不进 xlsx，另把 45 个不重复的 xlsx 解压成 435 个内部文件逐个查，上述两类命中 0 |
+| 截图 | 59 张 png 做不了文本扫描；人工查看两张管理后台截图 `H_AD_1_llm_admin.png`、`H_AD_2_robot_admin.png`：密钥只以掩码形态出现（仅露末 4 位），机器人页没有已配置的 webhook 或 secret |
+| 干净克隆可运行 | 新克隆、不放 `config.json`、没有 `data/`，以 `PORT=8699` 起服务：`GET /` 200、`sales1/123456` 登录 200、`/api/me` 200、`/api/meta/fields` 200；库文件自动建出（163,840 B），未生成 `config.json`；验后克隆已删。`config.json` 只在要用 LLM 时才需要 |
+
+### 12.5 建议（未执行，需用户点头）
+
+1. **仓库可见性**：当前是 Public，`docs/`、`tests/realdata/`、`shots/` 里的真实商机编号、客户项目名与界面截图对公网可读。若这批数据不宜公开，到仓库 Settings → General → Danger Zone → Change visibility 改为 Private；改私有收不回公开期间已被抓取的副本（复核时 `forks=0`）。要从远端彻底去掉这批数据，得删文件后重造无父快照并强推覆盖——强推是破坏性动作，须另行授权。
+2. **密钥轮换**：`config.json` 里的 DeepSeek key 与 REPORT_SECRET 曾经随 `deploy_review_platform.zip` 进入本地 git 对象库。远端拿不到那段历史，但本机仍有三处能读到：本地仓库历史；我为交接打的 `_handover_history.bundle`（`--all` 全历史，其头提交 `f59c368` 的树里就有该 zip）；`.bak_adv_fixed/`、`.bak_review_fix/` 两个备份目录各一份 `config.json`。把其中任何一样带出本机前，先轮换这两枚密钥——这是凭证侧动作，我不代做。
 
 
