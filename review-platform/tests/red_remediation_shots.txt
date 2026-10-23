@@ -1,0 +1,25 @@
+PASS - PRE 全HTTP建档/确认/锁定/提交/真实部门打灯/退回成功
+FAIL - NT-01 首页站内草稿待办横幅
+PASS - NT-01 深链仅显示指定单待办
+FAIL - IA-48 任务中心全单进度0/10
+FAIL - EV-05 A/B/C三区标题与真实查询锚点 | page.waitForSelector: Timeout 5000ms exceeded.
+FAIL - EV-05 完整评审深链新标签与灯按钮保留
+FAIL - EV-05 证据失败显式披露且保留打灯入口 | page.waitForFunction: Timeout 5000ms exceeded.
+FAIL - IA-44 legal1相关商机导航及本部门单
+FAIL - IA-44 comp1相关商机导航及本部门单
+FAIL - IA-44 data1相关商机导航及本部门单
+FAIL - IA-44 pur1相关商机导航及本部门单
+FAIL - IA-44 fde1相关商机导航及本部门单
+FAIL - IA-45 pm1预算单导航可达
+FAIL - IA-45 sales1预算单导航可达
+FAIL - IA-45 zhichizu预算单导航可达
+FAIL - IA-45 admin预算单导航可达
+FAIL - CRASH | page.waitForSelector: Timeout 5000ms exceeded.
+Call log:
+[2m  - waiting for locator('#budgetsImpFile') to be visible[22m
+[2m    13 × locator resolved to hidden <input type="file" accept=".xlsx" id="budgetsImpFile" onchange="importBudgetExcel(this)"/>[22m
+
+    at go (F:\workbuddy\9\review-platform\tests\h_remediation_shots.js:42:14)
+    at async F:\workbuddy\9\review-platform\tests\h_remediation_shots.js:93:5
+
+2 passed, 15 failed -> SOME FAIL

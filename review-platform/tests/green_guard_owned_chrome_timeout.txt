@@ -1,0 +1,70 @@
+{
+  "at": "2026-10-20T20:47:40.155Z",
+  "scope": "real owned Node + headless Chrome only, offline preload; no app/DB/config loaded; exact identity-owned tree timeout; no foreign kill",
+  "guardSha256": "152c1dc7e3fb06e64a7ad024af83fa4ea988173e8c6ab605ee209f0ddf9fdb42",
+  "preloadSha256": "669c56f487378b622b5d0c2e0894fee70adec3ffa952681d08aa7bc8602d3b1e",
+  "result": {
+    "status": null,
+    "signal": "SIGTERM",
+    "error": {},
+    "stopped": true,
+    "timedOut": true,
+    "pid": 28552,
+    "tree": [
+      {
+        "ProcessId": 28552,
+        "Name": "node.exe",
+        "CommandLine": "C:/Users/01386380/.workbuddy/binaries/node/versions/22.22.2-6/node.exe -r F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\guard-suite-realtest.js --child --marker=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\logs\\owned_chrome_timeout_1792529202913.json",
+        "Created": "2026-10-21 04:46:42.925"
+      },
+      {
+        "ProcessId": 35828,
+        "Name": "conhost.exe",
+        "CommandLine": "\\??\\C:\\Windows\\system32\\conhost.exe 0x4",
+        "Created": "2026-10-21 04:46:42.961"
+      },
+      {
+        "ProcessId": 34564,
+        "Name": "chrome.exe",
+        "CommandLine": "\"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\" --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=C:\\Users\\01386380\\AppData\\Local\\Temp\\playwright_chromiumdev_profile-eN4NOz --remote-debugging-pipe --no-startup-window --proxy-server=http://127.0.0.1:9 --proxy-bypass-list=127.0.0.1;localhost;[::1] \"--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost\" --disable-quic --force-webrtc-ip-handling-policy=disable_non_proxied_udp --disable-background-networking --disable-component-update --disable-domain-reliability --disable-sync --no-first-run",
+        "Created": "2026-10-21 04:46:44.037"
+      },
+      {
+        "ProcessId": 31424,
+        "Name": "chrome.exe",
+        "CommandLine": "\"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\" --type=crashpad-handler --user-data-dir=C:\\Users\\01386380\\AppData\\Local\\Temp\\playwright_chromiumdev_profile-eN4NOz /prefetch:4 --monitor-self-annotation=ptype=crashpad-handler --database=C:\\Users\\01386380\\AppData\\Local\\Temp\\playwright_chromiumdev_profile-eN4NOz\\Crashpad --url=https://clients2.google.com/cr/report --annotation=channel= --annotation=plat=Win64 --annotation=prod=Chrome --annotation=ver=125.0.6422.113 --initial-client-data=0x298,0x29c,0x2a0,0x264,0x2a4,0x7ffd7c821c70,0x7ffd7c821c7c,0x7ffd7c821c88",
+        "Created": "2026-10-21 04:46:44.249"
+      },
+      {
+        "ProcessId": 32368,
+        "Name": "chrome.exe",
+        "CommandLine": "\"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\" --type=gpu-process --no-sandbox --disable-breakpad --headless --use-angle=swiftshader-webgl --headless --gpu-preferences=WAAAAAAAAADgAAAMAAAAAAAAAAAAAAAAAABgAAEAAAA4AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAAAAAAAAAAYAAAAAAAAAAgAAAAAAAAACAAAAAAAAAAIAAAAAAAAAA== --use-gl=angle --field-trial-handle=2732,i,17175121449323714947,330758093704808433,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --enable-logging=handle --log-file=2748 --mojo-platform-channel-handle=2708 /prefetch:2",
+        "Created": "2026-10-21 04:46:44.905"
+      },
+      {
+        "ProcessId": 29560,
+        "Name": "chrome.exe",
+        "CommandLine": "\"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=zh-CN --service-sandbox-type=none --host-resolver-rules=\"MAP * 127.0.0.1, EXCLUDE localhost\" --no-sandbox --proxy-server=http://127.0.0.1:9 --use-angle=swiftshader-webgl --use-gl=angle --mute-audio --disable-quic --headless --field-trial-handle=2980,i,17175121449323714947,330758093704808433,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --enable-logging=handle --log-file=2984 --mojo-platform-channel-handle=2972 /prefetch:3",
+        "Created": "2026-10-21 04:46:44.963"
+      },
+      {
+        "ProcessId": 20828,
+        "Name": "SGTool.exe",
+        "CommandLine": "\"C:\\Program Files (x86)\\SogouInput\\11.2.0.5099\\SGTool.exe\" -daemon",
+        "Created": "2026-10-21 04:46:55.115"
+      }
+    ]
+  },
+  "observed": {
+    "suitePid": 28552,
+    "chromePid": 34564,
+    "profile": "C:\\Users\\01386380\\AppData\\Local\\Temp\\playwright_chromiumdev_profile-eN4NOz",
+    "ready": true
+  },
+  "cleanedProfile": true,
+  "events": [
+    "[2026-10-21 04:47:23 CST] suite timeout owned-tree=[{\"ProcessId\":28552,\"Name\":\"node.exe\",\"CommandLine\":\"C:/Users/01386380/.workbuddy/binaries/node/versions/22.22.2-6/node.exe -r F:\\\\workbuddy\\\\9\\\\.superpowers\\\\sdd\\\\2026-10-20-business-flow-remediation\\\\offline-preload.js F:\\\\workbuddy\\\\9\\\\.superpowers\\\\sdd\\\\2026-10-20-business-flow-remediation\\\\guard-suite-realtest.js --child --marker=F:\\\\workbuddy\\\\9\\\\.superpowers\\\\sdd\\\\2026-10-20-business-flow-remediation\\\\logs\\\\owned_chrome_timeout_1792529202913.json\",\"Created\":\"2026-10-21 04:46:42.925\"},{\"ProcessId\":35828,\"Name\":\"conhost.exe\",\"CommandLine\":\"\\\\??\\\\C:\\\\Windows\\\\system32\\\\conhost.exe 0x4\",\"Created\":\"2026-10-21 04:46:42.961\"},{\"ProcessId\":34564,\"Name\":\"chrome.exe\",\"CommandLine\":\"\\\"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\\\" --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --no-sandbox --user-data-dir=C:\\\\Users\\\\01386380\\\\AppData\\\\Local\\\\Temp\\\\playwright_chromiumdev_profile-eN4NOz --remote-debugging-pipe --no-startup-window --proxy-server=http://127.0.0.1:9 --proxy-bypass-list=127.0.0.1;localhost;[::1] \\\"--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost\\\" --disable-quic --force-webrtc-ip-handling-policy=disable_non_proxied_udp --disable-background-networking --disable-component-update --disable-domain-reliability --disable-sync --no-first-run\",\"Created\":\"2026-10-21 04:46:44.037\"},{\"ProcessId\":31424,\"Name\":\"chrome.exe\",\"CommandLine\":\"\\\"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\\\" --type=crashpad-handler --user-data-dir=C:\\\\Users\\\\01386380\\\\AppData\\\\Local\\\\Temp\\\\playwright_chromiumdev_profile-eN4NOz /prefetch:4 --monitor-self-annotation=ptype=crashpad-handler --database=C:\\\\Users\\\\01386380\\\\AppData\\\\Local\\\\Temp\\\\playwright_chromiumdev_profile-eN4NOz\\\\Crashpad --url=https://clients2.google.com/cr/report --annotation=channel= --annotation=plat=Win64 --annotation=prod=Chrome --annotation=ver=125.0.6422.113 --initial-client-data=0x298,0x29c,0x2a0,0x264,0x2a4,0x7ffd7c821c70,0x7ffd7c821c7c,0x7ffd7c821c88\",\"Created\":\"2026-10-21 04:46:44.249\"},{\"ProcessId\":32368,\"Name\":\"chrome.exe\",\"CommandLine\":\"\\\"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\\\" --type=gpu-process --no-sandbox --disable-breakpad --headless --use-angle=swiftshader-webgl --headless --gpu-preferences=WAAAAAAAAADgAAAMAAAAAAAAAAAAAAAAAABgAAEAAAA4AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAAAAAAAAAAYAAAAAAAAAAgAAAAAAAAACAAAAAAAAAAIAAAAAAAAAA== --use-gl=angle --field-trial-handle=2732,i,17175121449323714947,330758093704808433,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --enable-logging=handle --log-file=2748 --mojo-platform-channel-handle=2708 /prefetch:2\",\"Created\":\"2026-10-21 04:46:44.905\"},{\"ProcessId\":29560,\"Name\":\"chrome.exe\",\"CommandLine\":\"\\\"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\\\" --type=utility --utility-sub-type=network.mojom.NetworkService --lang=zh-CN --service-sandbox-type=none --host-resolver-rules=\\\"MAP * 127.0.0.1, EXCLUDE localhost\\\" --no-sandbox --proxy-server=http://127.0.0.1:9 --use-angle=swiftshader-webgl --use-gl=angle --mute-audio --disable-quic --headless --field-trial-handle=2980,i,17175121449323714947,330758093704808433,262144 --enable-features=CDPScreenshotNewSurface --disable-features=AutoDeElevate,AvoidUnnecessaryBeforeUnloadCheckSync,BlockOriginHeaderModificationOnRedirect,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,OptimizationHints,PaintHolding,ThirdPartyStoragePartitioning,Translate,msEdgeUpdateLaunchServicesPreferredVersion,msForceBrowserSignIn --variations-seed-version --enable-logging=handle --log-file=2984 --mojo-platform-channel-handle=2972 /prefetch:3\",\"Created\":\"2026-10-21 04:46:44.963\"},{\"ProcessId\":20828,\"Name\":\"SGTool.exe\",\"CommandLine\":\"\\\"C:\\\\Program Files (x86)\\\\SogouInput\\\\11.2.0.5099\\\\SGTool.exe\\\" -daemon\",\"Created\":\"2026-10-21 04:46:55.115\"}]"
+  ],
+  "error": "",
+  "status": "PASS"
+}

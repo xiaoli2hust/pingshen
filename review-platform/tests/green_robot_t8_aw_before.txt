@@ -1,0 +1,9 @@
+PASS - AW-01 #/agent?opp=<code> 显示统一工作台和本地预演状态 | robotMode=1 hash=#/agent?opp=PL-AW-1792136522835
+PASS - AW-02 三上传控件 accept=.xlsx 且各 POST 命中既有导入端点恰一次 | {"fileCounts":[1,1,1],"accepts":[".xlsx",".xlsx",".xlsx"],"uploadCounts":[1,1,1]}
+PASS - AW-03 文字生成后只出现草稿行与人工保存/确认按钮，不自动确认 | generated=true save=1 confirm=1 status=draft
+PASS - AW-04 预算/评审真对话入口各发送确认锁定/提交评审，HTTP 200 且仍 draft | {"tabCounts":{"budget":1,"review":1},"links":{"budget":1,"review":1},"oral":{"budget":200,"review":200},"budgetStatus":"draft","reviewStatus":"draft"}
+PASS - AW-05 页面显示交付/预算/评审真实状态及下一步深链 | delivery=true budget=true review=true
+PASS - AW-06 工作台 console.error/pageerror 为零并捕获截图，非 RED 必须落盘 | console=0 pageerror=0 shot=87504B(文件)
+CLEANUP - PL-AW-1792136522835 opps/budgets/reviews=0/0/0
+
+6 passed, 0 failed -> ALL PASS

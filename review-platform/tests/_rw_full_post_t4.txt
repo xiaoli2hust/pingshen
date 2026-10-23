@@ -1,0 +1,18 @@
+PASS - RW-01 非 admin 对 bindings/targets/outbox/preview/cancel 全部 403 | 403,403,403,403,403
+PASS - RW-02 admin 可读写已有 user_id binding；不存在 user_id=400；不改变 users.role/dept | put=200 get=200 bad=400 role=项目经理
+PASS - RW-03 target_key/status/provider/target_type 枚举校验且未绑定是合法状态 | 400,400,400,400,200
+PASS - RW-07 outbox payload 无 token/key/secret/file data，只含工作台深链与可显示文字 | preview=200 list=200 row=true bad=
+PASS - RW-08 provider 未激活时 active target/binding 也不访问本地监听桩且状态仍 preview | binding=200 target=200 invite=200/preview hits=0
+PASS - RW-15 outbox cancel 仅 preview/ready 可取消，重复取消幂等；sent 由服务端守卫拒绝 | preview=200 cancel=200/200 guard=true
+PASS - RW-04 invite-review 仅销售支持组/admin 可调用，项目经理/销售经理/部门账号均 403 | denied=403,403,403 allow=200/200
+PASS - RW-05 已有任何评审记录时邀请 409；无评审商机写 preview | new=200/preview existing=409
+PASS - RW-06 同一 opp_code+target_user_id 重复邀请返回同一 outbox id 且表中一行 | status=200/200 ids=24/24 rows=1
+PASS - RW-09 GET workbench 返回 opp/delivery/budgets/reviews/provider/capabilities 且不复制写接口 | status=200 keys=opp,delivery,budgets,reviews,capabilities,provider
+PASS - RW-10 skill=delivery 返回净化 rows，cost/sum/status/action 全丢弃 | status=200 rows=1 keys=content,stage,pm_pd,own_pd,rd_pd,prod_pd,travel_cost,note
+PASS - RW-11 口头确认交付预算/锁预算/提交评审不改变三种状态 | chat=200 {"delivery":"draft","budget":"draft","review":"draft"} -> {"delivery":"draft","budget":"draft","review":"draft"}
+PASS - RW-12 Excel 三入口仍命中既有端点且解析错误不生成伪草稿 | status=502/502/502 counts=1/2->1/2
+FAIL - RW-13 真实 HTTP 提交后按部门而非任务入箱，财务多任务只有一行 | submit=200 tasks=10 depts=6 outbox=0 finance=4/false
+PASS - RW-14 admin preview 重放同键返回同一 outbox_id 且行数不增；双推由 RB-07b 守护 | preview=200/200 ids=28/28 rows=1->1
+CLEANUP - PL-RW-1792126555013 opps/budgets/reviews=0/0/0
+
+14 passed, 1 failed -> SOME FAIL

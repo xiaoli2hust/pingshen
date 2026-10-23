@@ -1,0 +1,7 @@
+(node:38256) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+夹具 opp=PL-T4F-CORRUPT-1792127854042 rows_json={bad json (非数组、语法损坏)
+8600 已修码 http=200 delivery={"status":"draft","rows":[],"sum":{"pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"cost":0},"rate":null,"rd_price":995,"prod_price":320,"rate_source":"none","source_file":null,"updated_at":"2026-10-16T13:00:00.000Z"}
+8699 红件码 http=500 body={"error":"服务器错误:Expected property name or '}' in JSON at position 1 (line 1 column 2)"}
+有效存行回归 PL-A-DL-1792126527654 http=200 rows=1 cost=[0] rate=null rate_source=none 八键=["content","stage","pm_pd","own_pd","rd_pd","prod_pd","travel_cost","note","cost"]
+CLEANUP 探针夹具残留 opps=0 opp_delivery=0

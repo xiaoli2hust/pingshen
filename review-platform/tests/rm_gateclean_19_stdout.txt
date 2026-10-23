@@ -1,0 +1,55 @@
+PASS - C2-01 旧键全在 reviews/budgets/tasks/lights/opp.code/opp.title | status=200 reviews=1 budgets=3 tasks=0 opp.code="PL00008572"
+PASS - C2-02 delivery 键集恰好等于 status/rows/total_cost/dev_dept/rate/rate_source/updated_at/can_write | 实键=status/rows/total_cost/dev_dept/rate/rate_source/updated_at/can_write
+PASS - C2-02 status ∈ draft/confirmed 且 rows 为数字>=0 | status=confirmed rows=2
+PASS - C2-03 chain 键集恰好等于 delivery_confirmed/budget_locked/reviews_total/reviews_submitted/next_action | 实键=delivery_confirmed/budget_locked/reviews_total/reviews_submitted/next_action
+PASS - C2-03 typeof next_action==string 且 ∈ 枚举 | next_action="lock_budget"
+PASS - C2-04 链序自洽 ①未确认→confirm_delivery / ②未锁定→lock_budget / ③未提交→submit_review | delivery_confirmed=true budget_locked=false submitted=0 next_action="lock_budget" 命中规则=②
+PASS - C2-04b 在线单一张 reviewing 时 next_action==reviewing, 转入结论态后翻 judged(server.js:1737 some 分支实执行, some→every 误写在此夹具必红; 真实 HTTP: 同码两张在线单先 Finish 一张、再 Finish 另一张) | 前置 confirmed=true locked=true submitted=2/2 online状态=["archived","reviewing"] some=true every=false | 在途="reviewing" 反证(转结论态后)="judged" | ids open=288 done=289 budget=246 中态行=[[289,"online","archived"],[288,"online","reviewing"]] 终态行=[[288,"online","archived"],[289,"online","archived"]] 终态 submitted=2/2 | finDone: rid=289 前态="reviewing" era="online" round=1 当前轮pending=10 完成=10 研判后="judged"/"green" decision=200 archive=200 终态="archived" 结论="同意" | finOpen: rid=288 前态="reviewing" era="online" round=1 当前轮pending=10 完成=10 研判后="judged"/"green" decision=200 archive=200 终态="archived" 结论="同意"
+PASS - C2-04c 真实红灯退回单 next_action==returned, 不得误提示可归档 | returned/red=true next_action="returned"
+PASS - C2-05 建档无单 360 返回 200(旧代码 404) | status=200 error=""
+PASS - C2-05 opp 含 18 要素键 + code | 缺= code="PL-T5-hy43ul3dd7-c05"
+PASS - C2-05 chain.next_action==confirm_delivery | 实="confirm_delivery"
+PASS - C2-06 PL00008572 两端 total_cost 对账(容差 0.01) | 360.delivery.total_cost=58880 /delivery sum.cost=58880 差=0.0000
+PASS - C2-07 rate_source ∈ budget/review/none 且 budget 分支两端 rate 同值(容差 0.001) | rate_source="none" dev_dept=null 360.rate=null /delivery rate=null
+PASS - C2-07b 有明细且 dev_dept 命中预算档: rate_source==budget 且两端 rate 同值(容差 0.001, D-22 分支实执行) | rate_source="budget" dev_dept="交付处" 360.rate=1696 detail.rate=1696 360.total_cost=136896 detail.sum.cost=136896
+PASS - C2-08 非四项角色 fde1 读明细 403(旧代码 200) | status=403 error="仅商机建档人/项目经理/销售支持组可查看交付预算明细"
+PASS - C2-08 403 文案含「交付预算明细」 | error="仅商机建档人/项目经理/销售支持组可查看交付预算明细"
+PASS - C2-08 同角色 fde1 读 360 仍 200(只收明细面, 不伤链路引导) | status=200 error=""
+PASS - C2-09 can_write fde1=false / sales=true | fde1=false sales=true
+PASS - C2-09 其余 delivery 键两次逐值相同(能力位不影响摘要) | fde1={"status":"draft","rows":2,"total_cost":136896,"dev_dept":"交付处","rate":1696,"rate_source":"budget","updated_at":"2026-10-21T10:04:58.597Z"} sales={"status":"draft","rows":2,"total_cost":136896,"dev_dept":"交付处","rate":1696,"rate_source":"budget","updated_at":"2026-10-21T10:04:58.597Z"}
+PASS - C2-10 建档 sales1 can_write=true ⇔ 明细 200 | detail_error=""
+PASS - C2-10 支持组 zhichizu can_write=true ⇔ 明细 200 | detail_error=""
+PASS - C2-10 非四项 fde1 can_write=false ⇔ 明细 403 | detail_error="仅商机建档人/项目经理/销售支持组可查看交付预算明细"
+PASS - C2-11 前置 两码各自 ①confirmed+②locked 就绪(配对 fresh code) | H码 PL-T5-hy43ul3dd7-c11h: put=200 confirm=200 budget=249 lock=200 | O码 PL-T5-hy43ul3dd7-c11o: put=200 confirm=200 budget=250 lock=200
+PASS - C2-11 H 码只有真实历史导入单: reviews 列表恰 1 行(=导入 id, history/archived/none)且 lights 合计 1, 但 chain 计数为 0/0 且 next_action=submit_review | import: import=200 id=290 era="history" status="archived" light="none" archived_at="2024-05-12" decision="通过" form.opp_code="PL-T5-hy43ul3dd7-c11h" | detail=200 title="夹具历史补录单-hy43ul3dd7-c11h" 附件=["历史评审表原件"] 事件=["历史数据导入"] tasks=0 | 360 行=[[290,"history","archived","none"]] lights={"red":0,"yellow":0,"green":0,"none":1} delivery.status="confirmed" budget_locked=true reviews_total=0 reviews_submitted=0 next_action="submit_review"
+PASS - C2-11 O 码真实在线单全链(提交→六部门→研判→同意→归档): reviews 恰 1 行(=该 id, online/archived), chain 1/1 且 next_action=judged(配对码业务对照, 非同一行改 era) | online: create=200 id=291 submit=200 detail=200 era="online" status="reviewing" opp_code="PL-T5-hy43ul3dd7-c11o" budget_id=250 round=1 当前轮pending=10 | finish: rid=291 前态="reviewing" era="online" round=1 当前轮pending=10 完成=10 研判后="judged"/"green" decision=200 archive=200 终态="archived" 结论="同意" | 360 行=[[291,"online","archived","green"]] reviews_total=1 reviews_submitted=1 next_action="judged"
+NOT EXECUTABLE C2-11-identity same-row era flip identity coverage gap(不可计为PASS) | unsupported identity coverage replaced by paired-code business comparison; 同一行 history→online 改 era 无已授权 HTTP 产地(历史导入恒 era=history/archived, 无改 era 端点), 原 SQL UPDATE 已删除; 配对码只钉 era 过滤, 不证同一行身份/来源转换
+PASS - C3-01 360 顶层 profile: fields/sources 恰 12 键 + missing⊆OPP_REQUIRED + 旧键全在 | profile 键=fields,sources,missing missing=[]
+PASS - C3-02 reviews[] 含 budget_id/budget_code/applicant_name 且 budget_code=预算码 | rv.budget_id=251 budget_code=B-2026-0063 预算码=B-2026-0063
+PASS - C3-02 无预算单 reviews[].budget_id/budget_code 为 null | {"budget_id":null,"budget_code":null}
+PASS - C3-03 同码两张单: length===2 且排序 updated_at DESC,id DESC; chain 五键/lights 四档不变 | ids=[295,294] 期望=[295,294]
+PASS - C3-04 prefill presale: 同类型旧值胜过跨类型新值, 草稿不入选 | customer="C3同型客户" src={"value":"C3同型客户","source":"review","from":296,"type":"presale","era":"online","round":1,"status":"judged","updated_at":"2026-10-21T10:05:27.881Z","scope":"same"}
+PASS - C3-05 跨类型 CROSS 键可取(bid.region ← presale) | region="C5华东跨型"
+PASS - C3-05 change.summary 不跨类且不取档案 → null | summary=null
+PASS - C3-05 presale.summary 只取同类型(不取档案/跨类) | summary="C5售前概述"
+PASS - C3-06 0 原样返回且来源为评审; 空串字段为 null | contract_amount=0 sales=null
+PASS - C3-07 无评审: fields 由档案兜底 + sources.source=archive + missing=[] | customer="江西省自然资源测绘与监测院" src={"value":"江西省自然资源测绘与监测院","source":"archive","scope":"archive"} missing=[]
+PASS - C3-07 合法 HTTP PUT 清空必填后 missing=[sales] | missing=["sales"]
+PASS - C3-07 未知码 404 / 非法 type 400 / 未登录 401 | 404=404 400=400 401=401
+PASS - C3-08 L1 在线同型 > 其余四级 | customer="同型在A"
+PASS - C3-08 L2 在线跨型 > L3/L4/L5 | customer="跨型在B"
+PASS - C3-08 L3 历史同型 > L4/L5 | customer="历史同C客"
+PASS - C3-08 L4 历史跨型 > L5 档案 | customer="历史跨D客"
+PASS - C3-08 L5 档案兜底(kind=archive,scope=archive) | customer="档08e"
+PASS - C3-09 siblings 排除自身+只含同码+倒序(在线单视角只见草稿) | siblings=[310]
+PASS - C3-09 异码单不在 siblings | draft 视角=[311]
+PASS - C3-10 附件归属: A 有 c3.xlsx, B 无 | A附件=["c3.xlsx"]
+PASS - C3-10 提交产生的 tasks/events 只归 B: B 有任务且 review_id 全=B, A 无任务 | B.tasks=4 A.tasks=0
+PASS - C3-11 部门退回后 status=returned 且未判灯(light=null; server :2649 只改状态, red 仅来自研判红灯自动打回) | st=returned/null
+PASS - C3-11 重提后仍 1 条 + round=2 + 两轮 tasks 并存 | round=2 rounds=[2,1]
+PASS - C3-12 delivery 8 键 + chain 5 键 + opp 18 列(+code) + lights 四档(旧码即绿) | delivery=can_write,dev_dept,rate,rate_source,rows,status,total_cost,updated_at chain=budget_locked,delivery_confirmed,next_action,reviews_submitted,reviews_total
+OWNED(新 HTTP 夹具) run=hy43ul3dd7 codes=["PL-T5-hy43ul3dd7-c04b","PL-T5-hy43ul3dd7-c11h","PL-T5-hy43ul3dd7-c11o"] reviews=[288,289,290,291] budgets=[246,249,250] | 本轮自建码前缀 PL-T5-hy43ul3dd7-* / PL-C3-hy43ul3dd7* | 清理: 仅靠父级守护恢复演示库与 uploads, 本套无 SQL 清理
+NOT EXECUTABLE C2-11-identity same-row era flip identity coverage gap(不可计为PASS)
+
+49 passed, 0 failed, 1 NOT EXECUTABLE -> EXECUTED PASS + 1 COVERAGE GAP(不可计为全绿) [C2-11-identity same-row era flip identity coverage gap(不可计为PASS)] [DISCLOSURE: C2-11 unsupported identity coverage replaced by paired-code business comparison]
+

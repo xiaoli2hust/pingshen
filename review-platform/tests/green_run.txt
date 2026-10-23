@@ -1,0 +1,165 @@
+
+==== F-01~15 财务引擎(纯函数) ====
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 270.5182
+
+==== A-05~07/13 agent 核心(纯函数) ====
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 254.312
+
+==== API-01~20+S-01~06 预算 API(HTTP) ====
+PASS - S-06 重提 round=2
+PASS - S-06 一轮旧任务作废留痕
+PASS - S-06 二轮任务重新分发(bid 10 项指标)
+PASS - S-06 二轮复判转绿 judged
+
+29 passed, 0 failed -> ALL PASS
+
+==== A-01~04/A-08~18 对话流(HTTP+桩) ====
+PASS - A-17 预判返回灯色+路由+风险项
+PASS - A-17 reply 含灯色与风险项摘要
+PASS - A-18 小数格式自动×100 归一化
+
+40 passed, 0 failed -> ALL PASS
+config.json LLM_BASE_URL 已恢复
+
+==== R-01~34 规则矩阵 preview-light + 闭环/SEC ====
+PASS - R-32 (yellow/1 项非绿)
+PASS - R-34 (yellow/1 项非绿)
+preview-light 批量 32 条耗时 5733ms (性能冒烟门槛 <10s, 不硬卡)
+
+45 passed, 0 failed -> ALL PASS
+红绿用例(★red): 20 PASS / 0 FAIL (绿证据: 旧代码已先行 FAIL 留档则红绿成立)
+
+==== API-21~23/R-33/J/N 通知与结论(HTTP+webhook 桩) ====
+PASS - R-33 reroute_xo 事件留痕
+PASS - N-02 webhook 失败主流程仍 200(不 throw, 不久等)
+PASS - N-03 同一周一两次仅发一次(幂等)
+
+21 passed, 0 failed -> ALL PASS
+config.json 通知键已恢复
+
+==== D-01~08 附3交付明细(上传解析+递进门禁) ====
+PASS - D-06 非 owner 编辑交付明细 403
+PASS - D-07 锁定后编辑明细 400(提示新建版本)
+PASS - D-08 非 owner 上传 403
+PASS - D-08 非 xlsx 文件解析失败提示(不崩, 提示可手编)
+
+20 passed, 0 failed -> ALL PASS
+
+==== BI-01~12 归档库 BI(直查同源+对抗) ====
+PASS - BI-09 结构完整兜底(空库时同结构 0/[] 不崩)
+PASS - BI-10 恶意 query 参数被忽略(200 不注入不 500)
+PASS - BI-11 聚合只含归档单(非归档 2378 单不混入)
+PASS - BI-12 聚合性能 < 300ms | 72ms
+
+13 passed, 0 failed -> ALL PASS(数据基线: 归档 691 单, 直查同源断言)
+
+==== T3 门禁口径 bid+presale ====
+PASS - T3-01 presale 无 budget_id 提交被拦 400 | status=400
+PASS - T3-02 presale 带 locked budget_id 提交 200 | status=200
+PASS - T3-03 change 无关联提交不受影响(200) | status=200
+
+3 passed, 0 failed -> ALL PASS
+
+==== EI-01~09 Excel 导入(六组锚定+安全+性能) ====
+PASS - EI-07 真实评审表导入: matched>=10 + opp_code 命中 | matched=15
+PASS - EI-08a 毒件拒绝(400/502) | status=502
+PASS - EI-08b 结构键注入被白名单丢弃
+PASS - EI-09 单次导入耗时<4s(python 启动+机器负载波动) | 2873ms
+
+18 passed, 0 failed -> ALL PASS
+
+==== HI-01~06 历史数据承接 ====
+PASS - HI-05b kpi.historyTotal>=1 + historyPassRate 命中 | historyTotal=44 passRate=27.3
+PASS - HI-05c kpi.greenRate 分母=在线单(不被历史污染)
+PASS - HI-05d years 年度分布含 2024 | [{"y":"2024","c":12},{"y":"2026","c":680}]
+PASS - HI-06 真实表 history 模式导入不炸(200+archived) | status=200 matched=31
+
+16 passed, 0 failed -> ALL PASS
+
+==== OC-01~06 商机代码贯穿 ====
+PASS - OC-05a type=bid 筛选只回 bid | rows=25
+PASS - OC-05b q=商机代码模糊命中 | hit=true
+PASS - OC-05c q=% 被转义为字面量不全表 | rows=0
+PASS - OC-06 预算列表 q=PL00008572 命中 opp_code | rows=49
+
+11 passed, 0 failed -> ALL PASS
+
+==== PA-* 解析器全字段对账(原表审计) ====
+PASS - PA-PL00008572-C 商机名称为短名(可作 title) | "江西省天地图POI数据服务项目"
+PASS - PA-PL00008111-A 原表关键标签齐全(审计有效性) | 缺: 
+PASS - PA-PL00008111-B 逐字段对账 15 项一致(原表值=解析值)
+PASS - PA-PL00008111-C 商机名称为短名(可作 title) | "坪山区三维数据更新2026"
+
+9 passed, 0 failed -> ALL PASS
+
+==== PL-01~08 解析器实验室(admin 实测+调优) ====
+PASS - PL-05 GET 映射含已保存的 contract
+PASS - PL-06 非法段名 400 | status=400
+PASS - PL-07 未勾选时不应用调优(contract 仍 undefined)
+PASS - PL-08 清空调优 200
+
+12 passed, 0 failed -> ALL PASS
+
+==== HL-1~4 实验室浏览器层 ====
+            未匹配
+    | pick=impRvC_2_0
+PASS - HL-5 添加关键词生效(chips 新词+未保存标记)
+PASS - HL-6 保存调优反馈 | 已保存——勾选「应用调优映射」后点「解析并对照」验证
+
+8 passed, 0 failed -> ALL PASS
+
+==== 回归 test_flow.js ====
+   黄灯指标: 贡献利润、签约转包次数
+   路径: 黄灯:部门级评审会(每周二)
+   与真实评审结论一致(黄灯-部门级,2项黄灯,无XO): PASS
+6) 正式报告 HTML 生成: PASS
+7) 归档: PASS
+ALL PASS
+
+==== 回归 test_p15_flow.js ====
+PASS - B1 退回后状态=returned
+PASS - B2 重新提交后轮次=2
+PASS - B3 二轮完成后自动研判(judged, 绿灯)
+PASS - B4 第一轮旧任务已作废留痕
+
+10 passed, 0 failed -> ALL PASS
+
+==== 数据可行性 data_feasibility_check.js ====
+======================================================================
+数据可行性实测汇总
+  C-02 PL00008068: 系统=yellow/判例=yellow → 一致
+  C-03 PL00008111: 系统=yellow/判例=yellow → 一致
+结论: 判例数据可完整驱动 建单→附件→提交→分派→打灯→研判→对比 全链路(2/2 跑通); 判灯偏差即规则修正项输入(1.6/1.7)
+ALL PASS
+
+======== 汇总 ========
+PASS  F-01~15 财务引擎(纯函数)
+PASS  A-05~07/13 agent 核心(纯函数)
+PASS  API-01~20+S-01~06 预算 API(HTTP)
+PASS  A-01~04/A-08~18 对话流(HTTP+桩)
+PASS  R-01~34 规则矩阵 preview-light + 闭环/SEC
+PASS  API-21~23/R-33/J/N 通知与结论(HTTP+webhook 桩)
+PASS  D-01~08 附3交付明细(上传解析+递进门禁)
+PASS  BI-01~12 归档库 BI(直查同源+对抗)
+PASS  T3 门禁口径 bid+presale
+PASS  EI-01~09 Excel 导入(六组锚定+安全+性能)
+PASS  HI-01~06 历史数据承接
+PASS  OC-01~06 商机代码贯穿
+PASS  PA-* 解析器全字段对账(原表审计)
+PASS  PL-01~08 解析器实验室(admin 实测+调优)
+PASS  HL-1~4 实验室浏览器层
+PASS  回归 test_flow.js
+PASS  回归 test_p15_flow.js
+PASS  数据可行性 data_feasibility_check.js
+
+18/18 套通过, 耗时 220.5s -> ALL PASS

@@ -1,0 +1,10 @@
+PASS - T1-EQ 对话路径创建草稿成功
+PASS - T1-EQ 两路径 form_json 4 映射字段完全一致(等价性锁定) | {"A":{"c":"T1 等价客户","ca":240,"sa":100,"s":"T1 等价预算项目"},"B":{"c":"T1 等价客户","ca":240,"sa":100,"s":"T1 等价预算项目"}}
+PASS - T1-EQ 元→万元换算正确(2400000→240)
+FAIL - T1-UI 回填合同额 240(元→万元) | contract=
+FAIL - T1-UI 回填分包额 100 | sub=
+FAIL - T1-UI 回填项目名到摘要 | summary=
+PASS - T1-UI 不覆盖用户已填(customer 保留手填) | customer=我已手填的客户
+FAIL - T1-UI 提交后草稿落库 | not found
+
+4 passed, 4 failed -> SOME FAIL

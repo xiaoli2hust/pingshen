@@ -1,0 +1,8 @@
+FAIL - legacy zero-exit SOME FAIL is rejected
+PASS - explicit failure is rejected
+PASS - TAP failure is rejected
+PASS - crash is rejected
+PASS - normal old flow is not rejected
+PASS - TAP zero failure is not rejected
+PASS - passed assertion is not rejected
+6 passed, 1 failed

@@ -1,0 +1,178 @@
+========================================================================
+== F 系财务引擎单元(预期红: finance.js 不存在 -> MODULE_NOT_FOUND)
+== $ node --test tests/test_finance.js
+========================================================================
+TAP version 13
+# node:internal/modules/cjs/loader:1137
+#   throw err;
+#   ^
+# Error: Cannot find module '../finance.js'
+# Require stack:
+# - F:\\workbuddy\\9\\review-platform\\tests\\test_finance.js
+#     at Module._resolveFilename (node:internal/modules/cjs/loader:1134:15)
+#     at Module._load (node:internal/modules/cjs/loader:975:27)
+#     at Module.require (node:internal/modules/cjs/loader:1225:19)
+#     at require (node:internal/modules/helpers:177:18)
+#     at Object.<anonymous> (F:\\workbuddy\\9\\review-platform\\tests\\test_finance.js:5:70)
+#     at Module._compile (node:internal/modules/cjs/loader:1356:14)
+#     at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+#     at Module.load (node:internal/modules/cjs/loader:1197:32)
+#     at Module._load (node:internal/modules/cjs/loader:1013:12)
+#     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:128:12) {
+#   code: 'MODULE_NOT_FOUND',
+#   requireStack: [ 'F:\\\\workbuddy\\\\9\\\\review-platform\\\\tests\\\\test_finance.js' ]
+# }
+# Node.js v18.19.0
+# Subtest: F:\\workbuddy\\9\\review-platform\\tests\\test_finance.js
+not ok 1 - F:\\workbuddy\\9\\review-platform\\tests\\test_finance.js
+  ---
+  duration_ms: 164.9106
+  location: 'F:\\workbuddy\\9\\review-platform\\tests\\test_finance.js:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 177.2486
+
+
+[exit 1]
+
+========================================================================
+== A 系 Agent 纯函数(预期红: agent.js 不存在 -> MODULE_NOT_FOUND)
+== $ node --test tests/test_agent_core.js
+========================================================================
+TAP version 13
+# node:internal/modules/cjs/loader:1137
+#   throw err;
+#   ^
+# Error: Cannot find module '../agent.js'
+# Require stack:
+# - F:\\workbuddy\\9\\review-platform\\tests\\test_agent_core.js
+#     at Module._resolveFilename (node:internal/modules/cjs/loader:1134:15)
+#     at Module._load (node:internal/modules/cjs/loader:975:27)
+#     at Module.require (node:internal/modules/cjs/loader:1225:19)
+#     at require (node:internal/modules/helpers:177:18)
+#     at Object.<anonymous> (F:\\workbuddy\\9\\review-platform\\tests\\test_agent_core.js:5:91)
+#     at Module._compile (node:internal/modules/cjs/loader:1356:14)
+#     at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+#     at Module.load (node:internal/modules/cjs/loader:1197:32)
+#     at Module._load (node:internal/modules/cjs/loader:1013:12)
+#     at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:128:12) {
+#   code: 'MODULE_NOT_FOUND',
+#   requireStack: [ 'F:\\\\workbuddy\\\\9\\\\review-platform\\\\tests\\\\test_agent_core.js' ]
+# }
+# Node.js v18.19.0
+# Subtest: F:\\workbuddy\\9\\review-platform\\tests\\test_agent_core.js
+not ok 1 - F:\\workbuddy\\9\\review-platform\\tests\\test_agent_core.js
+  ---
+  duration_ms: 158.1748
+  location: 'F:\\workbuddy\\9\\review-platform\\tests\\test_agent_core.js:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 170.6452
+
+
+[exit 1]
+
+========================================================================
+== API/S 系预算契约(预期红: /api/budget* 404 -> 全 FAIL)
+== $ node tests/test_budget_api.js
+========================================================================
+PASS - API-02 未登录建单 401
+FAIL - API-01 建单 200 返回 id/code
+FAIL - API-01 初始 status=draft
+PASS - API-15 不存在 id 404
+FAIL - API-07 preview 200 返回 §3.2 结构 calc
+FAIL - API-08 未知字段静默丢弃(200 且 calc 不受污染)
+FAIL - API-03 owner PUT 白名单字段 200 且 calc 同步
+FAIL - API-04 结构字段注入被白名单丢弃(status 不变)
+FAIL - API-04 注入单业务字段放行 sub_cost=800000
+FAIL - API-05 非 owner 非 admin 403
+FAIL - API-03/04/05 流程异常:/api/budget/0 -> 404 接口不存在
+FAIL - API-10 缺必填 400 且列出全部缺失项(不只第一个)
+FAIL - API-09 lock 200 status=locked
+FAIL - S-01 calc/settings_snapshot 快照落库
+FAIL - API-11 重复锁定 409
+FAIL - S-02/API-06 locked 后 PUT 400 含已锁定
+FAIL - API-12 newversion 200 v2 draft
+FAIL - S-03 v2 parent_id 指向 v1 且拷贝 fields
+FAIL - S-03 v1 保持 locked 不动
+FAIL - API-13 无锁定版 newversion 409
+FAIL - API-14 versions 长度 2
+PASS - S-04 第1张评审单关联同一 locked 预算合法
+PASS - S-04 第2张评审单关联同一 locked 预算合法
+FAIL - S-05/API-20 提交关联 draft 单 400 拦截
+PASS - S-06 红灯自动打回 returned
+PASS - S-06 重提 round=2
+PASS - S-06 一轮旧任务作废留痕
+PASS - S-06 二轮任务重新分发(bid 10 项指标)
+PASS - S-06 二轮复判转绿 judged
+
+9 passed, 20 failed -> SOME FAIL
+
+
+[exit 1]
+
+========================================================================
+== A 系对话剧本(预期红: /api/agent/chat 404 -> 全 FAIL; 桩照常起停, config.json finally 恢复)
+== $ node tests/test_agent_chat.js
+========================================================================
+FAIL - A-01 首轮 200
+FAIL - API-16 响应六键结构(reply/draft/calc/missing/actions/degraded)
+FAIL - A-01 未降级
+FAIL - A-01 reply 含不含税收入 226.4 万
+FAIL - A-01 缺 3 项清单(交付部门/人天/差旅)
+FAIL - A-01 draft 更新 contract/sub_cost
+FAIL - A-01 calc.income 锚定
+PASS - A-02 missing 清零
+FAIL - A-02 actions=[confirm_lock]
+FAIL - A-02 calc 与 §3.2 一致(十项抽核)
+FAIL - A-04 reply 含 68.2 万/46.6%
+FAIL - A-04 draft.sub_cost=800000
+FAIL - A-04 calc 重算 contribution/margin
+FAIL - A-09 口头确认 200 且不降级
+FAIL - A-09 状态仍 draft(人确认门)
+FAIL - A-09 reply 引导点按钮
+FAIL - A-03 缺 confirm_lock action
+FAIL - A-10 提示走 newversion
+FAIL - A-10 fields 不变
+FAIL - A-12 每轮 user+assistant 成对可按序回放
+FAIL - A-14 回显 draft+calc
+FAIL - A-14 历史消息回显
+FAIL - A-11/API-19 非该单 owner chat 403
+PASS - API-18 budget 不存在 404
+FAIL - API-17/A-13 空消息 400
+FAIL - A-08 降级仍 HTTP 200
+FAIL - A-08 degraded=true
+FAIL - A-08 missing 数组完整(5 项)
+PASS - A-08 LLM 失败跳过 merge(fields 不变)
+FAIL - A-08 reply 为点选补齐引导
+
+3 passed, 27 failed -> SOME FAIL
+config.json LLM_BASE_URL 已恢复
+
+
+[exit 1]
+
+========================================================================
+红证据结论: 4 脚本全红(finance.js/agent.js 不存在, 端点 404)。改造完成后须全部转绿。

@@ -1,0 +1,4 @@
+PASS - OD-08 当前L1渲染调用可检测
+FAIL - OD-08 删除真实调用必须被检测
+FAIL - OD-08 调用挪至无关函数必须被检测
+1 passed, 2 failed -> SOME FAIL

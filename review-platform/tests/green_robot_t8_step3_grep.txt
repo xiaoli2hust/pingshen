@@ -1,0 +1,70 @@
+# Task8 Step3 边界 grep @ 2026-10-16T07:53:49.491Z
+# 取证口径: 已跟踪文件只看 git diff -U0 的新增行, robot-orchestrator.js 为全新文件看全文; 行号为工作区当前行号
+
+本轮新增行总数(7 个已跟踪文件的 diff + 4 个未入库新文件全文)=1927  其中机器人/工作台相关=1279
+
+## 1) robot-orchestrator.js 出站能力为零(禁 fetch/http/https/curl)
+[orch.fetch] 命中 0 处 — 期望 0
+[orch.http.request] 命中 0 处 — 期望 0
+[orch.spawn(curl)] 命中 0 处 — 期望 0
+[orch.require(http/https/net/dgram/tls)] 命中 0 处 — 期望 0
+[orch.child_process] 命中 0 处 — 期望 0(编排器不直接落外部进程)
+
+## 2) 新代码不得有业务状态 SQL 写(判灯/算账/锁定/提交不出代码)
+[added.UPDATE reviews status/light] 命中 0 处 — 期望 0
+[added.UPDATE budgets status] 命中 0 处 — 期望 0
+[added.UPDATE tasks light] 命中 0 处 — 期望 0
+[added.UPDATE opp_delivery] 命中 0 处 — 期望 0
+[added.any UPDATE(人工核对归属)] 命中 1 处 — 逐条核对是否属发送队列/身份映射面
+    review-platform/server.js:2589  db.prepare("UPDATE robot_outbox SET status='cancelled' WHERE id=? AND status IN ('preview','ready')").run(id);
+
+## 3) 新测试不得用 SQL 伪造业务工作流态
+[test.INSERT/UPDATE 业务表] 命中 0 处 — 期望 0
+[test.robot_outbox 直连写(仅发送队列记账态, 见 RW-15 注释)] 命中 1 处 — 本轮 RW-15 种子 1 处 INSERT
+    review-platform/tests/test_robot_workbench.js:234  const ins = w.prepare(`INSERT INTO robot_outbox(opp_code,event,target_key,provider,payload_json,status,idempotency_key,created_by,created_at,sent_at,attempts,la
+
+## 4) 新 API 不得复制第二套预算/评审/交付写入实现
+[added.INSERT INTO budgets/reviews/opps/opp_delivery] 命中 0 处 — 期望 0
+[added.UPDATE 业务表] 命中 0 处 — 期望 0
+[added 触达唯一写入/算账函数名] 命中 9 处 — 只允许复用既有唯一入口(读侧复用不算第二套写实现)
+    review-platform/server.js:1727  const odCalc = od ? deliverySumFor(parseRowsJson(od.rows_json), rp.dev_dept) : null;
+    review-platform/robot-orchestrator.js:2  // 铁律: 本模块不判灯、不算账、不写状态、不访问网络; 计价只走 server.js 的 deliverySumFor()
+    review-platform/tests/test_robot_workbench.js:209  const opp = await createOpp(tokens.admin, 'NO-NET');
+    review-platform/tests/test_robot_workbench.js:219  const cancelOpp = await createOpp(tokens.admin, 'CANCEL');
+    review-platform/tests/test_robot_workbench.js:269  const inviteOpp = await createOpp(tokens.support, 'INVITE');
+    review-platform/tests/test_robot_workbench.js:279  const reviewedOpp = await createOpp(tokens.sales, 'HAS-REVIEW');
+    review-platform/tests/test_robot_workbench.js:366  const dispatchOpp = await createOpp(tokens.sales, 'DISPATCH');
+    review-platform/tests/test_robot_workbench.js:388  const replayOpp = await createOpp(tokens.admin, 'REPLAY');
+    review-platform/tests/test_robot_workbench.js:418  const wOpp = await createOpp(tokens.sales, 'WEBFAIL');
+[workbench 只读聚合体] server.js:1718-1749 体内写语句 0 处(零)
+[invite-review 实现] server.js:267-278 体内写语句 0 处(零)
+[createTasks 入箱循环] server.js:660-674 体内写语句 1 处: INSERT
+
+## 5) task_dispatch 入箱口唯一
+[enqueueRobotOutbox 全仓调用点] 命中 4 处(含定义):
+    server.js:253  function enqueueRobotOutbox(record, actor) {
+    server.js:277  const row = enqueueRobotOutbox(record, user);
+    server.js:672  enqueueRobotOutbox(record, null);
+    server.js:2576  const row = enqueueRobotOutbox(buildReviewInvite({ opp, targetUser: target, baseUrl: publicBaseUrl() }), user);
+[task_dispatch 出现点] 命中 6 处:
+    server.js:281  const NOTIFY_EVENTS = ['red_reject', 'judged', 'task_dispatch', 'green_publish', 'archived', 'returned', 'weekly', 'xo_push'];
+    server.js:285  red_reject: ['applicant', 'notify'], judged: ['applicant', 'notify'], task_dispatch: ['dept', 'notify'],
+    server.js:290  red_reject: '红灯自动打回', judged: '研判完成', task_dispatch: '前置评审任务分发', green_publish: '评审结论·绿灯发布',
+    server.js:2119  notifySafe('notify', `### 前置评审任务分发\n**${review.title}**(第 ${round} 轮)已提交,前置评审任务已分发至相关部门。\n[打开评审单](${reviewLink(review.id)})`, { title: '评审任务分发', phone
+    robot-orchestrator.js:44  event: 'task_dispatch', target_key: `dept:${dept}`, provider: 'dingtalk',
+    robot-orchestrator.js:45  idempotency_key: `task_dispatch:${review.id}:${review.round}:${dept}`,
+[新增行里的 task_dispatch] 命中 9 处(须全部落在 createTasks 一处循环内):
+    review-platform/tests/test_robot_admin.js:222  const outbox1 = tryAll("SELECT idempotency_key,target_key FROM robot_outbox WHERE review_id=? AND event='task_dispatch'", f1.rid);
+    review-platform/tests/test_robot_admin.js:392  // 既不碰历史轮/他人行, 又让每轮 RB 不再往共享库叠加 task_dispatch 行
+    review-platform/robot-orchestrator.js:44  event: 'task_dispatch', target_key: `dept:${dept}`, provider: 'dingtalk',
+    review-platform/robot-orchestrator.js:45  idempotency_key: `task_dispatch:${review.id}:${review.round}:${dept}`,
+    review-platform/tests/test_robot_workbench.js:377  const out = await raw(tokens.admin, '/api/admin/robot/outbox?event=task_dispatch&limit=200');
+    review-platform/tests/test_robot_workbench.js:405  // 非空转: 先由 /api/admin/robot/test 探活证明该目标真的失败, 再由矩阵断言 task_dispatch 处于放行(否则本条判 FAIL 不跳过)
+    review-platform/tests/test_robot_workbench.js:417  dispatchRow = (mtx.events || []).find(e => e.event === 'task_dispatch') || {};
+    review-platform/tests/test_robot_workbench.js:431  wRows = all("SELECT * FROM robot_outbox WHERE review_id=? AND event='task_dispatch'", wReview.id) || [];
+    review-platform/tests/test_robot_orchestrator.js:50  assert.strictEqual(rows[0].idempotency_key, 'task_dispatch:7:2:财务BP');
+
+## 6) config.json 不入 diff / 不被本轮触碰
+git diff --name-only 命中 config.json = 0
+git ls-files 跟踪 config.json = 0
+git check-ignore 判定 = .gitignore:8:review-platform/config.json	review-platform/config.json

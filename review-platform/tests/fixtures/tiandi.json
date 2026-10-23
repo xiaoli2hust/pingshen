@@ -1,0 +1,25 @@
+{
+  "_meta": {
+    "source": "《产品方案.md》天地图对话剧本（V1.2 总体流程同源），自演算构造",
+    "extracted": "2026-10-08",
+    "note": "技能①剧本输入：销售口述'合同 240 万，分包 100 万，交付处，220 人天，差旅 2 万'。sales_labor 留空（0）走公式估值 140万×1727=241780；§3.2 十项锚定已 node 实算验证（contribution 529630.27 曾由手算 529630.26 修正为实算值）"
+  },
+  "project_name": "天地图数据生产项目",
+  "customer": "江西省自然资源测绘与监测院",
+  "contract": 2400000,
+  "sub_cost": 1000000,
+  "sw_outsource": 0,
+  "flex_labor": 0,
+  "sales_labor": 0,
+  "sales_travel": 0,
+  "sales_entertain": 0,
+  "sales_marketing": 0,
+  "incentive_factor": 1,
+  "dev_dept": "交付处",
+  "dev_pd": 220,
+  "prod_pd": 0,
+  "rd_outsource": 0,
+  "pm_cost": 0,
+  "del_travel": 20000,
+  "del_other": 0
+}

@@ -1,0 +1,18 @@
+PASS - PA-PL00008068-A 原表关键标签齐全(审计有效性) | 缺: 
+PASS - PA-PL00008068-B 逐字段对账 15 项一致(原表值=解析值)
+PASS - PA-PL00008068-C 商机名称为短名(可作 title) | "昆山市消防要素可视化分析平台"
+PASS - PA-PL00008572-A 原表关键标签齐全(审计有效性) | 缺: 
+PASS - PA-PL00008572-B 逐字段对账 15 项一致(原表值=解析值)
+PASS - PA-PL00008572-C 商机名称为短名(可作 title) | "江西省天地图POI数据服务项目"
+PASS - PA-PL00008572-D 明确“是否涉及数据评审”优先于旧模板兜底问题 | "是"
+PASS - PA-PL00008572-E 明确 data_review 溯源到 A26/D26 | {"label":"是否涉及数据评审","lab_pos":[25,0],"val_pos":[25,3]}
+PASS - PA-PL00008111-A 原表关键标签齐全(审计有效性) | 缺: 
+PASS - PA-PL00008111-B 逐字段对账 15 项一致(原表值=解析值)
+PASS - PA-PL00008111-C 商机名称为短名(可作 title) | "坪山区三维数据更新2026"
+PASS - PA-PL00008111-D 旧模板用数据跨境/红线问题兜底 data_review=否 | "否"
+PASS - PA-PL00008111-E 旧模板 data_review 溯源到 G23/I23 | {"label":"是否涉及数据跨境传输或红线禁止数据","lab_pos":[22,6],"val_pos":[22,8]}
+PASS - PA-PRESALE-PERIOD-A 售前日期区间按含首尾天数折算并向上取整为3个月 | 3
+PASS - PA-PRESALE-PERIOD-B 售前周期溯源到 G11/I11 | {"label":"预计售前实施周期","lab_pos":[10,6],"val_pos":[10,8]}
+
+15 passed, 0 failed -> ALL PASS
+

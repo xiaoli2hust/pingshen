@@ -1,0 +1,224 @@
+{
+  "preconditions": 5,
+  "fixtureCodePattern": "^PL-[A-Za-z0-9]",
+  "explicitIds": "F:\\workbuddy\\9\\review-platform\\tests\\dg_cleanup_idlist.json",
+  "explicitIdsSha256": "373ef4cbdee917a45769669f68b59cbeb5586d77ec981adf85be60906e35e8bc",
+  "sha256": {
+    "before": "96cf5ea46f9a044eafd8c149bb8b9e136aec8024d561aab3f2b7febb558574d4",
+    "after": "9cddd8af0684e7ae5d0cf40dff54523329a0b1ab99029da9a5030afd86de86b0"
+  },
+  "retainedReviews": [
+    [
+      1,
+      "bid",
+      "PL00007297",
+      "returned",
+      "red",
+      1
+    ],
+    [
+      2,
+      "presale",
+      "PL00008330",
+      "archived",
+      "yellow",
+      2
+    ],
+    [
+      3,
+      "bid",
+      "PL00006204",
+      "archived",
+      "yellow",
+      3
+    ],
+    [
+      4,
+      "bid",
+      "PL00008026",
+      "archived",
+      "yellow",
+      4
+    ],
+    [
+      5,
+      "bid",
+      "PL00008210",
+      "archived",
+      "yellow",
+      5
+    ],
+    [
+      6,
+      "bid",
+      "PL00008314",
+      "archived",
+      "yellow",
+      6
+    ]
+  ],
+  "before": {
+    "agent_messages": {
+      "count": 258,
+      "sha256": "6b6f70a3838e3637ddf4f585c9aee9009d8baa52b8a56c912f1232394e826c63"
+    },
+    "attachments": {
+      "count": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "budget_delivery": {
+      "count": 72,
+      "sha256": "f4b2a09f907ac7038f9e3d81866a78fd8d929f4846d89fcbace3c7394624d63f"
+    },
+    "budgets": {
+      "count": 98,
+      "sha256": "71298010383aa9c8234d2bbf2b445ff6621110cccb747bb7345bc7a493db815a"
+    },
+    "events": {
+      "count": 604,
+      "sha256": "22f7ab81756ffc90ee46e60bdf6d3115b10e5e1244c4da871f1a46ace7563f4d"
+    },
+    "llm_calls": {
+      "count": 41,
+      "sha256": "0d2b81ee6af9e9c4a9014ad6dc230c06aee4a333fc43cde9c211e5854c622642"
+    },
+    "notify_matrix": {
+      "count": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "opp_delivery": {
+      "count": 26,
+      "sha256": "9d89be63d0ce90d7d20b6c13048ede1db9273f75cf90e9379d987a33421ff7e6"
+    },
+    "opps": {
+      "count": 50,
+      "sha256": "9d15b20f525a06497a84d2ae502e83b48d01d0315359d7196db176d9d39560b1"
+    },
+    "reviews": {
+      "count": 93,
+      "sha256": "e755a472ae092789f8b9a188ed1c244aba43f6b7bc179b2eff9e998029d47c86"
+    },
+    "robot_instances": {
+      "count": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "robot_outbox": {
+      "count": 90,
+      "sha256": "44f1e22dc15092ff4860916940ff343f52ae57ed14575967833b5a89ca49a796"
+    },
+    "robot_targets": {
+      "count": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "robot_user_bindings": {
+      "count": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "robot_whitelist": {
+      "count": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "sessions": {
+      "count": 263,
+      "sha256": "e450665b30e76118f8aa5220c59f677839472d50c58df7b4d5ee812ec1955704"
+    },
+    "settings": {
+      "count": 20,
+      "sha256": "ea1b9df294928b82c73be72b5dc806c90707b8a48d5387997244bb75b84f7d61"
+    },
+    "sqlite_sequence": {
+      "count": 10,
+      "sha256": "53676542dde0d47fa0eac102372f728a3ff5794559f8e063c2c0821fe6034e31"
+    },
+    "tasks": {
+      "count": 695,
+      "sha256": "48f0dab25c2926fc18634f8ee528ee98dfc976281697253329029fca3371ea3f"
+    },
+    "users": {
+      "count": 10,
+      "sha256": "c26ee81a99855f138e0d8ed3be26df1d6b13539db0eca65aea972350d1383804"
+    }
+  },
+  "after": {
+    "agent_messages": {
+      "count": 18,
+      "sha256": "0585ee1158f165400357c32116fdd5d80da0c7abdddb197deeced12f3f9c0665"
+    },
+    "attachments": {
+      "count": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "budget_delivery": {
+      "count": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "budgets": {
+      "count": 6,
+      "sha256": "9cb75b8a099fe37f0fe36b8727f32ddd07eef858e3a0ab3109c517759d98bd74"
+    },
+    "events": {
+      "count": 93,
+      "sha256": "8271c901ae709be704738bd754b0f147a58e9d225a76ed3da95ae0cd54a40623"
+    },
+    "llm_calls": {
+      "count": 41,
+      "sha256": "0d2b81ee6af9e9c4a9014ad6dc230c06aee4a333fc43cde9c211e5854c622642"
+    },
+    "notify_matrix": {
+      "count": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "opp_delivery": {
+      "count": 7,
+      "sha256": "a645bd4ffe90c3fabc3cbd8329df55fc66e6f42a126fc996ff41a11947269215"
+    },
+    "opps": {
+      "count": 7,
+      "sha256": "1782362043ed919f1e462b859ca1023bdb792d23b2041ad2ce86238c360a3516"
+    },
+    "reviews": {
+      "count": 6,
+      "sha256": "9f9a07718b34f692b417973dd4b1cb5ec0015fbdf2c46f4be9e28ead60b20eac"
+    },
+    "robot_instances": {
+      "count": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "robot_outbox": {
+      "count": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "robot_targets": {
+      "count": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "robot_user_bindings": {
+      "count": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "robot_whitelist": {
+      "count": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "sessions": {
+      "count": 263,
+      "sha256": "e450665b30e76118f8aa5220c59f677839472d50c58df7b4d5ee812ec1955704"
+    },
+    "settings": {
+      "count": 20,
+      "sha256": "ea1b9df294928b82c73be72b5dc806c90707b8a48d5387997244bb75b84f7d61"
+    },
+    "sqlite_sequence": {
+      "count": 10,
+      "sha256": "53676542dde0d47fa0eac102372f728a3ff5794559f8e063c2c0821fe6034e31"
+    },
+    "tasks": {
+      "count": 55,
+      "sha256": "ae17f8bd5624826af9b7cb8c4657d34762aff9e330cdf34534999874123779a0"
+    },
+    "users": {
+      "count": 10,
+      "sha256": "c26ee81a99855f138e0d8ed3be26df1d6b13539db0eca65aea972350d1383804"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+PASS - HL-1 实验室页(上传区+调优表格)
+PASS - HL-2 调优表展示字段与关键词(含 contract_amount)
+PASS - HL-3 对账表渲染+一键调优列
+PASS - HL-4 未匹配标签行有字段下拉(可一键关联) | selects=118
+PASS - HL-7 实验室左右分区+原表证据网格 | panels=2 cells=196
+PASS - HL-8 点击对账行→原表格子聚焦 | PartA：项目基础信息（由申请人填写）
+            未匹配
+    | pick=impRvC_2_0
+PASS - HL-5 添加关键词生效(chips 新词+未保存标记)
+PASS - HL-6 保存调优反馈 | 已保存——勾选「应用调优映射」后点「解析并对照」验证
+
+8 passed, 0 failed -> ALL PASS
+

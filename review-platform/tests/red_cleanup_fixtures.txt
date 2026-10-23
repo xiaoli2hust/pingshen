@@ -1,0 +1,2 @@
+FAIL - DG-00 清理工具尚不存在，受保护删除能力未实现
+0 passed, 1 failed -> SOME FAIL

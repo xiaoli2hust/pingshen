@@ -1,0 +1,13 @@
+PASS - A1 无预算表无关联提交被拦截
+PASS - A1 建单即关联预算单(budget_id 落库)
+PASS - A2 预算单实算 margin≈2.57(交付处×1696, dev_dept 模型)
+PASS - A3 关联锁定预算单可提交(轮次=1)
+PASS - A5 综合灯态=黄(由预算单实算毛利率触发, 而非表单粗填20%)
+PASS - A6 贡献利润判黄且标注"取自关联预算单"
+PASS - B1 退回后状态=returned
+PASS - B2 重新提交后轮次=2
+PASS - B3 二轮完成后自动研判(judged, 绿灯)
+PASS - B4 第一轮旧任务已作废留痕
+
+10 passed, 0 failed -> ALL PASS
+

@@ -1,0 +1,159 @@
+{
+  "at": "2026-10-20T20:34:41.580Z",
+  "scope": "actual guard VM; fake subprocess/identity/FS/DB/HTTP; no process killed or application loaded",
+  "guardSha256": "1528ba76c4ff9d53f0d95c186d941abbc1c8dd540d0f190c4f85d790d3a26e25",
+  "passed": 0,
+  "failed": 5,
+  "rows": [
+    {
+      "name": "GT-01 超时先终止自有测试树，再停服务并还原",
+      "mode": "timeout",
+      "events": [
+        "snap",
+        "old-suite",
+        "app-stop",
+        "diff",
+        "restore"
+      ],
+      "error": "",
+      "summary": {
+        "tag": "controlled",
+        "script": "controlled.js",
+        "log": "controlled.txt",
+        "exit": null,
+        "secs": "0.0",
+        "diff": "controlled-diff.json",
+        "stopped": true,
+        "restored": true,
+        "errors": [],
+        "configUnchanged": true,
+        "offline": true,
+        "preload": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+        "preloadSha256": "43a7988fa8cc40067190d3d193234d5296a769c16855a4d2413d071a4d8156c9",
+        "at": "2026-10-21 04:34:41 CST"
+      },
+      "status": "FAIL",
+      "assertion": "timeout left owned browser descendants alive"
+    },
+    {
+      "name": "GT-02 PID身份已变拒杀且绝不还原数据库",
+      "mode": "identity",
+      "events": [
+        "snap",
+        "old-suite",
+        "app-stop",
+        "diff",
+        "restore"
+      ],
+      "error": "",
+      "summary": {
+        "tag": "controlled",
+        "script": "controlled.js",
+        "log": "controlled.txt",
+        "exit": null,
+        "secs": "0.0",
+        "diff": "controlled-diff.json",
+        "stopped": true,
+        "restored": true,
+        "errors": [],
+        "configUnchanged": true,
+        "offline": true,
+        "preload": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+        "preloadSha256": "43a7988fa8cc40067190d3d193234d5296a769c16855a4d2413d071a4d8156c9",
+        "at": "2026-10-21 04:34:41 CST"
+      },
+      "status": "FAIL",
+      "assertion": "unsafe suite cleanup overwrote database\n\ntrue !== false\n"
+    },
+    {
+      "name": "GT-03 树终止失败显式失败且绝不还原数据库",
+      "mode": "kill",
+      "events": [
+        "snap",
+        "old-suite",
+        "app-stop",
+        "diff",
+        "restore"
+      ],
+      "error": "",
+      "summary": {
+        "tag": "controlled",
+        "script": "controlled.js",
+        "log": "controlled.txt",
+        "exit": null,
+        "secs": "0.0",
+        "diff": "controlled-diff.json",
+        "stopped": true,
+        "restored": true,
+        "errors": [],
+        "configUnchanged": true,
+        "offline": true,
+        "preload": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+        "preloadSha256": "43a7988fa8cc40067190d3d193234d5296a769c16855a4d2413d071a4d8156c9",
+        "at": "2026-10-21 04:34:41 CST"
+      },
+      "status": "FAIL",
+      "assertion": "Expected values to be strictly equal:\n\nfalse !== true\n"
+    },
+    {
+      "name": "GT-04 正常非零测试保持结果并安全还原，不杀树",
+      "mode": "normal",
+      "events": [
+        "snap",
+        "old-suite",
+        "app-stop",
+        "diff",
+        "restore"
+      ],
+      "error": "",
+      "summary": {
+        "tag": "controlled",
+        "script": "controlled.js",
+        "log": "controlled.txt",
+        "exit": 1,
+        "secs": "0.0",
+        "diff": "controlled-diff.json",
+        "stopped": true,
+        "restored": true,
+        "errors": [],
+        "configUnchanged": true,
+        "offline": true,
+        "preload": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+        "preloadSha256": "43a7988fa8cc40067190d3d193234d5296a769c16855a4d2413d071a4d8156c9",
+        "at": "2026-10-21 04:34:41 CST"
+      },
+      "status": "FAIL",
+      "assertion": "Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- true\n"
+    },
+    {
+      "name": "GT-05 无PID起动错误可安全还原并明确失败",
+      "mode": "spawn",
+      "events": [
+        "snap",
+        "old-suite",
+        "app-stop",
+        "diff",
+        "restore"
+      ],
+      "error": "",
+      "summary": {
+        "tag": "controlled",
+        "script": "controlled.js",
+        "log": "controlled.txt",
+        "exit": null,
+        "secs": "0.0",
+        "diff": "controlled-diff.json",
+        "stopped": true,
+        "restored": true,
+        "errors": [],
+        "configUnchanged": true,
+        "offline": true,
+        "preload": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+        "preloadSha256": "43a7988fa8cc40067190d3d193234d5296a769c16855a4d2413d071a4d8156c9",
+        "at": "2026-10-21 04:34:41 CST"
+      },
+      "status": "FAIL",
+      "assertion": "Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- true\n"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+PASS - API-23 草稿单 200 返回 light/route/items
+PASS - API-23 dry-run 不改 status(仍 draft)
+PASS - API-23 预判黄项(贡献利润 5.52)
+PASS - J-02 无关联回落 budget_json(取自在线预算表)
+PASS - J-01 关联单研判取 budgets.calc(黄, 非表单 99 绿)
+PASS - J-01 理由标注取自关联预算单
+PASS - J-02 presale 在线预算单全流程研判正常(judged)
+PASS - PRE 全绿单就绪(judged/green)
+PASS - API-22 普通申请人 403
+PASS - API-21 支持组录结论 200
+PASS - API-21 四列落库(result/note/by/at)
+PASS - API-21 addEvent 留痕(录入结论)
+PASS - N-01 绿灯发布 markdown 到委员会群
+PASS - N-01 payload 含项目名/结论/链接
+PASS - N-01 @申请人手机号
+PASS - R-33 冲突结论录入 200
+PASS - R-33 路由升级 XO(意见冲突重路由)
+PASS - R-33 灯色不变(仍 yellow)
+PASS - R-33 reroute_xo 事件留痕
+PASS - N-02 webhook 失败主流程仍 200(不 throw, 不久等)
+PASS - N-03 同一周一两次仅发一次(幂等)
+
+21 passed, 0 failed -> ALL PASS
+config.json 通知键已恢复
+日志已写入: tests\rm_gatefinal2_08_suite.txt
+
+(node:32432) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)

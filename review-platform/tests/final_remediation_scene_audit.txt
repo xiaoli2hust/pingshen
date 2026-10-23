@@ -1,0 +1,396 @@
+{
+  "at": "2026-10-21 07:13:00 CST",
+  "scope": "read-only frozen sources, original workflow tuples, config fingerprint, content-verified scratch candidates and recorded process IDs; no deletion or application/network call",
+  "checks": [
+    {
+      "name": "all 55 frozen source files unchanged during final gate",
+      "ok": true,
+      "evidence": []
+    },
+    {
+      "name": "guard and preload frozen during final gate",
+      "ok": true,
+      "evidence": {
+        "guard": "d67d6d0426ea5e3da90c2995453b3a26ad030db8ba5ae13bbd21d0bd7d80edda",
+        "preload": "669c56f487378b622b5d0c2e0894fee70adec3ffa952681d08aa7bc8602d3b1e"
+      }
+    },
+    {
+      "name": "real config bytes and fingerprint unchanged",
+      "ok": true,
+      "evidence": {
+        "bytes": 270,
+        "sha16": "f285c66ad4790370"
+      }
+    },
+    {
+      "name": "real config not tracked by git",
+      "ok": true,
+      "evidence": {
+        "status": 0,
+        "tracked": ""
+      }
+    },
+    {
+      "name": "six original workflow tuples preserved exactly",
+      "ok": true,
+      "evidence": [
+        [
+          1,
+          "bid",
+          "PL00007297",
+          "returned",
+          "red",
+          1
+        ],
+        [
+          2,
+          "presale",
+          "PL00008330",
+          "archived",
+          "yellow",
+          2
+        ],
+        [
+          3,
+          "bid",
+          "PL00006204",
+          "archived",
+          "yellow",
+          3
+        ],
+        [
+          4,
+          "bid",
+          "PL00008026",
+          "archived",
+          "yellow",
+          4
+        ],
+        [
+          5,
+          "bid",
+          "PL00008210",
+          "archived",
+          "yellow",
+          5
+        ],
+        [
+          6,
+          "bid",
+          "PL00008314",
+          "archived",
+          "yellow",
+          6
+        ]
+      ]
+    },
+    {
+      "name": "six original budgets remain locked",
+      "ok": true,
+      "evidence": [
+        {
+          "id": 1,
+          "status": "locked"
+        },
+        {
+          "id": 2,
+          "status": "locked"
+        },
+        {
+          "id": 3,
+          "status": "locked"
+        },
+        {
+          "id": 4,
+          "status": "locked"
+        },
+        {
+          "id": 5,
+          "status": "locked"
+        },
+        {
+          "id": 6,
+          "status": "locked"
+        }
+      ]
+    },
+    {
+      "name": "all seven real delivery anchors remain confirmed",
+      "ok": true,
+      "evidence": [
+        {
+          "opp_code": "PL00006204",
+          "status": "confirmed"
+        },
+        {
+          "opp_code": "PL00007297",
+          "status": "confirmed"
+        },
+        {
+          "opp_code": "PL00008026",
+          "status": "confirmed"
+        },
+        {
+          "opp_code": "PL00008210",
+          "status": "confirmed"
+        },
+        {
+          "opp_code": "PL00008314",
+          "status": "confirmed"
+        },
+        {
+          "opp_code": "PL00008330",
+          "status": "confirmed"
+        },
+        {
+          "opp_code": "PL00008572",
+          "status": "confirmed"
+        }
+      ]
+    },
+    {
+      "name": "original outbox remains local preview only",
+      "ok": true,
+      "evidence": [
+        {
+          "status": "preview",
+          "n": 90
+        }
+      ]
+    },
+    {
+      "name": "scratch candidates match complete source rows and unique per-cycle cardinality",
+      "ok": true,
+      "evidence": {
+        "cardinality": [
+          {
+            "stage": "pre",
+            "mk": 1,
+            "c3": 6,
+            "ok": true
+          },
+          {
+            "stage": "final",
+            "mk": 1,
+            "c3": 6,
+            "ok": true
+          }
+        ],
+        "unverified": []
+      }
+    },
+    {
+      "name": "final app PID bound to recorded launch log",
+      "ok": true,
+      "evidence": 37292
+    },
+    {
+      "name": "recorded final guard app and suite process IDs no longer exist",
+      "ok": true,
+      "evidence": {
+        "ids": [
+          26200,
+          35584,
+          15192,
+          37292
+        ],
+        "status": 0,
+        "remaining": "",
+        "error": ""
+      }
+    }
+  ],
+  "passed": 11,
+  "failed": 0,
+  "originalCounts": {
+    "tasks": 695,
+    "pending": 348,
+    "reviews": 93,
+    "opps": 50
+  },
+  "scratch": [
+    {
+      "name": "_c3hi1792534419626.xlsx",
+      "bytes": 5137,
+      "sha256": "8f505ac873ba21ab580b8af80094548885776dabb2b4304246b4b459e677fce1",
+      "generator": "tests/test_opp360.js:620-632",
+      "cycle": "pre",
+      "sourceRun": "h8oa6409a7",
+      "expectedCase": 0,
+      "contentMatches": true,
+      "untracked": true,
+      "createdWithinCycle": true,
+      "ownershipVerified": true
+    },
+    {
+      "name": "_c3hi1792534424817.xlsx",
+      "bytes": 5139,
+      "sha256": "dcbb6b645f0fd6c91f9c03cbe504dc0e55a1432808cb73ac81ce03e923b4d839",
+      "generator": "tests/test_opp360.js:620-632",
+      "cycle": "pre",
+      "sourceRun": "h8oa6409a7",
+      "expectedCase": 1,
+      "contentMatches": true,
+      "untracked": true,
+      "createdWithinCycle": true,
+      "ownershipVerified": true
+    },
+    {
+      "name": "_c3hi1792534436087.xlsx",
+      "bytes": 5137,
+      "sha256": "1219ed61c7ea0c6e5a93c7ef26853f230d9b528ee5d5c3d1c92249f7f2353320",
+      "generator": "tests/test_opp360.js:620-632",
+      "cycle": "pre",
+      "sourceRun": "h8oa6409a7",
+      "expectedCase": 2,
+      "contentMatches": true,
+      "untracked": true,
+      "createdWithinCycle": true,
+      "ownershipVerified": true
+    },
+    {
+      "name": "_c3hi1792534443004.xlsx",
+      "bytes": 5137,
+      "sha256": "a4566bab87c157ca1aa72d0213a3a07c9a2c4482a38fab0bdce7b7fad0ce655b",
+      "generator": "tests/test_opp360.js:620-632",
+      "cycle": "pre",
+      "sourceRun": "h8oa6409a7",
+      "expectedCase": 3,
+      "contentMatches": true,
+      "untracked": true,
+      "createdWithinCycle": true,
+      "ownershipVerified": true
+    },
+    {
+      "name": "_c3hi1792534448519.xlsx",
+      "bytes": 5140,
+      "sha256": "8948d5e25023a621ec8f6928e5796f0124dac1b79b3140df3d8a4a6c460feca3",
+      "generator": "tests/test_opp360.js:620-632",
+      "cycle": "pre",
+      "sourceRun": "h8oa6409a7",
+      "expectedCase": 4,
+      "contentMatches": true,
+      "untracked": true,
+      "createdWithinCycle": true,
+      "ownershipVerified": true
+    },
+    {
+      "name": "_c3hi1792534454341.xlsx",
+      "bytes": 5140,
+      "sha256": "063d442899678fbc52417bf2ff88fe223d8b9646bb1492a40db93b6b498a48f7",
+      "generator": "tests/test_opp360.js:620-632",
+      "cycle": "pre",
+      "sourceRun": "h8oa6409a7",
+      "expectedCase": 5,
+      "contentMatches": true,
+      "untracked": true,
+      "createdWithinCycle": true,
+      "ownershipVerified": true
+    },
+    {
+      "name": "_c3hi1792536548035.xlsx",
+      "bytes": 5138,
+      "sha256": "b048efbe48fd7f0e47797fded1f3cb3ba53493c9b8815d038f54a06276a836d7",
+      "generator": "tests/test_opp360.js:620-632",
+      "cycle": "final",
+      "sourceRun": "h9xw18dffc",
+      "expectedCase": 0,
+      "contentMatches": true,
+      "untracked": true,
+      "createdWithinCycle": true,
+      "ownershipVerified": true
+    },
+    {
+      "name": "_c3hi1792536553731.xlsx",
+      "bytes": 5141,
+      "sha256": "4b05fed451341d2c81d0b669f5878edb24eeaff8983a3884982c2f87ede0adcc",
+      "generator": "tests/test_opp360.js:620-632",
+      "cycle": "final",
+      "sourceRun": "h9xw18dffc",
+      "expectedCase": 1,
+      "contentMatches": true,
+      "untracked": true,
+      "createdWithinCycle": true,
+      "ownershipVerified": true
+    },
+    {
+      "name": "_c3hi1792536563314.xlsx",
+      "bytes": 5138,
+      "sha256": "34b2224414bbc42473f9bbabaa312868c1f2d312da48cb16ee831716d4443bb7",
+      "generator": "tests/test_opp360.js:620-632",
+      "cycle": "final",
+      "sourceRun": "h9xw18dffc",
+      "expectedCase": 2,
+      "contentMatches": true,
+      "untracked": true,
+      "createdWithinCycle": true,
+      "ownershipVerified": true
+    },
+    {
+      "name": "_c3hi1792536568861.xlsx",
+      "bytes": 5138,
+      "sha256": "b9cc2043a1c701608e1ec0f19f6c13c1f62dbdfdfeb759f0bd56ac3371a9d2fd",
+      "generator": "tests/test_opp360.js:620-632",
+      "cycle": "final",
+      "sourceRun": "h9xw18dffc",
+      "expectedCase": 3,
+      "contentMatches": true,
+      "untracked": true,
+      "createdWithinCycle": true,
+      "ownershipVerified": true
+    },
+    {
+      "name": "_c3hi1792536574039.xlsx",
+      "bytes": 5140,
+      "sha256": "546724d5fbc5c4fd6401a3c5eb895a0e9449590079befe74e8c975e87697c5a1",
+      "generator": "tests/test_opp360.js:620-632",
+      "cycle": "final",
+      "sourceRun": "h9xw18dffc",
+      "expectedCase": 4,
+      "contentMatches": true,
+      "untracked": true,
+      "createdWithinCycle": true,
+      "ownershipVerified": true
+    },
+    {
+      "name": "_c3hi1792536579314.xlsx",
+      "bytes": 5141,
+      "sha256": "84135623534ce032652ea04d8f15dd99ef5f16c814f5885b5f830ea6c9d2150c",
+      "generator": "tests/test_opp360.js:620-632",
+      "cycle": "final",
+      "sourceRun": "h9xw18dffc",
+      "expectedCase": 5,
+      "contentMatches": true,
+      "untracked": true,
+      "createdWithinCycle": true,
+      "ownershipVerified": true
+    },
+    {
+      "name": "_mk1792534258401.xlsx",
+      "bytes": 5447,
+      "sha256": "f3253664afa156b4ea8e4a7088e612f77f5e5de6841d8f71925089801b2dc96d",
+      "generator": "tests/test_excel_import.js:125",
+      "cycle": "pre",
+      "sourceRun": "h8oa6409a7",
+      "expectedCase": 0,
+      "contentMatches": true,
+      "untracked": true,
+      "createdWithinCycle": true,
+      "ownershipVerified": true
+    },
+    {
+      "name": "_mk1792536385482.xlsx",
+      "bytes": 5448,
+      "sha256": "1a8df6fac26c7514405a2c5ebedab4553547528c887b1bb6219bdbbad7e804df",
+      "generator": "tests/test_excel_import.js:125",
+      "cycle": "final",
+      "sourceRun": "h9xw18dffc",
+      "expectedCase": 0,
+      "contentMatches": true,
+      "untracked": true,
+      "createdWithinCycle": true,
+      "ownershipVerified": true
+    }
+  ]
+}

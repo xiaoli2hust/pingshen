@@ -1,0 +1,2 @@
+FAIL - C2-04c 真实红灯退回单 next_action==returned | status=200 review=returned/red actual="judged"
+0 passed, 1 failed -> HAS FAIL

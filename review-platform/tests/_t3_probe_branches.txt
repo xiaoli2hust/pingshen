@@ -1,0 +1,24 @@
+OK   未登录访问 bindings 拒绝 | status=401
+OK   清理探针族残留 | bindings=1 targets=1
+OK   基线三表计数 | {"outbox":0,"bindings":0,"targets":0}
+OK   preview 带 payload_json 拒 400 | 400 消息正文由服务端生成, 不接受客户端提交
+OK   preview 带 payload 拒 400 | 400 消息正文由服务端生成, 不接受客户端提交
+OK   preview 非 review_invite 拒 400 | 400 preview 目前只支持 event=review_invite
+OK   preview 未知商机 404 | 404 商机档案不存在
+OK   preview 缺 opp_code 不回落成全表查询(404) | 404 商机档案不存在
+OK   binding status 非枚举拒 400 | 400 status 仅限 unbound/active/disabled
+OK   同一 external_user_id 绑两个用户第二个 409 | 200/409 该钉钉账号已绑定其他用户
+OK   bindings 子路径不吞 404 | 404
+OK   dept: 空部门拒 400 | 400 target_key 仅限 committee/sales_group/dept:<部门>
+OK   external_ref 全空白也回落 unbound | 200/unbound
+OK   cancel: preview 200 / ready 200 / sent 409 / failed 409 | 200/200/409/409
+OK   cancel 后状态真落库 | cancelled/cancelled
+OK   重复 cancel 幂等 200 cancelled | 200/cancelled
+OK   不存在 id 404 | 404 外发记录不存在
+OK   409 响应带原因不含正文 | "当前状态 sent 不可取消(仅 preview/ready 可取消)"
+OK   GET outbox 恒不超 200 行 | rows=4 limit=9999
+OK   GET 行无 payload_json 且 payload 为对象 | attempts,created_at,created_by,event,id,idempotency_key,last_error,opp_code,payload,provider,review_id,sent_at,status,target_key,task_id
+OK   GET 不回 webhook/secret/token/文件正文 | none
+OK   cancel 落库行在 GET 中 status=cancelled | cancelled
+OK   探针行全部删除且三表计数回到基线 | before={"outbox":0,"bindings":0,"targets":0} after={"outbox":0,"bindings":0,"targets":0} deleted=4/1/1
+PROBE ALL OK  (bad=0)

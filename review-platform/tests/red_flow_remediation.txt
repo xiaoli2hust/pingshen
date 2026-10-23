@@ -1,0 +1,94 @@
+PASS - PIN RL-06 未登录 /api/me=401
+PASS - PIN EV-401 证据端点未登录=401
+PASS - PIN MT-01 meta 保留原五键
+FAIL - MT-01 新增证据与夹具元信息
+FAIL - MT-02 夹具样本 "PL00006204"
+FAIL - MT-02 夹具样本 "PL-T3-x"
+FAIL - MT-02 夹具样本 "PL-RW-1-MAIN"
+FAIL - MT-02 夹具样本 "PL-A-DL-1"
+FAIL - MT-02 夹具样本 "PL-AD-RB-1"
+FAIL - MT-02 夹具样本 ""
+FAIL - MT-02 夹具样本 "PL-RM-0845808-1"
+PASS - PIN MT-04 前端不复制夹具正则
+FAIL - MT-03 presale.tech=C
+FAIL - MT-03 presale.resource=C
+FAIL - MT-03 presale.survey_deliver=B
+FAIL - MT-03 presale.sub_early=B
+FAIL - MT-03 presale.credit_history=C
+FAIL - EV-03 presale 指标映射完整且角色/名称同源
+FAIL - EV-04a presale 定量覆盖全集
+FAIL - MT-03 bid.sub_reason=B+C
+FAIL - MT-03 bid.tech=C
+FAIL - MT-03 bid.arrears=C
+FAIL - MT-03 bid.credit=C
+FAIL - MT-03 bid.related_tx=C
+FAIL - MT-03 bid.payment=B
+FAIL - MT-03 bid.upstream=B+C
+FAIL - MT-03 bid.subcontract_limit=B
+FAIL - MT-03 bid.compliance=C
+FAIL - MT-03 bid.data=B+C
+FAIL - EV-03 bid 指标映射完整且角色/名称同源
+FAIL - EV-04a bid 定量覆盖全集
+FAIL - MT-03 change.tech=C
+FAIL - MT-03 change.sub_reason=B+C
+FAIL - MT-03 change.sign_diff=B
+FAIL - MT-03 change.deduction=B+C
+FAIL - EV-03 change 指标映射完整且角色/名称同源
+FAIL - EV-04a change 定量覆盖全集
+FAIL - EV-03 登记 19 项 | 实际=0
+PASS - PRE judge 可独立抽取 12/4/4 定量项
+PASS - PRE 建档→交付确认→预算锁定 | 200/200/200/200
+PASS - PRE ev 草稿→提交 | id=206,status=200,error=
+PASS - PRE pre 草稿→提交 | id=207,status=200,error=
+PASS - PRE chg 草稿→提交 | id=208,status=200,error=
+PASS - PRE ev6 草稿→提交 | id=209,status=200,error=
+PASS - PRE sm1 草稿→提交 | id=210,status=200,error=
+PASS - PRE sm2 草稿→提交 | id=211,status=200,error=
+PASS - PRE nt 草稿→提交 | id=212,status=200,error=
+FAIL - EV-01 分包证据 HTTP 200 与 B+C
+FAIL - EV-01 系统已算分包占比且重点标注
+FAIL - EV-01 表单事实字段/注册标签/值
+FAIL - EV-01 外部依据明确且查询锚点对应本单
+FAIL - EV-01 任务和评审身份准确
+PASS - PIN EV-01 读证据不写事件
+FAIL - EV-02 历史欠款纯 C 且无虚构表单事实
+FAIL - EV-02 查询锚点含预计回款时间
+FAIL - EV-04b bid 已算/未触发/缺失三分区准确 | {"c":[],"n":[],"s":[]}
+FAIL - EV-04b bid 全集完整且两两不交
+FAIL - EV-04b presale 已算/未触发/缺失三分区准确 | {"c":[],"n":[],"s":[]}
+FAIL - EV-04b presale 全集完整且两两不交
+FAIL - EV-04b change 已算/未触发/缺失三分区准确 | {"c":[],"n":[],"s":[]}
+FAIL - EV-04b change 全集完整且两两不交
+FAIL - EV-06 缺分包金额证据披露 skipped
+FAIL - EV-06 研判前 coverage=null
+PASS - PRE 部门逐项打灯后机器自然研判
+FAIL - EV-06 研判后 coverage 仍披露缺分包金额
+PASS - PIN EV-06 judge 不凭空产出缺失定量项
+FAIL - EV-404 不存在任务=404 且准确错误
+FAIL - RD-01 缺①卡片阻塞并给可达锚点
+FAIL - RD-01 确认①后只缺②
+PASS - PRE 第二商机预算锁定
+FAIL - RD-01 ①②齐后三卡就绪
+PASS - PIN RD-03 草稿可变更同商机锁定预算关联
+FAIL - IA-47 人工修正事件包含字段/旧值/新值
+FAIL - IA-47 编辑入口与既有写鉴权一致
+PASS - PIN IA-47 FDE 档案 PUT=403
+FAIL - SM-01 退回保留 done/returned 并作废八项同轮兄弟
+FAIL - SM-01 任务作废事件可审计
+FAIL - SM-01 全量统计增量 cancelled+8/handled+1/zombie+0
+FAIL - SM-01 净统计不计测试夹具
+PASS - PIN SM-01 fde1 待办不回传退回单
+PASS - PIN SM-01 legal1 待办不回传退回单
+PASS - PIN SM-01 再提交自然进入第二轮十项待办
+FAIL - SM-02 支持组代财务判断角色可见
+FAIL - SM-02 代打事件与统计准确
+FAIL - SM-02 本部门判断不误标代理
+FAIL - NT-01 站内待办聚合对应本部门四项指标
+PASS - PIN NT-01 任务分发自然入本地 preview 箱
+FAIL - NT-01 待办真源是同一 outbox 行
+FAIL - NT-01 打完本部门后待办聚合移除本单
+FAIL - NT-02 全量未投递积压不受分页截断
+PASS - PIN NT-02 provider.active=false 且 provider_send=false
+FAIL - NT-02b 能力措辞明确待发送草稿和本地预演
+
+24 passed, 68 failed -> SOME FAIL

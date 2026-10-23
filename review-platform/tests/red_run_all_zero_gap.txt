@@ -1,0 +1,7 @@
+PASS - RG-01 全部实际完成才汇总 ALL PASS | exit=0
+PASS - RG-02 stdout 覆盖缺口即使不在末六行也禁止全绿 | exit=1
+PASS - RG-03 stderr 覆盖缺口禁止全绿 | exit=1
+PASS - RG-04 子套件失败仍汇总失败 | exit=1
+PASS - RG-05 超时未完成不能算通过 | exit=1
+FAIL - RG-06 零缺口统计不能误报缺口 | exit=1 last=36/37 套通过, 失败 0, 覆盖缺口 1, 耗时 0.0s -> COVERAGE GAP
+5 passed, 1 failed -> SOME FAIL

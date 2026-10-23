@@ -1,0 +1,5 @@
+PASS - RO-1 fde1 只读卡文案在且四按钮整体不渲染 | 含只读文案=true 含上传附3解析=false
+PASS - RO-2 明细请求 0 次且 360 恰 1 次(能力位短路, 非发了再吞 403) | GET/delivery=0 GET/360=1 全部=["GET /api/opp/PL00008572/360"]
+PASS - RO-3 零 pageerror(d.delivery.rows 是计数, 对它 .map 即崩) | pageerror=[]
+
+3 passed, 0 failed -> ALL PASS

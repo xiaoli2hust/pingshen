@@ -1,0 +1,32 @@
+PASS - AV-01 未登录 GET /uploads/ 401(附件鉴权) | status=401
+PASS - AV-02 竞态窗口内锁定成功 | lock=200
+PASS - AV-02 chat 被拒 409(条件更新拦住写穿) | chat=409
+PASS - AV-02 锁定 fields 未被改写(sub_cost 仍 1000000) | sub_cost=1000000
+PASS - AV-02 锁定 calc 与快照一致(margin 未被桩数据覆盖)
+PASS - AV-03 payload 原样存储(转义责任在前端)
+PASS - AV-04 断开桩下 10 次 chat 均降级 200
+PASS - AV-04 服务进程仍在线(/api/me 401 响应) | status=401
+PASS - AV-05 draft 单 judge 被拦 400 | status=400
+PASS - AV-05 archived 单 judge 被拦 400(归档不可倒退) | status=400
+PASS - AV-06 退回后其他部门 complete 被拦 400 | status=400
+PASS - AV-06 单据保持 returned(未被自动研判) | status=returned
+PASS - AV-07 双击恰一次 200 一次 400 | [200,400]
+PASS - AV-07 AI 研判事件恰一条(无重复研判) | events=1
+PASS - AV-07 单据 judged(自动研判正常触发)
+PASS - AV-08 非 owner 读详情/对话/版本链均 403 | 403/403/403
+PASS - AV-09 非申请人上传附件被拦 403 | status=403
+PASS - AV-10 decision 同意 200
+PASS - AV-10 通知链接含配置地址(10.0.0.1:8600)且不含 localhost | @13800000001
+### 评审结论·绿灯发布
+**[T]AV-1791994612282** 研判灯态:green, 结论:同意。
+[查看评审单与研判报
+PASS - AV2-01 非 owner 读空明细 /delivery 被拦 403 | status=403
+PASS - AV2-02 非 owner 读有明细单不泄露 rows(403) | status=403 leaked=false
+PASS - AV2-03 非 owner POST /delivery/apply 被拦 403 | status=403
+PASS - AV2-04 owner 读锁定单 /delivery 正常 200 | status=200
+PASS - AV2-05 3000 行 PUT/GET 一致且服务在线(耗时1051ms)
+PASS - AV2-06 毒件解析被拒且不落 rows | import=502
+PASS - AV2-07 超长 content 截断 200 字 | len=200
+PASS - AV2-09 非 review skill 走技能①路径(budget 缺 404) | status=404
+
+27 passed, 0 failed -> ALL PASS

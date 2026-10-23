@@ -1,0 +1,37 @@
+PASS - OD-01 OPP_FIELDS 按内容锚解析成功且为 12 项 | OPP_FIELDS=["title","customer","region","province","biz_line","contract_amount","opp_stage","sign_date","sales","pm","survey","summary"]
+PASS - OD-01 agent.OPP_WHITELIST 存在且键集 ⊆ OPP_FIELDS(集外键=[]) | keys=["title","customer","region","province","biz_line","contract_amount","opp_stage","sales","pm","survey","summary"]
+PASS - OD-01 OPP_REQUIRED(7) ⊆ 白名单(追问集可全部经口语补齐) | OPP_REQUIRED=["title","customer","biz_line","contract_amount","opp_stage","sales","summary"]
+PASS - OD-02 status/opp_code ∉ OPP_FIELDS 且 ∉ 白名单
+PASS - OD-02 对话 200 且 draft 不含 status/opp_code/created_by/source(LLM 与客户端草稿两路注入均丢弃) | status=200 draft={"title":"OD-02","customer":"注入测试客户"}
+PASS - OD-03 200 且 customer 更新为桩值 | status=200 customer=江西省测绘地理信息局
+PASS - OD-03 其余 10 键逐一保持原值且无新增键 | draft={"title":"T11对话建档商机","customer":"江西省测绘地理信息局","region":"华东","province":"江西","biz_line":"G1","contract_amount":240,"opp_stage":"投标决策/投标决策","sales":"王超","pm":"冯金华","survey":"否","summary":"天地图 POI 数据服务项目（OD 套件对话建档用例）"}
+PASS - OD-04 HTTP 200 且 degraded=true | status=200 degraded=true
+PASS - OD-04 已填三键原值不变且无新增键 | draft={"title":"OD-04 降级","customer":"江西省自然资源测绘与监测院","contract_amount":240}
+PASS - OD-04 回复含降级点选提示且列出缺项(missing 恰为 OPP_REQUIRED 未填 4 项) | missing=["biz_line","opp_stage","sales","summary"] reply=大模型暂不可用,本轮未改动已填字段,请在下方表单点选/填写。⏎建档还缺 4 项:业务线/商机阶段/销售/项目概述
+PASS - OD-05 网页 400 / 对话 400 | web=400 dlg=400
+PASS - OD-05 error 逐字相同且不含 missing | web=商机代码不合法:需 2-40 位字母数字开头, 仅可含 . _ - | dlg=商机代码不合法:需 2-40 位字母数字开头, 仅可含 . _ -
+PASS - OD-06 两路径均 400 且 error 逐字相同 | web=待评审商机要素不齐:customer, sales, summary | dlg=待评审商机要素不齐:customer, sales, summary
+PASS - OD-06 missing 恰含 customer/sales/summary 且两路径集合相等 | web=["customer","sales","summary"] dlg=["customer","sales","summary"]
+PASS - OD-06 对话轮(非建档) missing 与网页路径同集且不含 opp_code | turn=200 ["customer","sales","summary"]
+PASS - OD-06 缺项建档未落库(GET 404) | status=404
+PASS - OD-07 对话建档 200 且档案 status=pending | status=200 
+PASS - OD-07 同码再建 409 与网页路径逐字相同 | dlg=商机代码已存在:PL-T11-hy9ezedc25-07 | web=商机代码已存在:PL-T11-hy9ezedc25-07
+PASS - OD-07 无预算单提交被第 1 层拦 400(预算必带) | status=400 请先上传或在线填写《项目贡献毛利率及成本预算表》再提交
+PASS - OD-07 评审单仍为 draft | status=draft
+PASS - OD-08 app.js 存在纯函数 oppLightAgg/oppLightAggHtml 且 L1 概览渲染调用
+PASS - OD-08 夹具: C7 = OD-07 真实在线草稿 + 支持组真实历史补录(history/archived/none, 原件附件/导入事件/0 任务) | od07Rid=335 | import=200 id=336 era="history" status="archived" light="none" archived_at="2024-05-12" decision="通过" form.opp_code="PL-T11-hy9ezedc25-07" | detail=200 title="夹具历史补录单-hy9ezedc25-08" 附件=["历史评审表原件"] 事件=["历史数据导入"] tasks=0
+PASS - OD-08 夹具精确态: reviews 恰 2 行(OD-07 草稿 online/draft + H history/archived), chain 1/0, lights 合计 2, inflight 1, history_total 2 | rows=[[336,"history","archived","none"],[335,"online","draft",null]] chain=[1,0] lights={"red":0,"yellow":0,"green":0,"none":2} agg=[1,2]
+PASS - OD-08 夹具使两列不相等(chain 差值 1 ≠ lights 合计 2)
+PASS - OD-08 inflight = reviews_total - reviews_submitted | {"inflight":1,"chain":{"delivery_confirmed":false,"budget_locked":false,"reviews_total":1,"reviews_submitted":0,"next_action":"confirm_delivery"}}
+PASS - OD-08 history_total = lights 逐项相加 | {"history_total":2,"lights":{"red":0,"yellow":0,"green":0,"none":2}}
+PASS - OD-08 渲染两格分列且各显其值(不合并成单数) | inflight=1 history=2
+NOT EXECUTABLE OD-08-inflight history-draft inflight mutation witness gap(不可计为PASS) | era=history 且 status=draft 的行无已授权 HTTP 产地(历史导入恒 history/archived), 原 SQL INSERT 已删除; 去掉 era 过滤的变异对 inflight 不再可见(2−1 仍为 1), 仅 chain 1/0 见证保留
+PASS - OD-09 基线: 两 fresh code 各 1 张合法在线草稿, [inflight,cumulative] 均为 [1,1] 且 chain 均 1/0 | opp=200/200 草稿=200#337/200#338 历史侧={"agg":[1,1],"chain":[1,0],"rows":[[337,"online","draft"]]} 在线侧={"agg":[1,1],"chain":[1,0],"rows":[[338,"online","draft"]]}
+PASS - OD-09 历史侧加真实 H: 在途列不变 / 历史列 +1 → 精确 [1,2], chain 仍 1/0, 行=[基线草稿 online/draft, H history/archived] | {"h0":[1,1],"h1":[1,2],"chain":[1,0],"rows":[[337,"online","draft"],[339,"history","archived"]]} | import=200 id=339 era="history" status="archived" light="none" archived_at="2024-05-12" decision="通过" form.opp_code="PL-T11-hy9ezedc25-09h" | detail=200 title="夹具历史补录单-hy9ezedc25-09h" 附件=["历史评审表原件"] 事件=["历史数据导入"] tasks=0
+PASS - OD-09 在线侧加第二张真实草稿: 在途列 +1 / 历史列 +1 → 精确 [2,2], chain 2/0, 行=两张 online/draft; 两侧历史列同为 2、在途列只差 1(配对码对照, 非同一行改 era) | {"o0":[1,1],"o1":[2,2],"chain":[2,0],"rows":[[338,"online","draft"],[340,"online","draft"]],"历史侧":[1,2]} 草稿2=200#340
+NOT EXECUTABLE OD-09-flip literal same-record era flip coverage gap(不可计为PASS) | literal same-record era flip has no HTTP interface, not retained(历史导入恒 history/archived, 无改 era 端点), 原 SQL UPDATE 已删除; 配对 fresh code 对照只钉 era 归属, 不证同一行 history→online 转换
+PASS - OD-10 llm_calls 表存在(T9 观测面) | row={"id":76,"ts":"2026-10-21T10:09:11.848Z","profile":"opp","ok":1,"degraded":0,"ms":308,"tokens_est":12,"ref":"opp:"}
+PASS - OD-10 成功轮: profile=opp, ok=1, degraded=0 且与响应 degraded=false 一致 | row={"id":76,"ts":"2026-10-21T10:09:11.848Z","profile":"opp","ok":1,"degraded":0,"ms":308,"tokens_est":12,"ref":"opp:"}
+PASS - OD-10 断开轮: profile=opp, ok=0, degraded=1 且与响应 degraded=true 一致(新行) | row={"id":77,"ts":"2026-10-21T10:09:12.205Z","profile":"opp","ok":0,"degraded":1,"ms":292,"tokens_est":12,"ref":"opp:"}
+OWNED(新 HTTP 夹具) run=hy9ezedc25 codes=["PL-T11-hy9ezedc25-07","PL-T11-hy9ezedc25-09h","PL-T11-hy9ezedc25-09o"] reviews=[335,336,337,338,339,340] budgets=[] | 本轮自建码前缀 PL-T11-hy9ezedc25-* | 清理: 仅靠父级守护恢复演示库与 uploads, 本套无 SQL 清理
+33 passed, 0 failed, 2 NOT EXECUTABLE -> EXECUTED PASS + 2 COVERAGE GAP(不可计为全绿) [OD-08-inflight history-draft inflight mutation witness gap(不可计为PASS); OD-09-flip literal same-record era flip coverage gap(不可计为PASS)] [DISCLOSURE: OD-09 literal same-record era flip has no HTTP interface, not retained; replaced by paired-code comparison]

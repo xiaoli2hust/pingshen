@@ -1,0 +1,107 @@
+PASS - PIN RL-06 未登录 /api/me=401
+PASS - PIN EV-401 证据端点未登录=401
+PASS - PIN MT-01 meta 保留原五键
+PASS - MT-01 新增证据与夹具元信息
+PASS - MT-02 夹具样本 "PL00006204"
+PASS - MT-02 夹具样本 "PL-T3-x"
+PASS - MT-02 夹具样本 "PL-RW-1-MAIN"
+PASS - MT-02 夹具样本 "PL-A-DL-1"
+PASS - MT-02 夹具样本 "PL-AD-RB-1"
+PASS - MT-02 夹具样本 ""
+PASS - MT-02 夹具样本 "PL-RM-7511198-1"
+PASS - PIN MT-04 前端不复制夹具正则
+PASS - ERA-01 era 仅历史导入一个 INSERT 写入点且恒为 history+archived
+PASS - ERA-02 除启动期 era IS NULL 回填外无任何改 era 的 UPDATE
+PASS - ERA-03 归档态无退出入口(状态守卫与写入 WHERE 均不接 archived)
+PASS - ERA-04 变异须被对应分区拒绝: 历史导入写非归档态 | {"期望分区":"INS","变异命中":["INS"],"原码该分区":"空"}
+PASS - ERA-04 变异须被对应分区拒绝: 同一行改 era | {"期望分区":"UPD","变异命中":["UPD"],"原码该分区":"空"}
+PASS - ERA-04 变异须被对应分区拒绝: 归档单可回草稿 | {"期望分区":"GUARD","变异命中":["GUARD"],"原码该分区":"空"}
+PASS - ERA-05 run_all 白名单与三套件 gap() 声明逐字一致且恰四条 | {"decl":["CH-11b","C2-11-identity","OD-08-inflight","OD-09-flip"],"suiteIds":["CH-11b","C2-11-identity","OD-08-inflight","OD-09-flip"]}
+PASS - MT-03 presale.tech=C
+PASS - MT-03 presale.resource=C
+PASS - MT-03 presale.survey_deliver=B
+PASS - MT-03 presale.sub_early=B
+PASS - MT-03 presale.credit_history=C
+PASS - EV-03 presale 指标映射完整且角色/名称同源
+PASS - EV-04a presale 定量覆盖全集
+PASS - MT-03 bid.sub_reason=B+C
+PASS - MT-03 bid.tech=C
+PASS - MT-03 bid.arrears=C
+PASS - MT-03 bid.credit=C
+PASS - MT-03 bid.related_tx=C
+PASS - MT-03 bid.payment=B
+PASS - MT-03 bid.upstream=B+C
+PASS - MT-03 bid.subcontract_limit=B
+PASS - MT-03 bid.compliance=C
+PASS - MT-03 bid.data=B+C
+PASS - EV-03 bid 指标映射完整且角色/名称同源
+PASS - EV-04a bid 定量覆盖全集
+PASS - MT-03 change.tech=C
+PASS - MT-03 change.sub_reason=B+C
+PASS - MT-03 change.sign_diff=B
+PASS - MT-03 change.deduction=B+C
+PASS - EV-03 change 指标映射完整且角色/名称同源
+PASS - EV-04a change 定量覆盖全集
+PASS - EV-03 登记 19 项 | 实际=19
+PASS - PRE judge 可独立抽取 12/4/4 定量项
+PASS - PRE 建档→交付确认→预算锁定 | 200/200/200/200
+PASS - PRE ev 草稿→提交 | id=348,status=200,error=
+PASS - PRE pre 草稿→提交 | id=349,status=200,error=
+PASS - PRE chg 草稿→提交 | id=350,status=200,error=
+PASS - PRE ev6 草稿→提交 | id=351,status=200,error=
+PASS - PRE sm1 草稿→提交 | id=352,status=200,error=
+PASS - PRE sm2 草稿→提交 | id=353,status=200,error=
+PASS - PRE nt 草稿→提交 | id=354,status=200,error=
+PASS - EV-01 分包证据 HTTP 200 与 B+C
+PASS - EV-01 系统已算分包占比且重点标注
+PASS - EV-01 表单事实字段/注册标签/值
+PASS - EV-01 外部依据明确且查询锚点对应本单
+PASS - EV-01 任务和评审身份准确
+PASS - PIN EV-01 读证据不写事件
+PASS - PIN EV-AUTH 无关普通部门登录后仍可只读证据
+PASS - EV-02 历史欠款纯 C 且无虚构表单事实
+PASS - EV-02 查询锚点含预计回款时间
+PASS - EV-04b bid 已算/未触发/缺失三分区准确 | {"c":["分包占比","合同金额","签约转包次数","结算方式","贡献利润","项目运维周期"],"n":["合同担保事项","指定供应商","推广激励","测绘类分包占比","竞业事项"],"s":["条款外激励"]}
+PASS - EV-04b bid 全集完整且两两不交
+PASS - EV-04b presale 已算/未触发/缺失三分区准确 | {"c":["售前实施周期","售前投入占比","售前投入成本","预计签单时间"],"n":[],"s":[]}
+PASS - EV-04b presale 全集完整且两两不交
+PASS - EV-04b change 已算/未触发/缺失三分区准确 | {"c":["成本变动-交付成本"],"n":["分包超进度支付","合同金额","贡献利润"],"s":[]}
+PASS - EV-04b change 全集完整且两两不交
+PASS - EV-06 缺分包金额证据披露 skipped
+PASS - EV-06 研判前 coverage=null
+PASS - PRE 部门逐项打灯后机器自然研判
+PASS - EV-06 研判后 coverage 仍披露缺分包金额
+PASS - PIN EV-06 judge 不凭空产出缺失定量项
+PASS - EV-404 不存在任务=404 且准确错误
+PASS - RD-01 缺①卡片阻塞并给可达锚点
+PASS - RD-01 确认①后只缺②
+PASS - PRE 第二商机预算锁定
+PASS - RD-01 ①②齐后三卡就绪
+PASS - IA-45b admin 全部预算与支持组同范围且含销售预算
+PASS - PIN RD-03 草稿可变更同商机锁定预算关联
+PASS - IA-47 人工修正事件包含字段/旧值/新值
+PASS - IA-47 编辑入口与既有写鉴权一致
+PASS - PIN IA-47 FDE 档案 PUT=403
+PASS - SM-01 退回保留 done/returned 并作废八项同轮兄弟
+PASS - SM-01 任务作废事件可审计
+PASS - SM-01 全量统计增量 cancelled+8/handled+1/zombie+0
+PASS - SM-01 净统计不计测试夹具
+PASS - PIN SM-01 fde1 待办不回传退回单
+PASS - PIN SM-01 legal1 待办不回传退回单
+PASS - EV-04c 推广激励 合同=""/激励=10 属skipped
+PASS - EV-04c 推广激励 合同=""/激励=30 属computed
+PASS - EV-04c 推广激励 合同="100"/激励=10 属notTriggered
+PASS - PIN SM-01 再提交自然进入第二轮十项待办
+PASS - PIN SM-ROUND 真实重提链不存在旧轮pending且旧任务不可再退回
+PASS - SM-02 支持组代财务判断角色可见
+PASS - SM-02 代打事件与统计准确
+PASS - SM-02 本部门判断不误标代理
+PASS - NT-01 站内待办聚合对应本部门四项指标
+PASS - PIN NT-01 任务分发自然入本地 preview 箱
+PASS - NT-01 待办真源是同一 outbox 行
+PASS - NT-01 打完本部门后待办聚合移除本单
+PASS - NT-02 全量未投递积压不受分页截断
+PASS - PIN NT-02 provider.active=false 且 provider_send=false
+PASS - NT-02b 能力措辞明确待发送草稿和本地预演
+
+105 passed, 0 failed -> ALL PASS

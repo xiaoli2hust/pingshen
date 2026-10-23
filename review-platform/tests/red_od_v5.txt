@@ -1,0 +1,31 @@
+PASS - OD-01 OPP_FIELDS 按内容锚解析成功且为 12 项 | OPP_FIELDS=["title","customer","region","province","biz_line","contract_amount","opp_stage","sign_date","sales","pm","survey","summary"]
+PASS - OD-01 agent.OPP_WHITELIST 存在且键集 ⊆ OPP_FIELDS(集外键=[]) | keys=["title","customer","region","province","biz_line","contract_amount","opp_stage","sales","pm","survey","summary"]
+PASS - OD-01 OPP_REQUIRED(7) ⊆ 白名单(追问集可全部经口语补齐) | OPP_REQUIRED=["title","customer","biz_line","contract_amount","opp_stage","sales","summary"]
+PASS - OD-02 status/opp_code ∉ OPP_FIELDS 且 ∉ 白名单
+PASS - OD-02 对话 200 且 draft 不含 status/opp_code/created_by/source(LLM 与客户端草稿两路注入均丢弃) | status=200 draft={"title":"OD-02","customer":"注入测试客户"}
+PASS - OD-03 200 且 customer 更新为桩值 | status=200 customer=江西省测绘地理信息局
+PASS - OD-03 其余 10 键逐一保持原值且无新增键 | draft={"title":"T11对话建档商机","customer":"江西省测绘地理信息局","region":"华东","province":"江西","biz_line":"G1","contract_amount":240,"opp_stage":"投标决策/投标决策","sales":"王超","pm":"冯金华","survey":"否","summary":"天地图 POI 数据服务项目（OD 套件对话建档用例）"}
+PASS - OD-04 HTTP 200 且 degraded=true | status=200 degraded=true
+PASS - OD-04 已填三键原值不变且无新增键 | draft={"title":"OD-04 降级","customer":"江西省自然资源测绘与监测院","contract_amount":240}
+PASS - OD-04 回复含降级点选提示且列出缺项(missing 恰为 OPP_REQUIRED 未填 4 项) | missing=["biz_line","opp_stage","sales","summary"] reply=大模型暂不可用,本轮未改动已填字段,请在下方表单点选/填写。⏎建档还缺 4 项:业务线/商机阶段/销售/项目概述
+PASS - OD-05 网页 400 / 对话 400 | web=400 dlg=400
+PASS - OD-05 error 逐字相同且不含 missing | web=商机代码不合法:需 2-40 位字母数字开头, 仅可含 . _ - | dlg=商机代码不合法:需 2-40 位字母数字开头, 仅可含 . _ -
+PASS - OD-06 两路径均 400 且 error 逐字相同 | web=待评审商机要素不齐:customer, sales, summary | dlg=待评审商机要素不齐:customer, sales, summary
+PASS - OD-06 missing 恰含 customer/sales/summary 且两路径集合相等 | web=["customer","sales","summary"] dlg=["customer","sales","summary"]
+PASS - OD-06 对话轮(非建档) missing 与网页路径同集且不含 opp_code | turn=200 ["customer","sales","summary"]
+PASS - OD-06 缺项建档未落库(GET 404) | status=404
+PASS - OD-07 对话建档 200 且档案 status=pending | status=200 
+PASS - OD-07 同码再建 409 与网页路径逐字相同 | dlg=商机代码已存在:PL-T11-2241071-07 | web=商机代码已存在:PL-T11-2241071-07
+PASS - OD-07 无预算单提交被第 1 层拦 400(预算必带) | status=400 请先上传或在线填写《项目贡献毛利率及成本预算表》再提交
+PASS - OD-07 评审单仍为 draft | status=draft
+FAIL - OD-08 app.js 存在纯函数 oppLightAgg/oppLightAggHtml 且 L1 概览渲染调用
+PASS - OD-08 夹具使两列不相等(chain 差值 1 ≠ lights 合计 2)
+PASS - OD-08 inflight = reviews_total - reviews_submitted | {"inflight":1,"chain":{"delivery_confirmed":false,"budget_locked":false,"reviews_total":1,"reviews_submitted":0,"next_action":"confirm_delivery"}}
+PASS - OD-08 history_total = lights 逐项相加 | {"history_total":2,"lights":{"red":0,"yellow":0,"green":0,"none":2}}
+PASS - OD-08 渲染两格分列且各显其值(不合并成单数) | inflight=1 history=2
+PASS - OD-09 历史单: 在途列不变 / 历史列 +1 | {"a0":[1,1],"a1":[1,2]}
+PASS - OD-09 改回 online(draft): 在途列 +1 / 历史列不变 | {"a1":[1,2],"a2":[2,2]}
+PASS - OD-10 llm_calls 表存在(T9 观测面) | row={"id":46,"ts":"2026-10-19T09:30:44.099Z","profile":"opp","ok":1,"degraded":0,"ms":131,"tokens_est":12,"ref":"opp:"}
+PASS - OD-10 成功轮: profile=opp, ok=1, degraded=0 且与响应 degraded=false 一致 | row={"id":46,"ts":"2026-10-19T09:30:44.099Z","profile":"opp","ok":1,"degraded":0,"ms":131,"tokens_est":12,"ref":"opp:"}
+PASS - OD-10 断开轮: profile=opp, ok=0, degraded=1 且与响应 degraded=true 一致(新行) | row={"id":47,"ts":"2026-10-19T09:30:44.390Z","profile":"opp","ok":0,"degraded":1,"ms":214,"tokens_est":12,"ref":"opp:"}
+29 passed, 1 failed -> HAS FAIL

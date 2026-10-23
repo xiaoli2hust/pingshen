@@ -1,0 +1,29 @@
+PASS - C2-01 旧键全在 reviews/budgets/tasks/lights/opp.code/opp.title | status=200 reviews=161 budgets=86 tasks=660 opp.code="PL00008572"
+PASS - C2-02 delivery 键集恰好等于 status/rows/total_cost/dev_dept/rate/rate_source/updated_at/can_write | 实键=status/rows/total_cost/dev_dept/rate/rate_source/updated_at/can_write
+PASS - C2-02 status ∈ draft/confirmed 且 rows 为数字>=0 | status=confirmed rows=2
+PASS - C2-03 chain 键集恰好等于 delivery_confirmed/budget_locked/reviews_total/reviews_submitted/next_action | 实键=delivery_confirmed/budget_locked/reviews_total/reviews_submitted/next_action
+PASS - C2-03 typeof next_action==string 且 ∈ 枚举 | next_action="lock_budget"
+PASS - C2-04 链序自洽 ①未确认→confirm_delivery / ②未锁定→lock_budget / ③未提交→submit_review | delivery_confirmed=true budget_locked=false submitted=66 next_action="lock_budget" 命中规则=②
+PASS - C2-04b 在线单一张 reviewing 时 next_action==reviewing, 转入结论态后翻 judged(server.js:1737 some 分支实执行, some→every 误写在此夹具必红) | 前置 confirmed=true locked=true submitted=2/2 online状态=["archived","reviewing"] some=true every=false | 在途="reviewing" 反证(转结论态后)="judged"
+PASS - C2-05 建档无单 360 返回 200(旧代码 404) | status=200 error=""
+PASS - C2-05 opp 含 18 要素键 + code | 缺= code="PL-T5-1357751-c05"
+PASS - C2-05 chain.next_action==confirm_delivery | 实="confirm_delivery"
+PASS - C2-06 PL00008572 两端 total_cost 对账(容差 0.01) | 360.delivery.total_cost=58880 /delivery sum.cost=58880 差=0.0000
+PASS - C2-07 rate_source ∈ budget/review/none 且 budget 分支两端 rate 同值(容差 0.001) | rate_source="none" dev_dept=null 360.rate=null /delivery rate=null
+  C2-07 全分支对账(非断言): rate_source="none" 360.rate=null detail.rate=null 相等=true
+PASS - C2-07b 有明细且 dev_dept 命中预算档: rate_source==budget 且两端 rate 同值(容差 0.001, D-22 分支实执行) | rate_source="budget" dev_dept="交付处" 360.rate=1696 detail.rate=1696 360.total_cost=136896 detail.sum.cost=136896
+PASS - C2-08 非四项角色 fde1 读明细 403(旧代码 200) | status=403 error="仅商机建档人/项目经理/销售支持组可查看交付预算明细"
+PASS - C2-08 403 文案含「交付预算明细」 | error="仅商机建档人/项目经理/销售支持组可查看交付预算明细"
+PASS - C2-08 同角色 fde1 读 360 仍 200(只收明细面, 不伤链路引导) | status=200 error=""
+PASS - C2-09 can_write fde1=false / sales=true | fde1=false sales=true
+PASS - C2-09 其余 delivery 键两次逐值相同(能力位不影响摘要) | fde1={"status":"draft","rows":2,"total_cost":136896,"dev_dept":"交付处","rate":1696,"rate_source":"budget","updated_at":"2026-10-15T02:29:19.903Z"} sales={"status":"draft","rows":2,"total_cost":136896,"dev_dept":"交付处","rate":1696,"rate_source":"budget","updated_at":"2026-10-15T02:29:19.903Z"}
+  C2-07 budget 分支补充实测(非断言): code=PL-T5-1357751-c08 rate_source="budget" 360.rate=1696 detail.rate=1696 同值=true
+PASS - C2-10 建档 sales1 can_write=true ⇔ 明细 200 | detail_error=""
+PASS - C2-10 支持组 zhichizu can_write=true ⇔ 明细 200 | detail_error=""
+PASS - C2-10 非四项 fde1 can_write=false ⇔ 明细 403 | detail_error="仅商机建档人/项目经理/销售支持组可查看交付预算明细"
+  C2-10 三身份对账表: [{"label":"建档 sales1","can_write":true,"http":200},{"label":"支持组 zhichizu","can_write":true,"http":200},{"label":"非四项 fde1","can_write":false,"http":403}]
+PASS - C2-11 前置 ①confirmed+②locked 就绪 | lock=200 error=""
+PASS - C2-11 只有历史单: reviews 列表仍含它但 chain 计数为 0 且 next_action=submit_review | reviews.length=1 reviews_total=0 reviews_submitted=0 next_action="submit_review" delivery.status="confirmed" budget_locked=true
+PASS - C2-11 同单改回 era=online: reviews_total=1 且 next_action=judged(反证 era 过滤非死代码) | reviews_total=1 reviews_submitted=1 next_action="judged"
+
+24 passed, 0 failed -> ALL PASS

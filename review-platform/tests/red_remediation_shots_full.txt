@@ -1,0 +1,50 @@
+PASS - PRE 全HTTP建档/确认/锁定/提交/真实部门打灯/退回成功
+FAIL - NT-01 首页站内草稿待办横幅
+PASS - NT-01 深链仅显示指定单待办
+FAIL - IA-48 任务中心全单进度0/10
+FAIL - EV-05 A/B/C三区标题与真实查询锚点 | page.waitForSelector: Timeout 5000ms exceeded.
+FAIL - EV-05 完整评审深链新标签与灯按钮保留
+FAIL - EV-05 证据失败显式披露且保留打灯入口 | page.waitForFunction: Timeout 5000ms exceeded.
+FAIL - IA-44 legal1相关商机导航及本部门单
+FAIL - IA-44 comp1相关商机导航及本部门单
+FAIL - IA-44 data1相关商机导航及本部门单
+FAIL - IA-44 pur1相关商机导航及本部门单
+FAIL - IA-44 fde1相关商机导航及本部门单
+FAIL - IA-45 pm1预算单导航可达
+FAIL - IA-45 sales1预算单导航可达
+FAIL - IA-45 zhichizu预算单导航可达
+FAIL - IA-45 admin预算单导航可达
+FAIL - IA-45 admin预算标题全部
+FAIL - IA-45 版本链colspan实际7列
+FAIL - PL-02 二次进入预算列表零网络请求
+FAIL - RD-01 未就绪三卡列缺口且真实跳转
+FAIL - RD-01 缺口跳转滚动交付卡
+FAIL - RD-01 ①②完成显示就绪
+FAIL - RD-04 已有提交仍有下一步指引
+FAIL - IA-46 预算新建只一次并逐行关联
+FAIL - IA-47 档案授权入口并留痕
+FAIL - IA-50 灯色时间线与结论对比无内部阶段编号
+FAIL - SM-02 本次前置展示代打角色与作废状态
+FAIL - SM-01 作废任务不计已打灯
+PASS - IA 返回上一步与面包屑归商机
+FAIL - EV-06 结论披露缺分包覆盖但不参与灯色
+FAIL - SM-03 首页两状态计数与HTTP同源
+FAIL - DG-05 测试开关默认隐藏→开启可见→关闭归零
+FAIL - SM-04 空商机码评审独立成行且不居首 | locator.innerText: Timeout 5000ms exceeded.
+FAIL - IA-48 三灯队列tile可点定位
+FAIL - IA-49 历史入口明确直接入库
+FAIL - NT-02 机器人本地预演积压与诚实能力文案
+PASS - IA-47 FDE无档案编辑入口
+FAIL - CH-01 change无Excel模板不可选
+FAIL - IA-49 向导标记导入为草稿
+FAIL - RD-03 编辑关联预算存在且原值准确
+FAIL - RD-03 UI修改关联预算真实PUT
+FAIL - RD-02 必填未满显示N/M
+FAIL - RD-02 填满后实时变绿不刷新 | page.waitForFunction: Timeout 5000ms exceeded.
+FAIL - PL-01 部门文案随META变异无需改前端
+FAIL - CRASH | Error: /api/robot/workbench: 404 商机档案不存在
+    at api (F:\workbuddy\9\review-platform\tests\h_remediation_shots.js:14:20)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async F:\workbuddy\9\review-platform\tests\h_remediation_shots.js:143:18
+
+4 passed, 41 failed -> SOME FAIL

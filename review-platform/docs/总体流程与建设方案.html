@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>项目评审平台 · 全流程操作地图与建设方案</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; background: #F3F4F6; color: #1F2937; line-height: 1.6; }
+  .container { max-width: 1160px; margin: 0 auto; padding: 28px 20px 60px; }
+  .header { background: linear-gradient(135deg, #1E3A5F 0%, #2563EB 100%); color: #fff; padding: 26px 32px; border-radius: 12px; margin-bottom: 18px; }
+  .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .header p { font-size: 13px; opacity: .88; }
+  .legend { background: #fff; border-radius: 10px; padding: 12px 18px; display: flex; flex-wrap: wrap; gap: 14px; font-size: 12.5px; color: #4B5563; margin-bottom: 18px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  .lg { display: inline-flex; align-items: center; gap: 6px; }
+  .chip { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+  .c-auto { background: #DBEAFE; border: 1px solid #60A5FA; }
+  .c-online { background: #DCFCE7; border: 1px solid #4ADE80; }
+  .c-off { background: #FEF3C7; border: 1px solid #F59E0B; }
+  .c-out { background: #EDE9FE; border: 1px dashed #A78BFA; }
+  .phase { background: #fff; border-radius: 12px; margin-top: 20px; padding: 20px 24px; box-shadow: 0 1px 3px rgba(0,0,0,.07); }
+  .phase-title { font-size: 17px; font-weight: 700; padding-bottom: 9px; border-bottom: 2px solid #E5E7EB; margin-bottom: 6px; }
+  .phase-sub { font-size: 12.5px; color: #6B7280; margin-bottom: 14px; }
+  .lanes { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 10px; }
+  .lane-head { background: #EEF2FF; border: 1px solid #C7D2FE; color: #3730A3; font-weight: 600; font-size: 12px; text-align: center; padding: 7px 4px; border-radius: 8px; line-height: 1.45; }
+  .grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; align-items: stretch; }
+  .node { border: 1px solid #E5E7EB; border-radius: 10px; padding: 11px 12px; font-size: 12px; line-height: 1.55; background: #fff; }
+  .node.auto { background: #EFF6FF; border-color: #93C5FD; }
+  .node.online { background: #F0FDF4; border-color: #86EFAC; }
+  .node.off { background: #FFFBEB; border-color: #FCD34D; }
+  .n-title { font-weight: 700; font-size: 13px; margin-bottom: 7px; color: #111827; }
+  .auto .n-title { color: #1E3A5F; }
+  .n-row { display: flex; gap: 6px; margin-bottom: 4px; }
+  .n-k { flex: 0 0 56px; color: #6B7280; font-weight: 600; }
+  .n-v { flex: 1; color: #374151; }
+  .out { margin-top: 7px; background: #F5F3FF; border: 1px dashed #C4B5FD; color: #5B21B6; padding: 5px 8px; border-radius: 6px; font-size: 11.5px; }
+  .out b { font-weight: 700; }
+  .empty { border: 1px dashed #E5E7EB; border-radius: 10px; color: #9CA3AF; text-align: center; padding: 14px 6px; font-size: 11.5px; }
+  .banner { background: #F9FAFB; border: 1px solid #E5E7EB; border-left: 4px solid #9CA3AF; border-radius: 10px; padding: 13px 18px; font-size: 12.5px; color: #4B5563; }
+  .banner b { color: #111827; }
+  .branch { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .bcard { border-radius: 12px; padding: 15px 16px; }
+  .bcard h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .b-g { border: 2px solid #86EFAC; background: #F0FDF4; } .b-g h3 { color: #166534; }
+  .b-y { border: 2px solid #FDE68A; background: #FFFBEB; } .b-y h3 { color: #92400E; }
+  .b-r { border: 2px solid #FCA5A5; background: #FEF2F2; } .b-r h3 { color: #991B1B; }
+  .bcard .n-row { margin-bottom: 5px; }
+  .arrow-note { font-size: 11.5px; color: #92400E; background: #FFFBEB; border: 1px dashed #FDE68A; border-radius: 6px; padding: 5px 9px; margin-top: 10px; display: inline-block; }
+  .weekbar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 6px; }
+  .wd { background: #EEF2FF; border: 1px solid #C7D2FE; border-radius: 10px; padding: 10px 12px; font-size: 12px; }
+  .wd b { display: block; color: #3730A3; font-size: 12.5px; margin-bottom: 3px; }
+  .cross { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 6px; }
+  .cross .box { background: #fff; border: 1px solid #E5E7EB; border-radius: 12px; padding: 16px 18px; }
+  .cross h3 { font-size: 14.5px; font-weight: 700; margin-bottom: 10px; color: #1E3A5F; }
+  table { border-collapse: collapse; width: 100%; font-size: 12px; }
+  th { background: #F9FAFB; color: #374151; font-weight: 600; padding: 7px 10px; border: 1px solid #E5E7EB; text-align: left; }
+  td { padding: 7px 10px; border: 1px solid #E5E7EB; color: #4B5563; vertical-align: top; }
+  .foot { text-align: center; color: #9CA3AF; font-size: 12px; margin-top: 30px; }
+  .tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 1px 8px; border-radius: 999px; margin-left: 8px; vertical-align: 2px; }
+  .t-def { background: #FEF3C7; color: #92400E; }
+  .chat { margin-top: 2px; }
+  .msg { border-radius: 10px; padding: 8px 12px; font-size: 12px; margin-bottom: 8px; max-width: 96%; line-height: 1.55; color: #374151; }
+  .msg.u { background: #EEF2FF; border: 1px solid #C7D2FE; margin-left: auto; }
+  .msg.b { background: #F0FDF4; border: 1px solid #86EFAC; }
+  @media (max-width: 900px) { .grid5, .lanes, .branch, .cross { grid-template-columns: 1fr; } .weekbar { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>项目评审平台 · 全流程操作地图与建设方案</h1>
+    <p>每一步骤：谁在做 · 做什么 · 系统帮他解决什么问题 · 产出什么东西 ｜ 主线：预算机器人（口述成本→多轮补缺→锁定）→ 评审表机器人（引用预算→口述补充→生成）→ 灯态评估机器人（分派打灯→规则研判→按灯分发）→ 会后结论 → 看板总览 ｜ 单入口 · 三技能 · 确定性底座 ｜ V1.2 ｜ 2026-10-08</p>
+  </div>
+
+  <div class="legend">
+    <span class="lg"><span class="chip c-auto"></span>系统自动执行（无人值守）</span>
+    <span class="lg"><span class="chip c-online"></span>人在系统上操作（线上）</span>
+    <span class="lg"><span class="chip c-off"></span>线下进行（系统仅提供材料/不干预）</span>
+    <span class="lg"><span class="chip c-out"></span>产出物标识</span>
+    <span class="lg"><span class="tag t-def">默认决策</span>带此标记为本次按合理默认值拍板，后续可一句话调整</span>
+  </div>
+
+  <div class="lanes">
+    <div class="lane-head">① 申请人（与机器人对话）<br>（售前/投标=销售经理<br>关键事项=项目经理）</div>
+    <div class="lane-head">② 前置评审部门<br>（FDE · 采购BP · 财务BP<br>法务 · 合规BP · 数据BP）</div>
+    <div class="lane-head">③ 销售支持组<br>（流程唯一统筹方<span class="tag t-def">企划办已退出</span>）</div>
+    <div class="lane-head">④ 评审智能体<br>（平台系统自动执行）</div>
+    <div class="lane-head">⑤ 线下会议 · 外部系统<br>（评审委员会 / PMS / 钉钉群）</div>
+  </div>
+
+  <!-- 系统价值 -->
+  <div class="phase">
+    <div class="phase-title">系统价值总账——为什么不能停在"Excel 编预算 + 系统收表"</div>
+    <div class="phase-sub">核心主张：<b>数据一次录入、全程自动流转</b>。预算在系统里算（口径唯一）→ 评审一键引用（零誊抄）→ 研判用精算数字（零读表误差）→ 报告自动生成 → 结论线上留痕。Excel 退化为导入/导出格式，不再承担"编制"职能——否则系统只是个收发室。</div>
+    <table>
+      <tr><th style="width:72px">环节</th><th>现在（Excel + 邮件流转）</th><th>上系统后</th><th style="width:120px">谁直接受益</th></tr>
+      <tr><td><b>算账</b></td><td>各自 Excel 各自公式，附1↔附3 跨表引用易断链；单价靠旧表和记忆，财务调价无人同步</td><td>财务配置中心唯一口径；预算页只填"量"不碰"率"；财务改价全平台即时生效</td><td>项目经理 / 财务</td></tr>
+      <tr><td><b>调价</b></td><td>改一处全表手动重算易错；报价版本靠文件名区分，无轨迹无对比</td><td>报价沙盘改一项全表联动重算；每版自动快照、多版并排对比</td><td>销售经理（谈判现场）</td></tr>
+      <tr><td><b>提报</b></td><td>预算数字人工誊进 30+ 字段前置表——誊错一个数，判错一盏灯</td><td>口述/一句话引用预算单，AI 抽取生成表单 + 多轮补缺，零誊抄零填表</td><td>销售经理 / 支持组</td></tr>
+      <tr><td><b>判定</b></td><td>材料收齐后人工逐条对规则勾选；靠 LLM 读 Excel 依赖映射、会读错</td><td>结构化数据直接进规则引擎，秒级出灯；每盏灯附触发规则与当前值</td><td>支持组 / 评审委员会</td></tr>
+      <tr><td><b>上会</b></td><td>材料散落各邮件；汇报质量看主述人临场发挥</td><td>风险卡片（周一/周四钉钉推送）+ 投屏报告（汇报论据提示内嵌）</td><td>评审委员会</td></tr>
+      <tr><td><b>留证</b></td><td>结论靠邮件纪要，事后翻箱倒柜、口径各执一词</td><td>结论线上录入、报告固化、事件全史可溯，归档即审计材料</td><td>全员（复盘/审计）</td></tr>
+    </table>
+    <div class="banner" style="margin-top:12px">价值锚点：系统现有财务引擎已用真实案例 <b>PL00008572</b> 全量复算——销售人力 41448、税金 2264.15、激励 13298.13、贡献毛利 12508.82 / 毛利率 5.52%，与官方 Excel 逐项一致。技能①预算机器人不是从零造——对话只是换了交互外壳，内核是把这套已验证的引擎升级为可对话、可版本化、可关联的独立模块。</div>
+  </div>
+
+  <!-- 机器人架构 -->
+  <div class="phase">
+    <div class="phase-title">机器人架构总图（一个入口 · 三个技能 · 确定性底座）</div>
+    <div class="phase-sub">申请人与"项目评审机器人"对话完成全部录入——把"填表"变成"说话"。灯态判定、财务计算、流程流转 100% 由确定性代码执行，LLM 只做"翻译与提问"；任一环节 LLM 失败 → 自动降级网页表单，流程不阻断。POC 邮件审批不纳入本系统。</div>
+    <div class="cross">
+      <div class="box">
+        <h3>入口层（在哪里与机器人对话）</h3>
+        <table>
+          <tr><th style="width:86px">入口</th><th>形态</th><th>说明</th></tr>
+          <tr><td>钉钉机器人</td><td>企业内部应用 · Stream 长连接</td><td>服务器主动出站连接钉钉云——内网无需公网 IP、不开放入站端口；@机器人 即对话，入口零成本</td></tr>
+          <tr><td>网页对话窗</td><td>系统内置</td><td>一期先上（不等企业应用审批），Agent 核心与钉钉同一套；表单页兼作确认与兑底</td></tr>
+          <tr><td>看板</td><td>总览大屏</td><td>支持组 / 管理层 / 申请人三个视角（见看板区）</td></tr>
+        </table>
+      </div>
+      <div class="box">
+        <h3>技能层（单机器人内三技能，非三个机器人）</h3>
+        <table>
+          <tr><th style="width:86px">技能</th><th>职责</th><th>LLM 干什么 / 代码干什么</th></tr>
+          <tr><td>① 预算编制</td><td>口述成本 → 生成预算表草稿 → 多轮补缺 → 确认锁定</td><td>LLM：口语→结构化字段；代码：财务引擎精算 + 缺项校验</td></tr>
+          <tr><td>② 评审表编制</td><td>引用预算单 → 带入基础信息 → 口述补充 → 生成表单</td><td>LLM：抽取与追问；代码：必填校验 + 预判灯态</td></tr>
+          <tr><td>③ 灯态评估与分发</td><td>分派前置任务 → 收集打灯 → 合并研判 → 按灯分发</td><td>LLM：通知文案；代码：规则引擎判灯 + 状态机流转</td></tr>
+        </table>
+        <div style="font-size:11.5px;color:#6B7280;margin-top:8px">为什么单机器人而非三个：入口唯一（用户不用记找谁）、上下文延续（预算单号 B-xxxx 贯穿技能①→②）、申请与维护成本最低。</div>
+      </div>
+      <div class="box">
+        <h3>确定性底座（LLM 永不触碰）</h3>
+        <table>
+          <tr><th style="width:86px">组件</th><th>职责</th><th>现状</th></tr>
+          <tr><td>财务引擎</td><td>收入÷1.06 / 1727/万 / 税 1% / 激励 7.7%×系数 / 贡毛率</td><td>已用真实案例 PL00008572 复算验证，逐项一致</td></tr>
+          <tr><td>规则引擎</td><td>量化指标判灯 + 11 项 XO 升级 + 两级路由</td><td>已有，批次 1 修正补齐</td></tr>
+          <tr><td>流程状态机</td><td>草稿→评审中→judged→归档 / 红灯自动打回 / round+1</td><td>已有</td></tr>
+          <tr><td>通知适配器</td><td>钉钉（webhook @手机号 / Stream 对话）· 邮件接口（通道待确认，钉钉先行）</td><td>钉钉 webhook 可先行</td></tr>
+          <tr><td>数据层</td><td>预算单（版本化）· 评审单 · 前置任务 · 结论 · 事件流</td><td>预算单实体批次 2 建</td></tr>
+        </table>
+      </div>
+      <div class="box">
+        <h3>技能衔接（B 单号贯穿全程）</h3>
+        <div style="font-size:12.5px;color:#4B5563">锁定预算单 <b>B-xxxx-vN</b> 是唯一衔接凭证：技能②引用它带入合同/贡毛率/分包占比；技能③研判时精算数优先于表单粗填值；归档时预算版本快照随档案固化。一个预算单可关联多张评审单（谈判多轮报价→分别提报）。变更（R6）也回技能①出变更版。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 对话剧本 -->
+  <div class="phase">
+    <div class="phase-title">对话剧本（三个技能各一段真实交互示例）</div>
+    <div class="cross">
+      <div class="box">
+        <h3>技能① 预算编制（多轮问询）</h3>
+        <div class="chat">
+          <div class="msg u"><b>项目经理</b>：给天地图项目编个预算，合同 240 万，分包 100 万</div>
+          <div class="msg b"><b>机器人</b>：已识别：合同 240 万 / 分包 100 万。自动算出：不含税收入 226.4 万、销售人力 24.2 万（1727/万 × 净签单 140 万）、税金 2.3 万。还缺 3 项必需信息：① 交付部门（决定 8 档人天单价）② 交付人天数 ③ 差旅与其他交付成本（无则填 0）</div>
+          <div class="msg u"><b>项目经理</b>：交付处，10 个人月，差旅 2 万</div>
+          <div class="msg b"><b>机器人</b>：交付处 1696 元/天 × 220 人天 = 37.3 万。当前预算：净收入 126.4 万 / 交付成本 39.3 万 / 销售成本 26.5 万 / 激励 7.7 万 → <b>贡献毛利 52.9 万，毛利率 41.9%</b>。确认锁定预算单 v1？</div>
+          <div class="msg u"><b>项目经理</b>：确认</div>
+          <div class="msg b"><b>机器人</b>：预算单 <b>B-2026-0001 v1 已锁定</b>。发起评审时对我说"用 B-2026-0001 建投标评审单"；如需调整，说"把 B-2026-0001 的分包改成 80 万"（将生成 v2）。</div>
+        </div>
+      </div>
+      <div class="box">
+        <h3>技能② 评审表编制（引用 + 口述补充）</h3>
+        <div class="chat">
+          <div class="msg u"><b>销售经理</b>：用 B-2026-0001 建投标评审单</div>
+          <div class="msg b"><b>机器人</b>：已带入预算 B-2026-0001 v1：合同 240 万 / 测绘分包占比 41.7% / 贡毛率 41.9%。还缺基础信息：客户名称、项目省份、涉密、甲导、决策类型、付款方式、担保/竞业、转包路径——客户名称是？</div>
+          <div class="msg u"><b>销售经理</b>：江西省自然资源厅，江西，不涉密，无甲导，公开招标，电汇，无担保无竞业，直签无转包</div>
+          <div class="msg b"><b>机器人</b>：收到。提示：测绘分包 41.7% ≥ 40%，已触发黄灯条件（项目非广东省，不升红）。表单已生成，<b>预判灯态：黄灯</b>。确认提交？提交后自动分派 6 个部门前置评审。</div>
+          <div class="msg u"><b>销售经理</b>：提交</div>
+          <div class="msg b"><b>机器人</b>：评审单 R-2026-0007 已提交，前置任务已分派并钉钉 @到人。进度随时问我。</div>
+        </div>
+      </div>
+      <div class="box">
+        <h3>技能③ 灯态评估与分发</h3>
+        <div class="chat">
+          <div class="msg b"><b>机器人（自动）</b>：R-2026-0007 前置任务已分派：FDE 技术可行性 / 采购BP 分包合理性 / 财务BP 预算口径 / 法务 合规 / 数据BP 数据合规 / 信用评估——@到人，任务卡片内嵌判定标准原文。</div>
+          <div class="msg b"><b>机器人（自动）</b>：6/6 收齐 → 规则引擎合并研判 → <b>综合灯态：黄灯（部门级）</b>。已排入周二部门级评审会队列，周一汇总将推送风险卡片至评审委员会群。</div>
+          <div class="msg u"><b>销售支持组（会后）</b>：录结论：同意，备注"控制分包成本"</div>
+          <div class="msg b"><b>机器人</b>：结论已归档（灯=系统判定，结论=会议决策），已通知申请人，看板已更新。</div>
+        </div>
+        <div style="font-size:11.5px;color:#6B7280;margin-top:8px">绿灯路径：研判为绿 → 机器人钉钉评审委员会群发布结论 + 邮件留档 → 直接归档推进；红灯路径：钉钉通知申请人退回原因（红线不可豁免），调整后重提交 round+1。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- R1 -->
+  <div class="phase">
+    <div class="phase-title">R1 · 成本测算（技能① 预算编制机器人——先算账、再报价，远早于提报评审）</div>
+    <div class="phase-sub">业务顺序：商机出现 → 与机器人对话编制预算（可能持续数周、随谈判反复调整）→ 锁定版本作为报价依据。预算单为独立实体（B 编号/版本/状态），不依附评审单；本阶段零打扰部门。对话失败可随时切网页表单继续，数据同源。</div>
+    <div class="grid5">
+      <div>
+        <div class="node online" style="margin-bottom:10px">
+          <div class="n-title">S1.1 口述成本（对话生成）</div>
+          <div class="n-row"><span class="n-k">谁</span><span class="n-v">项目经理（+商务经理），与机器人对话</span></div>
+          <div class="n-row"><span class="n-k">做什么</span><span class="n-v">自然语言描述成本构成："合同 240 万，分包 100 万，交付处 10 个人月，差旅 2 万"</span></div>
+          <div class="n-row"><span class="n-k">系统解决</span><span class="n-v"><b>说话代替填表</b>——LLM 把口语抽取成结构化字段（草稿态）；财务引擎同步精算（收入÷1.06、1727/万、税 1%、激励 7.7%×系数、贡毛率），口述完立刻看到毛利；只填"量"不碰"率"，单价 8 档自动带出</span></div>
+          <div class="out">产出：<b>预算草稿 + 实时精算贡毛率</b></div>
+        </div>
+        <div class="node online" style="margin-bottom:10px">
+          <div class="n-title">S1.2 多轮补缺（缺项提醒）</div>
+          <div class="n-row"><span class="n-k">谁</span><span class="n-v">机器人问，项目经理答（逐项）</span></div>
+          <div class="n-row"><span class="n-k">做什么</span><span class="n-v">系统校验必填缺项（交付部门/人天/差旅/分包属性……），机器人逐项问询直到补齐；客户谈判调价也回对话改（"分包改 80 万"→ 生成 v2）</span></div>
+          <div class="n-row"><span class="n-k">系统解决</span><span class="n-v"><b>缺什么问什么</b>，不甩 30 字段大表；边答边重算（毛利率跌破 10% 即时预警）；每版自动快照、多版并排对比</span></div>
+          <div class="out">产出：<b>补齐的预算草稿（缺项清零）+ 每轮版本快照</b></div>
+        </div>
+        <div class="node online">
+          <div class="n-title">S1.3 确认锁定（人点确认，LLM 不代确认）</div>
+          <div class="n-row"><span class="n-k">谁</span><span class="n-v">项目经理在对话/网页确认页点"确认"</span></div>
+          <div class="n-row"><span class="n-k">做什么</span><span class="n-v">确认后锁定版本；需线下签字时导出复刻官方 Excel 模板；存量 Excel 一次性迁移导入</span></div>
+          <div class="n-row"><span class="n-k">系统解决</span><span class="n-v">确认前全程草稿态；锁定后版本不可改（调价=新版本）；导出/导入仅作格式兼容，编制职能已在系统内</span></div>
+          <div class="out">产出：<b>锁定预算单 B-xxxx-vN（供技能②引用）</b></div>
+        </div>
+      </div>
+      <div class="empty">② 前置部门<br>未被唤醒</div>
+      <div class="empty">③ 支持组<br>尚不介入</div>
+      <div>
+        <div class="node auto">
+          <div class="n-title">测算引擎</div>
+          <div class="n-row"><span class="n-k">谁</span><span class="n-v">系统自动</span></div>
+          <div class="n-row"><span class="n-k">做什么</span><span class="n-v">全财务口径实时测算</span></div>
+          <div class="n-row"><span class="n-k">系统解决</span><span class="n-v">口径唯一权威：所有人同一套公式算毛利，不再"各自 Excel 各自算法"；单价/税率/激励系数来自财务配置中心，财务更新后所有新预算即时生效</span></div>
+          <div class="out">产出：<b>实时贡献毛利率 + 灯态预警（&lt;10% 黄灯）</b></div>
+        </div>
+      </div>
+      <div class="empty">⑤ 客户谈判在线下进行<br>压价/改范围的结果<br>回 S1.2 沙盘重算</div>
+    </div>
+  </div>
+
+  <!-- R2 -->
+  <div class="phase">
+    <div class="phase-title">R2 · 提报（技能② 评审表编制机器人） <span style="font-size:12px;color:#6B7280;font-weight:400">｜纪律：提前 1 周提报（关键事项提前 5 个工作日），材料提前 2 个工作日提交完毕</span></div>
+    <div class="grid5">
+      <div>
+        <div class="node online" style="margin-bottom:10px">
+          <div class="n-title">S2.1 引用预算建单</div>
+          <div class="n-row"><span class="n-k">谁</span><span class="n-v">销售经理（关键事项：项目经理），对机器人说</span></div>
+          <div class="n-row"><span class="n-k">做什么</span><span class="n-v">"用 B-2026-0001 建投标评审单"——一句话触发</span></div>
+          <div class="n-row"><span class="n-k">系统解决</span><span class="n-v">预算精算数自动带入（合同/贡毛率/分包占比，<b>零誊抄</b>）；粘贴招标文件/邮件正文 → AI 抽取客户/金额等填草稿</span></div>
+          <div class="out">产出：<b>评审单草稿（已关联预算单）</b></div>
+        </div>
+        <div class="node online">
+          <div class="n-title">S2.2 口述补充（多轮问询）</div>
+          <div class="n-row"><span class="n-k">谁</span><span class="n-v">机器人问，申请人答</span></div>
+          <div class="n-row"><span class="n-k">做什么</span><span class="n-v">逐项补齐：客户/省份/涉密/甲导/决策类型/付款方式/担保/竞业/转包路径……口述即可</span></div>
+          <div class="n-row"><span class="n-k">系统解决</span><span class="n-v">缺什么问什么；<b>边答边提示风险</b>（如"测绘分包 ≥40% 已触发黄灯条件"）；表单同步生成，网页端随时可查可改</span></div>
+          <div class="out">产出：<b>完整评审表单草稿</b></div>
+        </div>
+      </div>
+      <div class="empty">② 前置部门<br>尚未参与</div>
+      <div class="empty">③ 支持组<br>尚不介入</div>
+      <div>
+        <div class="node auto">
+          <div class="n-title">S2.3 预判灯态 + 正式提交</div>
+          <div class="n-row"><span class="n-k">谁</span><span class="n-v">申请人确认（对话内或网页），系统接管</span></div>
+          <div class="n-row"><span class="n-k">做什么</span><span class="n-v">机器人给出预判灯态与风险点清单 → 申请人确认提交</span></div>
+          <div class="n-row"><span class="n-k">系统解决</span><span class="n-v">规则引擎试算（规则原文"提交前可自行通过智能体判断灯态"，零打扰部门）；强校验"已关联锁定版预算单"；自动分派前置任务 + 钉钉 @到人</span></div>
+          <div class="out">产出：<b>评审单（评审中）+ 前置任务清单</b><br>投标 10 项 / 售前 4 项 / 关键事项 4 项</div>
+        </div>
+      </div>
+      <div class="empty">⑤ 会议尚未召开</div>
+    </div>
+  </div>
+
+  <!-- R3 -->
+  <div class="phase">
+    <div class="phase-title">R3 · 前置评审与智能体研判（技能③ 灯态评估机器人）</div>
+    <div class="grid5">
+      <div class="empty">① 申请人<br>随时可见<br>评审进度</div>
+      <div>
+        <div class="node online">
+          <div class="n-title">S3.1 前置评审打灯</div>
+          <div class="n-row"><span class="n-k">谁</span><span class="n-v">六类部门评审人（每指标固定责任部门）</span></div>
+          <div class="n-row"><span class="n-k">做什么</span><span class="n-v">核实各自指标 → 填前置评审意见 → 打红/黄/绿灯（或带意见退回）</span></div>
+          <div class="n-row"><span class="n-k">系统解决</span><span class="n-v">任务页内嵌该指标绿/黄/红判定标准原文，无需翻规则文件；退回意见直达申请人；未完成可钉钉一键催办</span></div>
+          <div class="out">产出：<b>部门灯态 + 前置评审意见</b>（每轮全量留痕）</div>
+        </div>
+      </div>
+      <div>
+        <div class="node online">
+          <div class="n-title">S3.2 汇总确认</div>
+          <div class="n-row"><span class="n-k">谁</span><span class="n-v">销售支持组</span></div>
+          <div class="n-row"><span class="n-k">做什么</span><span class="n-v">看板确认各部门任务完成 → 触发智能体研判</span></div>
+          <div class="n-row"><span class="n-k">系统解决</span><span class="n-v">一屏可见各部门完成进度；最后一人打灯可自动触发研判（免人工盯守）</span></div>
+          <div class="out">产出：<b>研判指令</b></div>
+        </div>
+      </div>
+      <div>
+        <div class="node auto">
+          <div class="n-title">S3.3 智能体研判</div>
+          <div class="n-row"><span class="n-k">谁</span><span class="n-v">系统自动（判定权 100% 在规则引擎）</span></div>
+          <div class="n-row"><span class="n-k">做什么</span><span class="n-v">合并量化指标自动判定 + 前置人工灯 → 综合灯态（任红→红 / 任黄→黄 / 全绿→绿）→ 核验 11 项 XO 升级条件 → 确定会议级别（部门级 / XO 级<span class="tag t-def">两级路由，无杜总级</span>）</span></div>
+          <div class="n-row"><span class="n-k">系统解决</span><span class="n-v">在线预算精算毛利率优先于表单粗填值；每盏灯附触发规则与当前值，判定全程可解释</span></div>
+          <div class="out">产出：<b>综合灯态 + 升级条件 + 《项目风险评估报告》</b></div>
+        </div>
+      </div>
+      <div class="empty">⑤ 会议尚未召开</div>
+    </div>
+  </div>
+
+  <!-- R3 -->
+  <div class="phase">
+    <div class="phase-title">R3 · 灯态分流（规则原文 Step 4 分类处理）</div>
+    <div class="branch">
+      <div class="bcard b-g">
+        <h3>绿灯 · 免上会</h3>
+        <div class="n-row"><span class="n-k">谁</span><span class="n-v">系统自动 + 销售支持组确认</span></div>
+        <div class="n-row"><span class="n-k">做什么</span><span class="n-v">输出评审结论，项目直接推进下一阶段</span></div>
+        <div class="n-row"><span class="n-k">系统解决</span><span class="n-v"><b>机器人钉钉评审委员会群发布结论 + 邮件接口留档</b>（对应规则原文"邮件输出智能体评审结论并留档备查"）；项目直接推进，免上会</span></div>
+        <div class="out">产出：<b>绿灯结论通知 + 留档</b> → 转入 R5 归档</div>
+      </div>
+      <div class="bcard b-y">
+        <h3>黄灯 · 上会决策</h3>
+        <div class="n-row"><span class="n-k">谁</span><span class="n-v">销售支持组（推送）；主述人=销售经理/项目经理（备会）</span></div>
+        <div class="n-row"><span class="n-k">做什么</span><span class="n-v">按会议级别排会：常规黄灯→部门级（周二）；触发 XO 条件→XO 级（周五）</span></div>
+        <div class="n-row"><span class="n-k">系统解决</span><span class="n-v">周一一键"周汇总"→钉钉推评审委员会群；每个黄/红灯项目一张<b>风险卡片</b>（免登录签名链接：仅列红黄灯指标 + 升级条件 + 会上需决策问题）；XO 级单周四自动加推 XO 群</span></div>
+        <div class="out">产出：<b>会前风险卡片 + 投屏报告</b> → 转入 R4</div>
+      </div>
+      <div class="bcard b-r">
+        <h3>红灯 · 红线打回</h3>
+        <div class="n-row"><span class="n-k">谁</span><span class="n-v">系统自动打回 + 申请人</span></div>
+        <div class="n-row"><span class="n-k">做什么</span><span class="n-v">销售/项目经理与客户重新协商调整，红线项不可豁免</span></div>
+        <div class="n-row"><span class="n-k">系统解决</span><span class="n-v">钉钉通知申请人并附退回原因；调整后重提交自动进入新一轮（round+1：旧任务作废留痕、重新分派部门）</span></div>
+        <div class="out">产出：<b>退回记录 + 新一轮评审任务</b> → 回到 R2</div>
+        <div class="arrow-note">回环：商业承兑汇票 / 转包&gt;5 次 / 分包≥70% 等红线触发</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- R4 -->
+  <div class="phase">
+    <div class="phase-title">R4 · 评审会（线下）与结论录入（会后人工在系统后台补充，机器人不代录）</div>
+    <div class="grid5">
+      <div class="empty">① 申请人作为主述人<br>现场汇报</div>
+      <div class="empty">② 相关 BP 列席<br>接受质询</div>
+      <div>
+        <div class="node online" style="margin-bottom:10px">
+          <div class="n-title">S4.2 结论录入</div>
+          <div class="n-row"><span class="n-k">谁</span><span class="n-v">销售支持组（会后，系统后台人工录入）</span></div>
+          <div class="n-row"><span class="n-k">做什么</span><span class="n-v">录入评审结论"同意/不同意" + 结论说明（支持直接粘贴邮件纪要）</span></div>
+          <div class="n-row"><span class="n-k">系统解决</span><span class="n-v">结论独立于灯态存档（灯=系统判定，结论=会议决策）；勾选"评审意见未达成一致" → 自动升级 XO 级（11 项条件之 3）</span></div>
+          <div class="out">产出：<b>正式评审结论</b>（全流程事件留痕）</div>
+        </div>
+      </div>
+      <div>
+        <div class="node auto">
+          <div class="n-title">投屏看板</div>
+          <div class="n-row"><span class="n-k">谁</span><span class="n-v">系统提供，会上使用</span></div>
+          <div class="n-row"><span class="n-k">做什么</span><span class="n-v">会议室大屏展示项目风险报告</span></div>
+          <div class="n-row"><span class="n-k">系统解决</span><span class="n-v">免登录签名链接直接打开：基础信息 + 风险详述（仅红黄灯指标）+ 会议准备（参会人/汇报论据提示），不干预决策</span></div>
+          <div class="out">产出：<b>投屏报告页</b></div>
+        </div>
+      </div>
+      <div>
+        <div class="node off">
+          <div class="n-title">S4.1 评审会</div>
+          <div class="n-row"><span class="n-k">谁</span><span class="n-v">部门级评审委员会（每周二）/ XO 级评审委员会（每周五）</span></div>
+          <div class="n-row"><span class="n-k">做什么</span><span class="n-v">主述人汇报 → 当面质询 → 拍板（线下，系统不替代）</span></div>
+          <div class="n-row"><span class="n-k">系统解决</span><span class="n-v">提供材料与会前推送（R3 黄灯路径），会议本身线下进行</span></div>
+          <div class="out">产出：<b>会议决策</b>（口头/邮件纪要）</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- R5 -->
+  <div class="phase">
+    <div class="phase-title">R5 · 归档与后续执行</div>
+    <div class="grid5">
+      <div class="empty">① 项目经理后续<br>发起 PMS 申请</div>
+      <div class="empty">② 交付负责人<br>在 PMS 审批</div>
+      <div>
+        <div class="node online">
+          <div class="n-title">S5.1 归档</div>
+          <div class="n-row"><span class="n-k">谁</span><span class="n-v">销售支持组</span></div>
+          <div class="n-row"><span class="n-k">做什么</span><span class="n-v">评审完成后归档（绿灯直接归档；黄灯录结论后归档）</span></div>
+          <div class="n-row"><span class="n-k">系统解决</span><span class="n-v">材料 + 预算表 + 研判报告 + 结论一体归档；报告页固化含最终结论；事件流全程可溯（谁在何时做了什么）</span></div>
+          <div class="out">产出：<b>完整归档档案</b></div>
+        </div>
+      </div>
+      <div class="empty">④ 系统<br>归档后封存<br>只读可查</div>
+      <div>
+        <div class="node off">
+          <div class="n-title">S5.2 PMS 建立/变更/关闭</div>
+          <div class="n-row"><span class="n-k">谁</span><span class="n-v">项目经理发起、交付负责人审批（外部 PMS 系统）</span></div>
+          <div class="n-row"><span class="n-k">做什么</span><span class="n-v">评审决策文件 + 预算表（初算/概算/变更版）作为审批附件上传</span></div>
+          <div class="n-row"><span class="n-k">系统解决</span><span class="n-v">暂不对接 PMS（后置项）；提供归档材料下载</span></div>
+          <div class="out">产出：<b>PMS 项目建立/变更</b>；投标不通过且已预投入 → PMS 关闭 + 3 个工作日收尾</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- R6 -->
+  <div class="phase">
+    <div class="phase-title">R6 · 履约期回环：项目关键事项决策（变更预算回技能①出变更版，评审复用 R2–R5 同构流程）</div>
+    <div class="grid5">
+      <div>
+        <div class="node online">
+          <div class="n-title">S6.1 触发建单</div>
+          <div class="n-row"><span class="n-k">谁</span><span class="n-v">项目经理</span></div>
+          <div class="n-row"><span class="n-k">做什么</span><span class="n-v">发生 8 类决策事项时建单：签单与投标差异 / 成本变动 / 验收单异常 / 分包变化 / 项目核减 / 坏账 / 非正常终止 / 其他（另含分包超进度支付）</span></div>
+          <div class="n-row"><span class="n-k">系统解决</span><span class="n-v">按事项类型自动补充判定：验收异常/坏账/非正常终止→直接黄灯上会；勾"疑似虚假验收报告"→红线打回；成本增加&gt;10万或贡毛跌破 10%→黄；超进度支付→全部上会</span></div>
+          <div class="out">产出：<b>关键事项评审单 + 变更版预算（技能①新增版本）</b> → 复用 R2–R5（前置 4 项指标）→ 结论 → PMS 变更</div>
+        </div>
+      </div>
+      <div class="empty">② 4 项前置指标：<br>技术可行性 / 分包合理性<br>签单差异 / 项目核减</div>
+      <div class="empty">③ 同 R2–R5<br>流程同构复用</div>
+      <div class="empty">④ 同构研判<br>+ 事项类型规则</div>
+      <div class="empty">⑤ 部门级/XO 级会<br>+ PMS 变更</div>
+    </div>
+  </div>
+
+  <!-- 看板 -->
+  <div class="phase">
+    <div class="phase-title">看板总览（系统的数据出口，与研判/结论同源实时）</div>
+    <div class="cross">
+      <div class="box">
+        <h3>支持组视角（流程监控）</h3>
+        <table>
+          <tr><th style="width:86px">看什么</th><th>内容</th></tr>
+          <tr><td>评审漏斗</td><td>草稿 / 评审中 / 待上会 / 待补结论 / 已归档 各阶段单量</td></tr>
+          <tr><td>逾期清单</td><td>前置任务超时未打灯的部门与人（一键催办入口）</td></tr>
+          <tr><td>本周排会</td><td>周二部门级 / 周五 XO 级队列 + 风险卡片链接</td></tr>
+        </table>
+      </div>
+      <div class="box">
+        <h3>管理层视角（经营总览）</h3>
+        <table>
+          <tr><th style="width:86px">看什么</th><th>内容</th></tr>
+          <tr><td>灯态分布</td><td>本周/本月绿·黄·红数量与占比、驳回率</td></tr>
+          <tr><td>金额水位</td><td>在评审合同额 / 绿灯放行额 / 红灯拦截额</td></tr>
+          <tr><td>周期趋势</td><td>平均评审周期、分部门打灯时长（瓶颈定位）</td></tr>
+        </table>
+      </div>
+      <div class="box">
+        <h3>申请人视角（我的项目）</h3>
+        <table>
+          <tr><th style="width:86px">看什么</th><th>内容</th></tr>
+          <tr><td>我的单据</td><td>预算单（版本/状态）+ 评审单（当前灯态/所处阶段）</td></tr>
+          <tr><td>下一步</td><td>该谁做什么（等哪个部门打灯 / 何时上会 / 结论何时出）</td></tr>
+          <tr><td>历史留痕</td><td>退回原因、历轮研判结果、会议结论</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 周节奏 -->
+  <div class="phase">
+    <div class="phase-title">周节奏（系统的定时触点）</div>
+    <div class="weekbar">
+      <div class="wd"><b>周一</b>销售支持组一键周汇总 → 钉钉推评审委员会群：绿灯免上会 / 红灯驳回 / 黄灯列风险点待上会</div>
+      <div class="wd"><b>周二</b>部门级项目评审会（线下）</div>
+      <div class="wd"><b>周三</b>材料补交/催办缓冲日（钉钉自动催未完成任务）</div>
+      <div class="wd"><b>周四</b>XO 级单会前一天：风险卡片自动加推 XO 委员会群</div>
+      <div class="wd"><b>周五</b>XO 级项目评审会（线下）</div>
+    </div>
+  </div>
+
+  <!-- 横切能力 -->
+  <div class="phase">
+    <div class="phase-title">横切能力（平台建设项，服务于所有环节）</div>
+    <div class="cross">
+      <div class="box">
+        <h3>一、钉钉机器人（Stream 对话入口 + 通知矩阵 + @手机号）</h3>
+        <table>
+          <tr><th>触发事件</th><th>推送对象</th><th>形式</th></tr>
+          <tr><td>提交分派前置任务</td><td>责任部门对应个人</td><td>@手机号 + 待办链接</td></tr>
+          <tr><td>部门退回 / 红灯打回</td><td>申请人</td><td>@ + 退回意见</td></tr>
+          <tr><td>研判完成</td><td>申请人 + 支持组</td><td>按灯态分级文案 + 报告链接</td></tr>
+          <tr><td>周一汇总（黄灯单）</td><td>评审委员会群</td><td>周汇总卡 + 风险卡片链接</td></tr>
+          <tr><td>周四加推（XO 单）</td><td>XO 委员会群</td><td>风险卡片链接</td></tr>
+          <tr><td>结论 / 归档</td><td>申请人 + 相关方</td><td>结论通知</td></tr>
+        </table>
+      </div>
+      <div class="box">
+        <h3>二、财务配置中心（财务定期更新，改完即生效）</h3>
+        <table>
+          <tr><th>配置项</th><th>默认值（26 年标准）</th><th>说明</th></tr>
+          <tr><td>增值税 / 税金率</td><td>÷1.06 / 税后×1%</td><td>收入口径=不含税</td></tr>
+          <tr><td>销售人力单价</td><td>1727 元/万净签单</td><td>净签单=(合同−分包)万</td></tr>
+          <tr><td>激励基准 + 项目系数</td><td>考核利润×7.7% ×系数</td><td>系数按项目调整（如银行项目）</td></tr>
+          <tr><td>正编单价（8 档）</td><td>交付1696 / 拓展2303 / 企服2204·2350·3001 / 数据1720·1752·1374</td><td>按部门岗位选档</td></tr>
+          <tr><td>研发外包 / 生产外包</td><td>995·1022 / 320 元/天</td><td>研发外包除企服 995</td></tr>
+        </table>
+        <div style="font-size:11.5px;color:#6B7280;margin-top:8px">历史单据按当时配置快照存档，不追溯；每次修改留痕。</div>
+      </div>
+      <div class="box">
+        <h3>三、LLM 边界（判定权 100% 在规则引擎）</h3>
+        <table>
+          <tr><th>层</th><th>职责</th><th>状态</th></tr>
+          <tr><td>L1 存量迁移</td><td>存量 Excel 预算 → 在线预算单（字段映射+未匹配提示）；定位=一次性迁移工具，长期以在线编制为主</td><td>已上线，定位降级</td></tr>
+          <tr><td>L2 对话抽取<br>（主交互通道）</td><td>三个技能的对话核心：口述/粘贴 → 结构化字段 + 多轮补缺问询，草稿态人确认后生效</td><td>批次 2 建设（技能①）</td></tr>
+          <tr><td>L3 文字辅助</td><td>意见润色 / 纪要提炼 / 汇报论据初稿，人审后固化为配置</td><td>可选建设</td></tr>
+          <tr><td>禁区</td><td colspan="2">LLM 直接判灯 / 算账 / 代确认（锁定·提交·结论均人点）/ 自动归档 / 无人值守调用——永不做；所有产出停留草稿态；调用失败降级网页表单不阻断</td></tr>
+        </table>
+      </div>
+      <div class="box">
+        <h3>四、报告体系（全部免登录 + 签名链接）</h3>
+        <table>
+          <tr><th>形态</th><th>场景</th><th>内容</th></tr>
+          <tr><td>风险卡片</td><td>钉钉推送（周一/周四）</td><td>项目名/金额/客户 → 灯态与会议级别 → 仅红黄灯指标 → 升级条件</td></tr>
+          <tr><td>投屏报告</td><td>评审会现场</td><td>+ 会议准备（参会人、汇报论据提示、需准备材料）</td></tr>
+          <tr><td>归档报告</td><td>归档后查证</td><td>+ 评审结论与事件全史，不可篡改可追溯</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 建设批次 -->
+  <div class="phase">
+    <div class="phase-title">建设批次（每批完成跑双回归：test_flow.js + test_p15_flow.js，新规则补用例）</div>
+    <table>
+      <tr><th style="width:110px">批次</th><th style="width:220px">交付内容</th><th>对应流程节点</th><th style="width:260px">验收标准</th></tr>
+      <tr>
+        <td><b>批次 1</b><br>规则与安全基座<br>（先行动作）</td>
+        <td>XO 条件 3/10/11 补齐、广东省升红、两级路由（去杜总级）、红灯自动打回、L1 映射修复、报告链接签名</td>
+        <td>S2.4 研判 / R3 分流</td>
+        <td>双回归 ALL PASS + 新增规则用例逐条断言（含广东/推广激励/意见不一致场景）</td>
+      </tr>
+      <tr>
+        <td><b>批次 2</b><br>技能①<br>预算编制机器人</td>
+        <td>Agent 对话核心（抽取→校验→问询→确认循环，LLM 失败降级表单）+ 网页对话窗 + 预算单独立实体（编号/版本/状态）+ 财务引擎独立化与财务配置中心（settings 表 + 管理页 + 8 档单价 + 项目激励系数）+ 版本快照/多版对比 + 导出复刻官方模板 + 存量 Excel 导入（L1）</td>
+        <td>架构图技能① / R1 全流程 / S2.1 引用 / 横切二·三</td>
+        <td>真实案例 PL00008572 在线复算逐项一致（人力 41448 / 激励 13298.13 / 贡毛率 5.52%）；对话剧本逐句走通（缺项提醒全触发）；改配置→新预算即时生效、旧单据快照不变</td>
+      </tr>
+      <tr>
+        <td><b>批次 3</b><br>技能②③<br>评审表与评估分发</td>
+        <td>评审表编制机器人（一句话引用预算、口述补充、多轮补缺、预判灯态、强校验关联）+ 评估分发（前置任务分派打灯、规则研判合并、绿灯钉钉群发布+邮件留档、黄灯排会+周一汇总、红灯自动打回）+ 结论录入（同意/不同意 + 意见不一致升级）</td>
+        <td>架构图技能②③ / R2–R4 / 周节奏 / 横切一</td>
+        <td>真实群消息送达截图；绿灯发布可验证；结论字段入归档档案；升级勾选触发重路由；未关联预算单的提交被拦截</td>
+      </tr>
+      <tr>
+        <td><b>批次 4</b><br>钉钉对话入口<br>+ 看板</td>
+        <td>钉钉 Stream 机器人接入（对话入口从网页迁钉钉，Agent 核心同一套）+ 看板三视角（评审漏斗/灯态分布/金额水位/周期趋势/我的项目）+ 报告"会议准备/汇报论据"区块</td>
+        <td>架构图入口层 / 看板区 / S4 投屏 / 横切四</td>
+        <td>钉钉里 @机器人 完成一轮预算对话（端到端）；看板数字与库内一致（抽检对账）</td>
+      </tr>
+      <tr>
+        <td><b>后置项</b></td>
+        <td>邮件接口适配（SMTP/公司邮件 API 通道确认后接绿灯留档）、钉钉免登（H5 企业应用）、CRM/PMS 对接</td>
+        <td>—</td>
+        <td>按业务节奏另行启动</td>
+      </tr>
+    </table>
+    <div style="font-size:12px;color:#6B7280;margin-top:10px">默认拍板（可一句话调整）：①两级路由删除杜总级 ②售前保留"客户过往合作信誉"第 5 项指标 ③广东+测绘分包≥40% 判红 ④结论=同意/不同意两态 ⑤单机器人三技能（非多个机器人） ⑥对话入口一期网页对话窗、二期钉钉 Stream ⑦LLM 外发合规上线前找信息部门确认一次 ⑧POC 不纳入系统。</div>
+  </div>
+
+  <div class="foot">项目评审平台 · 全流程操作地图与建设方案 ｜ 机器人驱动版：单入口 · 三技能 · 确定性底座 ｜ 依据《项目评审管理规则-流程指引与评审表》与真实案例 PL00008572 绘制 ｜ V1.2 ｜ 2026-10-08</div>
+</div>
+</body>
+</html>

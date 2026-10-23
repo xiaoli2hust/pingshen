@@ -1,0 +1,8 @@
+target=http://127.0.0.1:8699 opp=PL-A-DL-1792126152431
+stored_prior_keys=["content","stage","pm_pd","own_pd","rd_pd","prod_pd","travel_cost","note","cost"]
+(node:35624) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+chat=200 degraded=true rows=1
+reply=大模型暂不可用，本轮未改动交付草稿，请手工补齐。
+returned_keys=["content","stage","pm_pd","own_pd","rd_pd","prod_pd","travel_cost","note","cost"]
+八键断言(FAIL) 越权键泄漏=cost

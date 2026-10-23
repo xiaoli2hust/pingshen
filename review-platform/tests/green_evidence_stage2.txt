@@ -1,0 +1,76 @@
+
+==== F-01~15 财务引擎(纯函数) ====
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 391.6275
+
+==== A-05~07/13 agent 核心(纯函数) ====
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 328.0928
+
+==== API-01~20+S-01~06 预算 API(HTTP) ====
+PASS - S-06 重提 round=2
+PASS - S-06 一轮旧任务作废留痕
+PASS - S-06 二轮任务重新分发(bid 10 项指标)
+PASS - S-06 二轮复判转绿 judged
+
+28 passed, 0 failed -> ALL PASS
+
+==== A-01~14 对话流(HTTP+桩) ====
+PASS - A-08 missing 数组完整(5 项)
+PASS - A-08 LLM 失败跳过 merge(fields 不变)
+PASS - A-08 reply 为点选补齐引导
+
+31 passed, 0 failed -> ALL PASS
+config.json LLM_BASE_URL 已恢复
+
+==== 回归 test_flow.js ====
+   黄灯指标: 贡献利润、签约转包次数
+   路径: 黄灯:部门级评审会(每周二)
+   与真实评审结论一致(黄灯-部门级,2项黄灯,无XO): PASS
+6) 正式报告 HTML 生成: PASS
+7) 归档: PASS
+ALL PASS
+
+==== 回归 test_p15_flow.js ====
+PASS - B1 退回后状态=returned
+PASS - B2 重新提交后轮次=2
+PASS - B3 二轮完成后自动研判(judged, 绿灯)
+PASS - B4 第一轮旧任务已作废留痕
+
+9 passed, 0 failed -> ALL PASS
+
+==== 数据可行性 data_feasibility_check.js ====
+======================================================================
+数据可行性实测汇总
+  C-02 PL00008068: 系统=yellow/判例=yellow → 一致
+  C-03 PL00008111: 系统=yellow/判例=yellow → 一致
+结论: 判例数据可完整驱动 建单→附件→提交→分派→打灯→研判→对比 全链路(2/2 跑通); 判灯偏差即规则修正项输入(1.6/1.7)
+ALL PASS
+
+======== 汇总 ========
+PASS  F-01~15 财务引擎(纯函数)
+PASS  A-05~07/13 agent 核心(纯函数)
+PASS  API-01~20+S-01~06 预算 API(HTTP)
+PASS  A-01~14 对话流(HTTP+桩)
+PASS  回归 test_flow.js
+PASS  回归 test_p15_flow.js
+PASS  数据可行性 data_feasibility_check.js
+
+7/7 套通过, 耗时 38.3s -> ALL PASS
+
+==== H-01~06 �˹�����(playwright, ��ͼ tests/shots/) ====
+(��� tests/green_h_stage2.txt; 18 passed, 0 failed -> ALL PASS)
+��ͼ: H01a/H01b/H03/H04/H02a/H02b/H05a/H05b/H06.png �� 9 ��
+
+==== ����֤������ ====
+��: tests/red_evidence_stage2.txt(�ɴ��� 4 �ű�ȫ��)
+��: ���ļ�(7 �ײ���) + tests/green_h_stage2.txt(H ����)
+���պ� config.json LLM_BASE_URL �ѻָ� https://api.deepseek.com

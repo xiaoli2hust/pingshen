@@ -1,0 +1,6 @@
+PASS - GC-01 子测试非零仍停机还原 | ["snap","start","stop:321","diff","restore"] error=
+FAIL - GC-02 起动健康失败仍按自有PID停机还原 | ["snap","start"] error=health failed
+FAIL - GC-03 差异写出失败不能绕过还原 | ["snap","start","stop:321","diff"] error=diff failed
+PASS - GC-04 无法安全停机绝不覆盖数据库 | ["snap","start","stop:321"] error=foreign listener
+PASS - GC-05 还原失败显式失败且不报成功 | ["snap","start","stop:321","diff","restore"] error=restore failed
+3 passed, 2 failed -> SOME FAIL

@@ -1,0 +1,279 @@
+{
+  "at": "2026-10-20T21:02:38.474Z",
+  "scope": "actual guard VM; fake subprocess/identity/FS/DB/HTTP; no process killed or application loaded",
+  "guardSha256": "152c1dc7e3fb06e64a7ad024af83fa4ea988173e8c6ab605ee209f0ddf9fdb42",
+  "passed": 4,
+  "failed": 4,
+  "rows": [
+    {
+      "name": "GT-01 超时先终止自有测试树，再停服务并还原",
+      "mode": "timeout",
+      "events": [
+        "snap",
+        "suite-spawn",
+        "app-stop"
+      ],
+      "error": "root-only termination must not re-derive an unbounded tree\n+ actual - expected\n\n  [\n    '/pid',\n    '4321',\n+   '/T',\n    '/F'\n  ]\n",
+      "summary": {
+        "tag": "controlled",
+        "script": "controlled.js",
+        "log": "controlled.txt",
+        "exit": null,
+        "secs": "0.0",
+        "diff": null,
+        "stopped": true,
+        "suiteStopped": false,
+        "timedOut": false,
+        "suitePid": null,
+        "suiteTree": [],
+        "restored": false,
+        "errors": [
+          "run: root-only termination must not re-derive an unbounded tree\n+ actual - expected\n\n  [\n    '/pid',\n    '4321',\n+   '/T',\n    '/F'\n  ]\n"
+        ],
+        "configUnchanged": true,
+        "offline": true,
+        "preload": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+        "preloadSha256": "43a7988fa8cc40067190d3d193234d5296a769c16855a4d2413d071a4d8156c9",
+        "at": "2026-10-21 05:02:38 CST"
+      },
+      "status": "FAIL",
+      "assertion": "timeout left owned browser descendants alive"
+    },
+    {
+      "name": "GT-02 PID身份已变拒杀且绝不还原数据库",
+      "mode": "identity",
+      "events": [
+        "snap",
+        "suite-spawn",
+        "app-stop"
+      ],
+      "error": "测试进程身份不符, 拒绝树终止",
+      "summary": {
+        "tag": "controlled",
+        "script": "controlled.js",
+        "log": "controlled.txt",
+        "exit": null,
+        "secs": "0.0",
+        "diff": null,
+        "stopped": true,
+        "suiteStopped": false,
+        "timedOut": false,
+        "suitePid": null,
+        "suiteTree": [],
+        "restored": false,
+        "errors": [
+          "run: 测试进程身份不符, 拒绝树终止"
+        ],
+        "configUnchanged": true,
+        "offline": true,
+        "preload": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+        "preloadSha256": "43a7988fa8cc40067190d3d193234d5296a769c16855a4d2413d071a4d8156c9",
+        "at": "2026-10-21 05:02:38 CST"
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "GT-03 树终止失败显式失败且绝不还原数据库",
+      "mode": "kill",
+      "events": [
+        "snap",
+        "suite-spawn",
+        "app-stop"
+      ],
+      "error": "root-only termination must not re-derive an unbounded tree\n+ actual - expected\n\n  [\n    '/pid',\n    '4321',\n+   '/T',\n    '/F'\n  ]\n",
+      "summary": {
+        "tag": "controlled",
+        "script": "controlled.js",
+        "log": "controlled.txt",
+        "exit": null,
+        "secs": "0.0",
+        "diff": null,
+        "stopped": true,
+        "suiteStopped": false,
+        "timedOut": false,
+        "suitePid": null,
+        "suiteTree": [],
+        "restored": false,
+        "errors": [
+          "run: root-only termination must not re-derive an unbounded tree\n+ actual - expected\n\n  [\n    '/pid',\n    '4321',\n+   '/T',\n    '/F'\n  ]\n"
+        ],
+        "configUnchanged": true,
+        "offline": true,
+        "preload": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+        "preloadSha256": "43a7988fa8cc40067190d3d193234d5296a769c16855a4d2413d071a4d8156c9",
+        "at": "2026-10-21 05:02:38 CST"
+      },
+      "status": "FAIL",
+      "assertion": "Expected values to be strictly equal:\n\nfalse !== true\n"
+    },
+    {
+      "name": "GT-04 正常非零测试保持结果并安全还原，不杀树",
+      "mode": "normal",
+      "events": [
+        "snap",
+        "suite-spawn",
+        "app-stop",
+        "diff",
+        "restore"
+      ],
+      "error": "",
+      "summary": {
+        "tag": "controlled",
+        "script": "controlled.js",
+        "log": "controlled.txt",
+        "exit": 1,
+        "secs": "0.0",
+        "diff": "controlled-diff.json",
+        "stopped": true,
+        "suiteStopped": true,
+        "timedOut": false,
+        "suitePid": 4321,
+        "suiteTree": [],
+        "restored": true,
+        "errors": [],
+        "configUnchanged": true,
+        "offline": true,
+        "preload": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+        "preloadSha256": "43a7988fa8cc40067190d3d193234d5296a769c16855a4d2413d071a4d8156c9",
+        "at": "2026-10-21 05:02:38 CST"
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "GT-05 无PID起动错误可安全还原并明确失败",
+      "mode": "spawn",
+      "events": [
+        "snap",
+        "suite-spawn",
+        "app-stop",
+        "diff",
+        "restore"
+      ],
+      "error": "cycle cleanup failed: suite: ENOENT",
+      "summary": {
+        "tag": "controlled",
+        "script": "controlled.js",
+        "log": "controlled.txt",
+        "exit": null,
+        "secs": "0.0",
+        "diff": "controlled-diff.json",
+        "stopped": true,
+        "suiteStopped": true,
+        "timedOut": false,
+        "suitePid": null,
+        "suiteTree": [],
+        "restored": true,
+        "errors": [
+          "suite: ENOENT"
+        ],
+        "configUnchanged": true,
+        "offline": true,
+        "preload": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+        "preloadSha256": "43a7988fa8cc40067190d3d193234d5296a769c16855a4d2413d071a4d8156c9",
+        "at": "2026-10-21 05:02:38 CST"
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "GT-06 快速子测试已退出且CIM为空仍保留退出码并还原",
+      "mode": "fast",
+      "events": [
+        "snap",
+        "suite-spawn",
+        "app-stop",
+        "diff",
+        "restore"
+      ],
+      "error": "",
+      "summary": {
+        "tag": "controlled",
+        "script": "controlled.js",
+        "log": "controlled.txt",
+        "exit": 1,
+        "secs": "0.0",
+        "diff": "controlled-diff.json",
+        "stopped": true,
+        "suiteStopped": true,
+        "timedOut": false,
+        "suitePid": 4321,
+        "suiteTree": [],
+        "restored": true,
+        "errors": [],
+        "configUnchanged": true,
+        "offline": true,
+        "preload": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+        "preloadSha256": "43a7988fa8cc40067190d3d193234d5296a769c16855a4d2413d071a4d8156c9",
+        "at": "2026-10-21 05:02:38 CST"
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "GT-07 终止命令非零但身份均消失仍安全还原",
+      "mode": "partial",
+      "events": [
+        "snap",
+        "suite-spawn",
+        "app-stop"
+      ],
+      "error": "root-only termination must not re-derive an unbounded tree\n+ actual - expected\n\n  [\n    '/pid',\n    '4321',\n+   '/T',\n    '/F'\n  ]\n",
+      "summary": {
+        "tag": "controlled",
+        "script": "controlled.js",
+        "log": "controlled.txt",
+        "exit": null,
+        "secs": "0.0",
+        "diff": null,
+        "stopped": true,
+        "suiteStopped": false,
+        "timedOut": false,
+        "suitePid": null,
+        "suiteTree": [],
+        "restored": false,
+        "errors": [
+          "run: root-only termination must not re-derive an unbounded tree\n+ actual - expected\n\n  [\n    '/pid',\n    '4321',\n+   '/T',\n    '/F'\n  ]\n"
+        ],
+        "configUnchanged": true,
+        "offline": true,
+        "preload": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+        "preloadSha256": "43a7988fa8cc40067190d3d193234d5296a769c16855a4d2413d071a4d8156c9",
+        "at": "2026-10-21 05:02:38 CST"
+      },
+      "status": "FAIL",
+      "assertion": "timeout left owned browser descendants alive"
+    },
+    {
+      "name": "GT-08 原PID复用为陌生身份不再杀且不误判自有进程残留",
+      "mode": "reusegone",
+      "events": [
+        "snap",
+        "suite-spawn",
+        "app-stop"
+      ],
+      "error": "root-only termination must not re-derive an unbounded tree\n+ actual - expected\n\n  [\n    '/pid',\n    '4321',\n+   '/T',\n    '/F'\n  ]\n",
+      "summary": {
+        "tag": "controlled",
+        "script": "controlled.js",
+        "log": "controlled.txt",
+        "exit": null,
+        "secs": "0.0",
+        "diff": null,
+        "stopped": true,
+        "suiteStopped": false,
+        "timedOut": false,
+        "suitePid": null,
+        "suiteTree": [],
+        "restored": false,
+        "errors": [
+          "run: root-only termination must not re-derive an unbounded tree\n+ actual - expected\n\n  [\n    '/pid',\n    '4321',\n+   '/T',\n    '/F'\n  ]\n"
+        ],
+        "configUnchanged": true,
+        "offline": true,
+        "preload": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+        "preloadSha256": "43a7988fa8cc40067190d3d193234d5296a769c16855a4d2413d071a4d8156c9",
+        "at": "2026-10-21 05:02:38 CST"
+      },
+      "status": "FAIL",
+      "assertion": "timeout left owned browser descendants alive"
+    }
+  ]
+}

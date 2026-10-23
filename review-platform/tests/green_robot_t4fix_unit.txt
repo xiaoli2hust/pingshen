@@ -1,0 +1,100 @@
+TAP version 13
+# Subtest: A-CORE-DL delivery 白名单键集精确等于八键且结构字段无法注入
+ok 1 - A-CORE-DL delivery 白名单键集精确等于八键且结构字段无法注入
+  ---
+  duration_ms: 13.524
+  type: 'test'
+  ...
+# Subtest: A-05 无关输入: 空字段合并后 draft 不变
+ok 2 - A-05 无关输入: 空字段合并后 draft 不变
+  ---
+  duration_ms: 0.3063
+  type: 'test'
+  ...
+# Subtest: A-06 结构字段注入: status/budget_id/code 被白名单丢弃, 业务字段放行
+ok 3 - A-06 结构字段注入: status/budget_id/code 被白名单丢弃, 业务字段放行
+  ---
+  duration_ms: 1.1418
+  type: 'test'
+  ...
+# Subtest: A-07 提示词攻击: 越权/非法值字段全部丢弃, 仅白名单合法值存活
+ok 4 - A-07 提示词攻击: 越权/非法值字段全部丢弃, 仅白名单合法值存活
+  ---
+  duration_ms: 0.4142
+  type: 'test'
+  ...
+# Subtest: A-13 空消息校验: 空串/纯空白拒绝, 正常文本放行
+ok 5 - A-13 空消息校验: 空串/纯空白拒绝, 正常文本放行
+  ---
+  duration_ms: 0.2285
+  type: 'test'
+  ...
+# Subtest: 提示词构建: 冻结字段清单+草稿+用户消息(§4.5 全文)
+ok 6 - 提示词构建: 冻结字段清单+草稿+用户消息(§4.5 全文)
+  ---
+  duration_ms: 0.1572
+  type: 'test'
+  ...
+# Subtest: 白名单与缺失清单一致性
+ok 7 - 白名单与缺失清单一致性
+  ---
+  duration_ms: 0.2074
+  type: 'test'
+  ...
+# Subtest: RO-01 delivery 只保留八个字段并丢弃 cost/sum/status/action
+ok 8 - RO-01 delivery 只保留八个字段并丢弃 cost/sum/status/action
+  ---
+  duration_ms: 1.8828
+  type: 'test'
+  ...
+# Subtest: RO-02 delivery 提示词禁止成本合计和确认动作
+ok 9 - RO-02 delivery 提示词禁止成本合计和确认动作
+  ---
+  duration_ms: 0.3066
+  type: 'test'
+  ...
+# Subtest: RO-03 部门任务按 review+round+dept 汇总并生成稳定幂等键
+ok 10 - RO-03 部门任务按 review+round+dept 汇总并生成稳定幂等键
+  ---
+  duration_ms: 0.3283
+  type: 'test'
+  ...
+# Subtest: RO-04 local provider 永远预演，dingtalk provider 明确未激活
+ok 11 - RO-04 local provider 永远预演，dingtalk provider 明确未激活
+  ---
+  duration_ms: 0.6964
+  type: 'test'
+  ...
+# Subtest: RO-05 dingtalk provider 五方法逐个抛未激活
+ok 12 - RO-05 dingtalk provider 五方法逐个抛未激活
+  ---
+  duration_ms: 1.8063
+  type: 'test'
+  ...
+# Subtest: RO-06 local provider 五方法全为预演且无真实结果
+ok 13 - RO-06 local provider 五方法全为预演且无真实结果
+  ---
+  duration_ms: 0.8136
+  type: 'test'
+  ...
+# Subtest: RO-07 编排器唯一出口是注入的 enqueue 且必须拿到整数 outbox_id
+ok 14 - RO-07 编排器唯一出口是注入的 enqueue 且必须拿到整数 outbox_id
+  ---
+  duration_ms: 1.499
+  type: 'test'
+  ...
+# Subtest: RO-08 已存行重过净化不吞行且剔净 cost(净化不变式与网络解耦的永久载体)
+ok 15 - RO-08 已存行重过净化不吞行且剔净 cost(净化不变式与网络解耦的永久载体)
+  ---
+  duration_ms: 0.8907
+  type: 'test'
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 343.7281

@@ -1,0 +1,14 @@
+login POST status=200 token=ok (GET /api/login=401)
+GET /api/meta/fields status=200
+presale 总项=14 req=9
+bid 总项=38 req=14
+change 总项=22 req=4
+
+bid 必填门 req 集 (14): ["customer","biz_line","contract_amount","gross_margin","ops_years","sign_path","survey","secret","settle_method","guarantee","non_compete","payment_terms","summary","data_review"]
+bid 对话追问集 BID_REQUIRED (17): ["customer","contract_amount","sub_amount","province","secret","jiadao","settle_method","sign_path","product_type","b2b_scene","revenue_confirm","promo_target","promo_amount","promo_outside","guarantee","non_compete","sub_limit"]
+交叠 (7): ["customer","contract_amount","sign_path","secret","settle_method","guarantee","non_compete"]
+req 独有 (7): ["biz_line","gross_margin","ops_years","survey","payment_terms","summary","data_review"]
+追问集独有 (10): ["sub_amount","province","jiadao","product_type","b2b_scene","revenue_confirm","promo_target","promo_amount","promo_outside","sub_limit"]
+
+subset 判定: req ⊆ 追问集 ? false | 追问集 ⊆ req ? false | 互不包含(两差集皆非空) ? true
+RQ-05 可用「都不在 req 集」的追问独有键数=10（与追问集独有数相等即自洽）: true

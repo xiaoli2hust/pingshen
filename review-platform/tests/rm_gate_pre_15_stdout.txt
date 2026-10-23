@@ -1,0 +1,28 @@
+PASS - OP-01 建档 200(实 200)
+PASS - OP-01 opp_code 回显一致
+PASS - OP-01 status=pending 且 source=form
+PASS - OP-01 contract_amount 为 number(240)
+PASS - OP-02 同码重复建档 409 含「已存在」(实 409 商机代码已存在:PL-T2-4307167-01)
+PASS - OP-03 缺 customer/summary → 400(实 400)
+PASS - OP-03 missing 恰含这两键且不含已给键(missing=["customer","summary"])
+PASS - OP-04 中文形态脏码 400 且提示商机代码(实 400 商机代码不合法:需 2-40 位字母数字开头, 仅可含 . _ -)
+PASS - OP-05 FDE 建档 403(实 403)
+PASS - OP-06 销售支持组建档 200(实 200)
+PASS - OP-07 GET 200 且回显 18 列(实 keys=18)
+PASS - OP-07 关键要素在位(title/customer/sales/opp_stage)
+PASS - OP-08 未知商机码 404(实 404)
+PASS - OP-09 PUT {pm} 生效(实 200)
+PASS - OP-09 未提交要素未被清掉(customer/biz_line/summary 原样)
+PASS - OP-10 非建档人 PUT 403(实 403)
+PASS - OP-11 未登录 GET 401(实 401)
+PASS - OP-12 建评审单 200(前置条件, 实 200)
+PASS - OP-12 隐式建档 source=form
+PASS - OP-12 status=pending
+PASS - OP-12 title 继承评审标题(实 "OP12-评审标题-4307167")
+PASS - OP-13 既有档案 title 未被覆盖(before="T2测试商机-4307167-01" after="T2测试商机-4307167-01")
+PASS - OP-14 重复隐式建档后 GET 仍 200 无报错(实 200)
+PASS - OP-14 档案仍为单份且保留首档标题(opp_code 为主键, 实 "OP14-第一张-4307167")
+
+24 passed, 0 failed -> ALL PASS
+日志已写入: tests\rm_gate_pre_15_suite.txt
+

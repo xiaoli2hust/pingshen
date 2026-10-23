@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>项目评审线上化规划方案</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"Microsoft YaHei","PingFang SC",sans-serif; background:#f5f6f8; color:#2c2c2a; line-height:1.7; padding:32px 16px; }
+  .wrap { max-width:1080px; margin:0 auto; }
+  h1 { font-size:26px; font-weight:600; }
+  h2 { font-size:19px; font-weight:600; margin:36px 0 14px; padding-left:12px; border-left:4px solid #534AB7; }
+  h3 { font-size:15px; font-weight:600; margin:18px 0 8px; }
+  p, li { font-size:14px; color:#444; }
+  .hero { background:linear-gradient(135deg,#26215C,#534AB7); color:#fff; border-radius:14px; padding:32px 36px; }
+  .hero p { color:#d9d7f5; margin-top:10px; }
+  .hero .tag { display:inline-block; background:rgba(255,255,255,.15); border-radius:20px; padding:3px 14px; font-size:12px; margin:14px 8px 0 0; color:#fff; }
+  .grid { display:grid; gap:14px; }
+  .g2 { grid-template-columns:1fr 1fr; }
+  .g3 { grid-template-columns:1fr 1fr 1fr; }
+  .g4 { grid-template-columns:repeat(4,1fr); }
+  @media(max-width:820px){ .g2,.g3,.g4 { grid-template-columns:1fr; } }
+  .card { background:#fff; border:1px solid #e6e7ea; border-radius:12px; padding:18px 20px; }
+  .card h4 { font-size:14.5px; font-weight:600; margin-bottom:6px; }
+  .card p, .card li { font-size:13px; }
+  .num { display:inline-flex; width:26px; height:26px; border-radius:8px; background:#EEEDFE; color:#534AB7; font-weight:600; align-items:center; justify-content:center; font-size:13px; margin-right:8px; }
+  .dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; vertical-align:middle; }
+  .green { background:#3B6D11; } .yellow { background:#BA7517; } .red { background:#A32D2D; }
+  .pill { display:inline-block; border-radius:6px; padding:1px 10px; font-size:12px; font-weight:600; }
+  .pill-g { background:#EAF3DE; color:#27500A; } .pill-y { background:#FAEEDA; color:#633806; } .pill-r { background:#FCEBEB; color:#791F1F; } .pill-b { background:#E6F1FB; color:#0C447C; } .pill-p { background:#EEEDFE; color:#3C3489; }
+  table { width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden; font-size:13px; }
+  th { background:#f0f1f4; text-align:left; padding:9px 12px; font-weight:600; color:#333; white-space:nowrap; }
+  td { padding:8px 12px; border-top:1px solid #eef0f2; color:#444; vertical-align:top; }
+  .flow { display:flex; align-items:stretch; gap:8px; flex-wrap:wrap; margin:6px 0; }
+  .step { flex:1; min-width:150px; background:#fff; border:1px solid #e6e7ea; border-top:3px solid #534AB7; border-radius:10px; padding:12px 14px; }
+  .step b { font-size:13.5px; display:block; margin-bottom:4px; }
+  .step span { font-size:12px; color:#666; }
+  .arrow { align-self:center; color:#9a99a8; font-size:18px; }
+  ul { padding-left:20px; } li { margin:3px 0; }
+  .note { background:#FFFBEB; border:1px solid #F3E3B3; border-radius:10px; padding:12px 16px; font-size:13px; color:#6b5310; margin-top:12px; }
+  .kbd { background:#f0f1f4; border-radius:5px; padding:0 6px; font-size:12px; color:#555; }
+  .footer { text-align:center; color:#999; font-size:12px; margin-top:40px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+  <h1>项目评审线上化规划方案</h1>
+  <p>基于《商机-项目关键节点评审管理流程指引 V1.0》——将 <b>信息收集、前置评审、红黄绿灯评定</b> 三环节线上化；评审会保留线下召开，但 <b>关键风险在会前自动推送到各位领导</b>，让会议只做决策、不做信息同步。</p>
+  <span class="tag">售前立项</span><span class="tag">投标决策</span><span class="tag">项目关键事项</span><span class="tag">红黄绿灯</span><span class="tag">会前风险推送</span>
+</div>
+
+<h2>一、现状与痛点</h2>
+<div class="grid g4">
+  <div class="card"><h4>表格多、分散</h4><p>3 张信息收集表 + 1 张指标规则卡片（40+ 指标）+ 往上决策规则，全部靠 Excel 流转，版本难统一。</p></div>
+  <div class="card"><h4>前置评审靠人肉</h4><p>销售支持组逐一分发给交付/财务/采购/法务/合规，回收靠催，进度不可见，"规定时间内完成"无法考核。</p></div>
+  <div class="card"><h4>灯态靠人工汇总</h4><p>每周一人工汇总灯态、判断 XO 升级条件（11 项）和向上路由（14 条规则含杜总级），慢且易漏。</p></div>
+  <div class="card"><h4>风险会上才暴露</h4><p>领导在评审会上才第一次看到项目风险，会前无准备，会议变成"读材料"而不是"做决策"。</p></div>
+</div>
+
+<h2>二、线上化目标与边界</h2>
+<div class="grid g2">
+  <div class="card">
+    <h4>线上化（本期做）</h4>
+    <ul>
+      <li><b>信息收集</b>：三张 Excel 表 → 在线表单，一次填报、全程复用</li>
+      <li><b>前置评审</b>：系统自动分发、各部门在线打灯 + 填意见、超时自动催办</li>
+      <li><b>红黄绿灯评定</b>：量化指标系统自动判灯，主观指标人工打灯，综合灯态与升级路由自动计算</li>
+      <li><b>会前风险推送</b>：黄/红灯项目的风险卡片，会前直达对应级别领导</li>
+      <li><b>归档与台账</b>：评审结论、决策文件线上归档，全程可追溯</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>保留线下（不做）</h4>
+    <ul>
+      <li><b>部门级评审会</b>（每周二）与 <b>XO 级评审会</b>（每周五）照常召开——领导多、需要当面质询与拍板</li>
+      <li>POC 投入维持邮件审批（规则明确不纳入红黄绿灯机制）</li>
+      <li>法务涉诉等敏感信息仍由法务人工确认后录入（规则卡片已有此要求）</li>
+    </ul>
+    <div class="note">定位一句话：<b>系统管"信息与判定"，会议管"决策与拍板"，推送管"会前到人"。</b></div>
+  </div>
+</div>
+
+<h2>三、总体流程（线上化后）</h2>
+<div class="flow">
+  <div class="step"><b>1 信息收集</b><span>销售/项目经理在线填报 Part A，系统按评审类型动态出字段，校验后提交</span></div>
+  <div class="arrow">→</div>
+  <div class="step"><b>2 前置评审</b><span>系统按指标责任矩阵自动分发，各部门并行打灯+意见，48h SLA 催办</span></div>
+  <div class="arrow">→</div>
+  <div class="step"><b>3 智能评定</b><span>规则引擎判定单指标灯态 → 综合灯态 → XO 升级 → 路由（部门级/XO/杜总）</span></div>
+  <div class="arrow">→</div>
+  <div class="step"><b>4 风险预推送</b><span>黄/红灯风险卡片会前推送给对应级别领导，绿灯留档、红灯打回</span></div>
+  <div class="arrow">→</div>
+  <div class="step"><b>5 会议决策归档</b><span>线下会照常开，结论线上录入、任务跟踪、自动归档</span></div>
+</div>
+
+<h2>四、五大模块设计</h2>
+
+<h3><span class="num">M1</span>信息收集 · 在线表单</h3>
+<div class="grid g3">
+  <div class="card"><h4>三表合一，按类型切换</h4><p>售前立项 / 投标决策 / 项目关键事项共用一套表单框架，选择评审类型后动态加载对应字段（如投标决策多出签约路径、分包金额、付款条件等 18 项；关键事项多出变更前后对比字段）。</p></div>
+  <div class="card"><h4>字段级管控</h4><p>下拉选项（业务线 G1/B2/G2、是否涉及测绘）、数值校验（金额、毛利率）、必填控制、附件上传（毛利率及成本预算表、客户审计报告、企查查记录等证据材料）。</p></div>
+  <div class="card"><h4>数据复用</h4><p>商机名称/代码关联 CRM 商机台账自动带出基础信息；同一项目售前→投标→关键事项三次评审信息继承，只填差异项。</p></div>
+</div>
+
+<h3><span class="num">M2</span>前置评审 · 协同打灯</h3>
+<div class="grid g3">
+  <div class="card"><h4>自动分发</h4><p>提交后系统按"指标-责任部门"矩阵自动派单：FDE（技术可行性/交付资源/分包合理性）、财务BP（利润/付款/信用/关联交易）、采购BP（分包/指定供应商）、法务（签约路径/担保竞业/数据合规）、合规BP（测绘/甲导资质）。</p></div>
+  <div class="card"><h4>在线打灯 + 意见</h4><p>评审人对自己负责的指标逐项选择 <span class="pill pill-g">绿</span> <span class="pill pill-y">黄</span> <span class="pill pill-r">红</span> 并填前置评审意见；主观判断类指标（规则卡片标注"手动输入"的）必须人工打灯。</p></div>
+  <div class="card"><h4>SLA 与催办</h4><p>每环节 48 小时时限，看板实时显示"已评/未评"，超时自动钉钉提醒评审人，抄送销售支持组；彻底解决"规定时间内完成"无法落地的问题。</p></div>
+</div>
+
+<h3><span class="num">M3</span>红黄绿灯 · 规则引擎</h3>
+<div class="grid g2">
+  <div class="card">
+    <h4>判定逻辑（与规则文件一一对应）</h4>
+    <ul>
+      <li><b>单指标判定</b>：量化指标（分包占比≥40%/70%、毛利率&lt;10%/0%、合同金额≥500万、运维周期&gt;3年、售前投入&gt;10万/50万、关联交易&gt;100万等）由系统按填报数值自动判灯；主观指标取前置评审人工灯态</li>
+      <li><b>综合灯态</b>：任一红 → 红（打回）；任一黄 → 黄（上会）；全绿 → 绿（免上会）</li>
+      <li><b>XO 升级</b>：自动核对 11 项升级条件（运维&gt;3年、指定供应商、意见不一致、毛利率&lt;0%、金额&gt;500万、提前投入&gt;50万、分包&gt;70%、担保、竞业、对外激励≥15%或≥30w、体系内规则外激励）</li>
+      <li><b>向上路由</b>：按"往上决策规则"14 条自动判定 部门级 / XO / 杜总 三级归宿</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>规则配置化（关键设计）</h4>
+    <p>把"指标规则卡片"整张表做成<b>后台可配置的规则库</b>：阈值（如 500 万、40%）、灯态标准文案、责任部门、适用环节、是否公司级，全部做成配置项。</p>
+    <ul>
+      <li>规则调整（如阈值变化、新增指标）改配置即可，<b>不需要改代码</b></li>
+      <li>规则版本留痕，历史项目按当时版本判定，可回查</li>
+      <li>已接入的"评审智能体"作为引擎的 AI 补充：对文字类材料（付款条款、签约路径描述）做辅助解读与判灯建议，最终灯态仍以规则+人工确认为准</li>
+    </ul>
+  </div>
+</div>
+
+<h3><span class="num">M4</span>会前风险预推送 <span class="pill pill-p">本次需求核心</span></h3>
+<div class="card">
+  <table>
+    <tr><th style="width:110px">要素</th><th>设计</th></tr>
+    <tr><td><b>推什么</b></td><td>每个黄/红灯项目一张「风险卡片」：项目名称/金额/客户 → 综合灯态与评审路径（部门级/XO/杜总）→ <b>仅列出红黄灯指标</b>（指标名、风险说明、责任部门意见）→ 触发的升级条件 → 会上需决策的问题清单。绿灯指标不推送，避免信息噪音。</td></tr>
+    <tr><td><b>推给谁</b></td><td>按路由结果分级推送：部门级黄灯 → 部门级评审委员会成员；XO 级 → XO 评审委员会成员；触杜总级规则（运维&gt;3年、毛利&lt;0%、金额&gt;500万、提前投入&gt;50万、过单&gt;70%）→ 加推杜总。销售支持组/企划办全量可见。</td></tr>
+    <tr><td><b>何时推</b></td><td>两个波次：① <b>周一上午</b>——系统自动汇总本周灯态，绿灯留档清单 + 红灯驳回通知 + 黄灯风险卡片首推（对齐现有"周一汇总邮件"动作）；② <b>会前 1 天</b>——材料截止（会前 2 个工作日）后，推送最终版风险卡片 + 上会材料包链接。</td></tr>
+    <tr><td><b>什么渠道</b></td><td>主推<b>钉钉</b>（已具备连接条件）：卡片消息直达到人，手机可览，点卡片进详情页；邮件同步归档版（对齐现行邮件留档要求）。</td></tr>
+    <tr><td><b>会后闭环</b></td><td>会议结论（通过/有条件通过/驳回）线上录入后，自动回推给申请人与相关部门；有条件通过的约束条件生成待办任务跟踪。</td></tr>
+  </table>
+</div>
+
+<h3><span class="num">M5</span>会议支撑与归档台账</h3>
+<div class="grid g3">
+  <div class="card"><h4>会上投屏看板</h4><p>按会议议程排列本周黄灯项目，每项一页：风险卡片 + 各部门前置意见 + 需决策点，替代销售经理读 PPT。</p></div>
+  <div class="card"><h4>结论线上化</h4><p>决策结果当场录入，自动关联后续动作：通过后触发 PMS 项目建立/变更申请提醒（对齐现有评审后续要求），不通过且有预投入的触发 PMS 关闭提醒。</p></div>
+  <div class="card"><h4>全程台账</h4><p>项目从售前立项到关键事项的全部评审记录、灯态变化、决策文件归档一处，支持按区域/业务线/灯态统计（红黄灯率、平均评审周期、超时部门）。</p></div>
+</div>
+
+<h2>五、角色与权限</h2>
+<table>
+  <tr><th>角色</th><th>信息收集</th><th>前置评审</th><th>灯态评定</th><th>风险推送</th><th>会议与归档</th></tr>
+  <tr><td>销售经理 / 项目经理</td><td>填报、红灯后重新提交</td><td>查看</td><td>提交前可自助预判灯态</td><td>接收本人项目结果</td><td>主述、查看结论</td></tr>
+  <tr><td>FDE / 财务BP / 采购BP / 法务 / 合规BP</td><td>—</td><td>负责指标打灯+意见</td><td>—</td><td>接收本部门相关风险</td><td>查看</td></tr>
+  <tr><td>销售支持组</td><td>分发（系统自动）</td><td>协调、催办</td><td>汇总确认</td><td>全量可见、组织推送</td><td>部门级会组织、归档</td></tr>
+  <tr><td>企划办</td><td>—</td><td>—</td><td>确认 XO 路由</td><td>全量可见</td><td>XO 会组织、归档</td></tr>
+  <tr><td>评审委员会 / 杜总</td><td>—</td><td>—</td><td>—</td><td>接收对应级别风险卡片</td><td>会上决策</td></tr>
+</table>
+
+<h2>六、周节奏（与现行机制完全对齐）</h2>
+<table>
+  <tr><th>时点</th><th>系统动作</th><th>人工动作</th></tr>
+  <tr><td>提前 1 周</td><td>在线提报入口开放，申请人自助预判灯态</td><td>销售/项目经理填报</td></tr>
+  <tr><td>提前 2 个工作日</td><td>材料提交截止，前置评审 SLA 到期自动催办</td><td>各部门完成打灯</td></tr>
+  <tr><td>每周一</td><td><b>自动汇总灯态</b>：绿灯留档、红灯驳回通知、黄灯风险卡片首推领导</td><td>销售支持组确认</td></tr>
+  <tr><td>每周二</td><td>投屏看板 + 结论录入</td><td><b>部门级评审会（线下）</b></td></tr>
+  <tr><td>每周五</td><td>XO 级风险卡片提前 1 天加推（含杜总级事项）</td><td><b>XO 级评审会（线下）</b></td></tr>
+</table>
+
+<h2>七、分期实施路线</h2>
+<div class="grid g3">
+  <div class="card" style="border-top:3px solid #3B6D11">
+    <h4>P1 · 跑通主流程（4–6 周）</h4>
+    <ul><li>M1 在线表单（三类评审）</li><li>M2 前置评审分发 + 打灯 + 催办</li><li>M4 钉钉风险卡片推送（先按现规则半自动生成）</li><li>基础台账</li></ul>
+    <p style="margin-top:6px;color:#3B6D11"><b>收益：摆脱 Excel 流转，领导会前收到风险</b></p>
+  </div>
+  <div class="card" style="border-top:3px solid #BA7517">
+    <h4>P2 · 智能判定（+4 周）</h4>
+    <ul><li>M3 规则引擎 + 规则配置后台</li><li>综合灯态 / XO 升级 / 杜总路由全自动</li><li>M5 会上投屏看板 + 结论录入</li><li>统计报表（红黄灯率、周期、超时）</li></ul>
+    <p style="margin-top:6px;color:#854F0B"><b>收益：周一汇总从半天缩到一键</b></p>
+  </div>
+  <div class="card" style="border-top:3px solid #534AB7">
+    <h4>P3 · 集成与智能（持续）</h4>
+    <ul><li>CRM 商机 / PMS 项目数据打通</li><li>评审智能体辅助解读合同条款类指标</li><li>历史评审数据反哺规则优化</li></ul>
+    <p style="margin-top:6px;color:#3C3489"><b>收益：填报减半，判定更准</b></p>
+  </div>
+</div>
+
+<h2>八、落地注意事项</h2>
+<div class="grid g2">
+  <div class="card"><h4>推送要"轻"</h4><p>领导只收红黄灯、只收自己级别的项目，单项目卡片一屏看完；绿灯项目只进台账不打扰。这是推送机制能否被接受的关键。</p></div>
+  <div class="card"><h4>规则维护责任</h4><p>建议明确规则库归口（销售支持组维护 + 企划办审核），阈值调整走线上审批留痕，避免"规则改了、系统没改"。</p></div>
+  <div class="card"><h4>敏感信息处理</h4><p>法务涉诉详情、客户信用细节按现行规则人工确认后录入，推送卡片只显示结论性描述，详情需权限查看。</p></div>
+  <div class="card"><h4>并行期安排</h4><p>P1 上线后建议设 2–4 周 Excel 并行期，以系统数据为准回校 Excel，跑顺后停发表格。</p></div>
+</div>
+
+<div class="footer">基于《项目评审管理规则-流程指引与评审表.xlsx》V1.0 编制 · 2026-09-24</div>
+</div>
+</body>
+</html>

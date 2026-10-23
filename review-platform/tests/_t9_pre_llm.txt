@@ -1,0 +1,44 @@
+FAIL - LM-01 非 admin GET /api/admin/llm/profiles 403 且文案前缀「仅 admin」 | 404:接口不存在 / 404:接口不存在
+FAIL - LM-01 非 admin POST /api/admin/llm/test 403 且文案前缀「仅 admin」 | 404:接口不存在 / 404:接口不存在
+FAIL - LM-01 非 admin GET /api/admin/llm/usage 403 且文案前缀「仅 admin」 | 404:接口不存在 / 404:接口不存在
+FAIL - LM-01 非 admin POST /api/admin/llm/settings 403 且文案前缀「仅 admin」 | 404:接口不存在 / 404:接口不存在
+PASS - LM-09 空提交 400 且文案「未提交任何要修改的键」 | 400:未提交任何要修改的键
+FAIL - LM-03 写 profile 200 后 config.json 可 parse、四键在场且值未被吞 | status=400 keys=LLM_BASE_URL,LLM_API_KEY,LLM_MODEL,REPORT_SECRET,PUBLIC_BASE_URL,DEMO_HINT
+FAIL - LM-03 profile 经唯一写者落盘(budget/review 三键)
+FAIL - LM-02 GET /api/admin/config 回 LLM_PROFILES_MASKED 且 key 为掩码 | budget.key=-
+FAIL - LM-02 两端点响应 JSON 不含任何明文 key/secret | profiles status=404
+FAIL - LM-04 回灌掩码 key 不改写原值 | status=400
+FAIL - LM-05 桩在跑: 200 ok=true ms 为数 | {"error":"接口不存在"}
+FAIL - LM-05 探针走 review profile 且 1-token | null
+FAIL - LM-05 桩断开: HTTP 仍 200 且 ok=false、error 非空 | {"error":"接口不存在"}
+PASS - LM-05 探针 error 不泄露明文 key
+FAIL - LM-06 技能①走 budget profile(桩收到 model=stub-budget)且未降级 | degraded=true model=null
+FAIL - LM-06 llm_calls 行数 0→1→2 单调增长 | c0=ERR no such table: llm_calls c1=ERR c2=ERR
+FAIL - LM-06 桩在跑行 ok=1/degraded=0, 桩断开行 ok=0/degraded=1, profile=budget | []
+PASS - LM-06 桩断开时技能① HTTP 200 且 degraded=true
+PASS - LM-07 技能② 桩断开 HTTP 200 且 degraded=true | rv=5327 status=200
+PASS - LM-07 降级回复点选字段齐备(reply/draft/missing/review_id)
+PASS - LM-07 form_json 未被 LLM 输出污染(前后逐字相等)
+FAIL - LM-07 技能② 降级同样落 llm_calls(profile=review, degraded=1) | []
+FAIL - LM-08 parser 未配置 + 顶层指拒连 -> ok=false(确实回落顶层) | {"error":"接口不存在"}
+FAIL - LM-08 顶层改指桩 -> parser ok=true 且 model 回落顶层 LLM_MODEL | model=null
+FAIL - LM-08 顶层拒连 + default.base 指桩 -> parser 经 default 回落 ok=true | {"error":"接口不存在"}
+FAIL - LM-08 profiles 端点回显 parser 实效值与来源(base←default, model←顶层) | {}
+FAIL - LM-08 default.base 显式 null 清除后回落顶层拒连(ok=false 且文件内已删)
+FAIL - LM-10 timeout_ms=1000 + 桩延迟 3s -> 探针 ok=false 且 ms<2500 | ms=undefined
+PASS - LM-10 同设置下技能① 也按 1s 超时降级(HTTP 200 degraded=true) | degraded=true
+FAIL - LM-10 timeout_ms=8000 -> 探针 ok=true 且 ms≥2900(确为同一桩) | ms=undefined
+PASS - LM-12 enabled=false: 技能① 200 degraded=true 且桩零命中 | hits+0
+FAIL - LM-12 enabled=false: 探针照常 ok=true
+FAIL - LM-13 v2 覆盖技能② 提示词(桩收到 LM13-PROMPT-V2)且字段照常归一化 | sys=null
+FAIL - LM-13 删除版本后回落冻结默认 BID 提示词
+FAIL - LM-14 timeout_ms 越界 400 | 404:接口不存在
+FAIL - LM-14 合法 degrade 落 settings 原始 JSON 串且记操作人 | {}
+FAIL - LM-14 提示词两次写入为 v1→v2 追加, profiles 回显版本与降级参数 | {"c":{"error":"接口不存在"},"d":{"error":"接口不存在"},"v":[]}
+FAIL - LM-14 非白名单 skill 400(判灯等路径不受提示词管理)
+FAIL - LM-11 30 天前行不计入 ?days=7(n=0) | no such table: llm_calls
+FAIL - LM-11 再插当前行 n 恰为 1 | n=ERR
+FAIL - LM-11 /stats 别名与 /usage 同口径
+config.json 已按原始字节复位; 四键在场=true 字节相等=true
+
+8 passed, 33 failed -> SOME FAIL

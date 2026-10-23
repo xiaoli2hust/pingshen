@@ -1,0 +1,7 @@
+PASS - T3-01 presale 无 budget_id 提交被拦 400 | status=400
+PASS - T3-02 presale 带 locked budget_id 提交 200 | status=200
+PASS - T3-03 change 无关联提交不受影响(200) | status=200
+
+3 passed, 0 failed -> ALL PASS
+日志已写入: tests\rm_gate_pre_11_suite.txt
+

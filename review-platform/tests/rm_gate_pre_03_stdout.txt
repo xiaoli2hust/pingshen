@@ -1,0 +1,65 @@
+TAP version 13
+# Subtest: RO-01 delivery 只保留八个字段并丢弃 cost/sum/status/action
+ok 1 - RO-01 delivery 只保留八个字段并丢弃 cost/sum/status/action
+  ---
+  duration_ms: 2.5699
+  type: 'test'
+  ...
+# Subtest: RO-02 delivery 提示词禁止成本合计和确认动作
+ok 2 - RO-02 delivery 提示词禁止成本合计和确认动作
+  ---
+  duration_ms: 0.3517
+  type: 'test'
+  ...
+# Subtest: RO-03 部门任务按 review+round+dept 汇总并生成稳定幂等键
+ok 3 - RO-03 部门任务按 review+round+dept 汇总并生成稳定幂等键
+  ---
+  duration_ms: 0.586
+  type: 'test'
+  ...
+# Subtest: RO-04 local provider 永远预演，dingtalk provider 明确未激活
+ok 4 - RO-04 local provider 永远预演，dingtalk provider 明确未激活
+  ---
+  duration_ms: 1.0603
+  type: 'test'
+  ...
+# Subtest: RO-05 dingtalk provider 五方法逐个抛未激活
+ok 5 - RO-05 dingtalk provider 五方法逐个抛未激活
+  ---
+  duration_ms: 0.7343
+  type: 'test'
+  ...
+# Subtest: RO-06 local provider 五方法全为预演且无真实结果
+ok 6 - RO-06 local provider 五方法全为预演且无真实结果
+  ---
+  duration_ms: 0.5544
+  type: 'test'
+  ...
+# Subtest: RO-07 编排器唯一出口是注入的 enqueue 且必须拿到整数 outbox_id
+ok 7 - RO-07 编排器唯一出口是注入的 enqueue 且必须拿到整数 outbox_id
+  ---
+  duration_ms: 1.216
+  type: 'test'
+  ...
+# Subtest: RO-08 已存行重过净化不吞行且剔净 cost(净化不变式与网络解耦的永久载体)
+ok 8 - RO-08 已存行重过净化不吞行且剔净 cost(净化不变式与网络解耦的永久载体)
+  ---
+  duration_ms: 0.7125
+  type: 'test'
+  ...
+# Subtest: RO-09 部门任务消息含非空截止提示且不含编造日期(spec §5.4.4)
+ok 9 - RO-09 部门任务消息含非空截止提示且不含编造日期(spec §5.4.4)
+  ---
+  duration_ms: 1.1955
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 375.5763
+

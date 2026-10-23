@@ -1,0 +1,141 @@
+HEAD=186b2513c0353e8af2419b91a7cfe2ebd631cb81
+HEAD_short=186b251
+git_commits_this_task=0 (全程无 git add/commit/push; HEAD 跑前跑后同为 186b251)
+suites=32 (运行时实测 tests/run_all.js SUITES.length, 不沿用旧 29)
+run_all_cmd=C:\Users\01386380\.workbuddy\binaries\node\versions\22.22.2-6\node.exe tests/run_all.js --log=tests/green_run_robot_workflow.txt
+run_all_last_line=32/32 套通过, 耗时 516.5s -> ALL PASS
+run_all_exit=0
+database_is_locked=0
+SOME_FAIL=0
+FAIL_lines=0
+
+[专项计数(全门内)]
+RO+A-core=15/0 (RO 8/0 + A 核心纯函数 7/0)
+A-chat=43/0
+RW=18/0
+RB=62/0
+AW=7/0
+AD=23/0
+合计=168/0 (与 Task 8 口径一致)
+机器人三表端点与浏览器层全绿; 全门 32 套无一红
+
+[新鲜浏览器终验(还原后重跑, 不复用门内证据)]
+h_robot_workbench_shots=7 passed, 0 failed -> ALL PASS (AW-01~07; console=0 pageerror=0; CLEANUP PL-AW-* opps/budgets/reviews=0/0/0; shot=87798B)
+h_admin_shots=23 passed, 0 failed -> ALL PASS (AD-01~15; console=0 pageerror=0; AD-09b pageerror 总数=0; CLEANUP PL-AD-RB-* =0/0/0; shots llm=97773B robot=70775B)
+h_flicker=4 passed, 0 failed -> ALL PASS (HF-1 probe=P1 / HF-2 probe=P2 / HF-3 on=归档库 / HF-4 shell 重建)
+本地预演文案=AD-11 命中「本地预演，未连接钉钉」
+上传与文字入口=AW-02 三上传 accept=.xlsx 各 POST 命中既有导入端点恰一次; AW-03 文字生成后只出草稿行+人工保存/确认按钮且 status=draft
+人工确认按钮=AW-03 save=1 confirm=1 不自动确认
+任务深链=AW-05 delivery/budget/review 三状态与下一步深链均命中
+未绑定与 preview=AD-13 unbound=true preview=true delivered=false (不伪装已送达)
+XSS=AW-07 三页签逐个自证 active=delivery/budget/review literal=true/true/true escaped=true/true/true imgs=0/0/0 ran=false; AD-14 payload 转义 img=0 ran=false
+
+[config.json 铁律3]
+config_before=270B SHA-256=f285c66ad4790370c4d30b2b0fbb51e8cc312deed99596d19164ced5d9285fcf
+config_after_gate=270B SHA-256=f285c66ad4790370c4d30b2b0fbb51e8cc312deed99596d19164ced5d9285fcf
+config_final=270B SHA-256=f285c66ad4790370c4d30b2b0fbb51e8cc312deed99596d19164ced5d9285fcf
+config_unchanged=true (三采全串相同且=基线; 未入 git)
+
+[快照与字节级还原]
+snapshot=F:\workbuddy\9\.superpowers\sdd\2026-10-16-robot-dingtalk-workflow\snapshot_20261016_164425.db
+snapshot_bytes=52826112
+snapshot_sha256=4339a18cfd94cf8b5cb9c696d11c1ae95269e5839acc0ec4ea83d702eceee1cf
+snapshot_gitignored=true (.gitignore:52 .superpowers/, git check-ignore 实测命中)
+pre_gate_db_sha256=4339a18cfd94cf8b5cb9c696d11c1ae95269e5839acc0ec4ea83d702eceee1cf (停机后采集)
+copy_identical=true (源与副本 SHA 全串相同)
+restore_1_sha256=4339a18cfd94cf8b5cb9c696d11c1ae95269e5839acc0ec4ea83d702eceee1cf identical=true (全门后)
+restore_2_sha256=4339a18cfd94cf8b5cb9c696d11c1ae95269e5839acc0ec4ea83d702eceee1cf identical=true (浏览器终验后)
+语义深比较: 门前(取自未改动快照只读 probe) vs 交付态 = diff_count=0
+逐表全行内容比对: 19/19 表 SAME, changed_tables=0
+交付态 vs 快照文件字节差=3/52826112 (offset 27 与 95 = SQLite file change counter / version-valid-for 由 116109→116118; offset 16354 = 第 4 页 leaf table page 内一个 cell 本地长度 varint 120→129)
+差异归因=还原当刻逐字节相同(identical=true), 其后仅服务重启的 SQLite 记账位; 全部 19 表逐行解码值相同
+门后脏库(还原前只读 probe, 证快照必要): opps 50→98, reviews 93→199, budgets 98→179, opp_delivery 26→55, robot_outbox 90→242, 且新写 outbox 落在真实码 PL00008026/PL00008572 上
+
+[语义回读(交付态, 逐项见 gate_restore_checklist_corrected.txt)]
+七月六份=PL00006204/PL00007297/PL00008026/PL00008210/PL00008314/PL00008330 全 delivery=confirmed 全 budget=locked
+review=五份 archived/yellow(6204/8026/8210/8314/8330) + PL00007297 returned/red round=1 budget_id=1
+锚点 PL00008572: reviews=0 budgets=0 delivery=confirmed
+opps=50; reviews{archived=21,draft=23,returned=25,reviewing=24}; light{null=59,green=16,red=13,yellow=5}; budgets{draft=12,locked=86}; opp_delivery{confirmed=11,draft=15}
+robot_user_bindings=0 robot_targets=0 robot_outbox=90(全 preview)
+夹具 opps 前缀分布与门前逐字相同: PL-A-DL-4/PL-AD-RB-2/PL-AW-17-2/PL-RW-17-24/PL-T-RB-1/PL-T10-*(2+2+2+2)/PL-T6-19-1/PL-WZ-19-1 计 43; 真实码 opps=7
+watermark 与门前相同: max_review_id=159 max_budget_id=153 max_opp_rowid=50 max_outbox_id=131
+语义回读合计=20 passed / 0 failed
+
+[真实外发取证]
+外发请求计数=0
+robot_outbox 总数=90 非 preview=0 status 分布={"preview":90}
+sent_at 非空=0 attempts>0=0 last_error 非空=0 IN('ready','sent','failed','cancelled')=0
+robot_user_bindings=0 robot_targets=0
+服务日志 grep oapi.dingtalk.com|api.dingtalk.com = 0 命中 (server_robot_t9.log/.err, server_robot_t9b.log/.err)
+.err 内 4 条 [notify:db]/[notify:config] 发送失败=套件自带的 127.0.0.1 桩拒连(故障注入用例), 非真实钉钉地址
+
+[服务与 PID 序列]
+开工 8600=PID 36404 (CommandLine 实测 node.exe server.js, CreationDate 2026-10-16 13:29:53, 全机唯一 node) → 双采样独占后停
+跑门 新 PID 28780 (16:44:51, 日志 server_robot_t9.log/.err 均为新建) → 还原前双采样独占后停
+浏览器终验 新 PID 5468 (16:58:38, 日志 server_robot_t9b.log/.err 新建) → 二次还原前双采样(两次同值)后停
+收工 新 PID 39880 (17:03:59, 日志 server_robot_t9c.log/.err 新建), /api/me=401
+未停任何陌生 PID; 未覆盖他人日志
+
+[鉴权与临时件]
+/api/me=401 本会话 curl 实测 4 次皆 401 (①停 36404 前 ②起 28780 后 ③起 5468 后 ④收工起 39880 后); 另 run_all.js:19 预检内部要求 /api/me=401 才开跑门
+临时件 tests/_tmp_robot_gate_snapshot.js=已删除 (实测 tests/_tmp_* No such file)
+外部快照 snapshot_20261016_164425.db=已删除 (SHA 三度验证一致后)
+npm 依赖新增=0 (零依赖铁律1未触)
+
+[交付后活库只读复核]
+复核对象=当前现网 data/review.db (服务 PID 39880 运行中, node:sqlite readOnly + 全参数绑定, 不写不回改)
+opps=50; reviews{archived=21,draft=23,returned=25,reviewing=24}; light{NULL=59,green=16,red=13,yellow=5}; budgets{draft=12,locked=86}; opp_delivery{confirmed=11,draft=15}
+robot_user_bindings=0 robot_targets=0 robot_outbox=90; outbox_status={"preview":90}; 非preview=0 sent_at非空=0 attempts>0=0 last_error非空=0
+七月六份逐行读值=PL00006204/8026/8210/8314/8330 各 review archived+yellow round1 且 budget locked 且 delivery confirmed; PL00007297 review returned+red round1 budget_id=1 且 locked 且 confirmed
+锚点 PL00008572 reviews=0 budgets=0 delivery=confirmed
+真实码 opps=7 夹具 opps=43 前缀分布与门前逐字相同; outbox 前缀 {"PL-T-RB":90}; watermark=159/153/50/131; db_bytes=52826112
+逐行证据文件=.superpowers/sdd/2026-10-16-robot-dingtalk-workflow/live_readback_step6_recheck.txt
+
+[简报失真与偏离披露]
+1) 简报 Step4「六份 budget=locked / 五份 review=archived/yellow」按真实六份集合(含 PL00008314)成立, 本会话首轮曾把 PL00008572 误当第六份而得出「四份 archived/yellow」; 已按 green_run_july_meta.txt:7 的真实集合纠正并重测, 纠正后 20/0。
+2) 快照未在 Step4 末删除, 保留至 Step5 浏览器终验后做二次还原再删(Step6 亦要求删)。理由: Step5 两个浏览器套件会真实写夹具与 session, 若 Step4 即删快照则交付库无法再回到门前态。二次还原后交付态与快照 19/19 表逐行相同。
+3) Step5「人工用项目经理/admin 打开页面」属用户本人动作, 本会话未代替人工点击; 已用 AW/AD/HF 三套新鲜实测覆盖同等观测面, 深链与页签地址见报告。
+
+[I-1 修复轮 · spec §5.4.4 截止提示 (交付码变更后重跑)]
+改动(3 处生产/前端 + 3 处断言):
+  robot-orchestrator.js:50 payload 新增 deadline_hint='请及时完成本部门前置评审并打灯'(注释 :42)
+  public/app.js:2733 rbaOutboxPane 以 esc() 渲染 pl.deadline_hint(条件渲染, 不改 DOM 行数)
+  tests/test_robot_orchestrator.js:162 RO-09; tests/test_robot_workbench.js:404 RW-13d; tests/h_admin_shots.js:251-268 种子 + :314 AD-16
+不编造日期依据: tasks 表无 due 列(实测列集 id,review_id,round,ind_key,ind_name,dept,standards,status,light,opinion,done_by,done_at), 无真数据源 → RO-09 反向钉「出现数字或历法字样即判红」且各部门同文
+run_all 第二轮末行: 32/32 套通过, 耗时 584.0s -> ALL PASS ; GATE_EXIT=0 ; database is locked=0 ; ^FAIL 行数=0
+第二轮专项计数: RO 9/0(原 8) + A核心 7/0 + A对话 43/0 + RW 19/0(原 18, +RW-13d) + RB 62/0 + AW 7/0 + AD 24/0(原 23, +AD-16) = 171/0
+红绿配对(三件都是自然红, 非变异):
+  tests/red_robot_deadline_hint.txt   RO 8 passed/1 failed(旧 payload 无该字段, 基线 RO-01~08 全绿)
+  tests/red_robot_deadline_rw13d.txt  RW 18 passed/1 failed(hints=(缺)|(缺)|(缺)|(缺)|(缺)|(缺), 跑在改动前的旧服务上)
+  tests/red_robot_deadline_ad16.txt   AD 23 passed/1 failed(hint 有值但 预览命中=false, 一次性回退渲染行取红后已复原)
+  绿件: tests/green_robot_deadline_hint.txt RO 9/0 · tests/green_robot_workbench.txt RW 19/0(RW-13d 六部门全命中) · tests/green_robot_deadline_hint_ad.txt AD 24/0 · tests/green_robot_deadline_hint_aw.txt AW 7/0 · tests/green_robot_deadline_hint_rb.txt RB 62/0(RB-07b 仍 outbox=6 webhook=1 不双发)
+服务 PID 序列(第二轮): 39880→停→23580(专项) →停→14520(17:54:06, server_robot_t9e, 跑第二轮全门)→停→16832(收工, server_robot_t9f 新建), 每停前双采样独占且全机 node 计数 1, /api/me 皆 401
+第二轮快照: snapshot_i1_20261016_175319.db 52826112B sha=360e8c2f854bc1aa901c18baa0e4004ac2b62c86d877225e3663105698dee4f2, copy identical=true
+第二轮还原: restored sha=360e8c2f…dee4f2 identical=true(还原当刻未重启, 文件级逐字节同), 深比较 diff_count=0, fulldiff changed_tables=0
+config.json: 第二轮门前/门后/收工三采仍 270B + f285c66ad4790370c4d30b2b0fbb51e8cc312deed99596d19164ced5d9285fcf
+真实外发第二轮: outbox_total=90, 非 preview=0, sent_at 非空=0, attempts>0=0, last_error 非空=0, ready/sent/failed/cancelled=0, bindings=0, targets=0
+  注: deadline_hint_rows=0 属预期——库内 90 行是改动前的历史 PL-T-RB, 而本轮所有带 hint 的新行都被字节还原抹掉; 字段已上线由 RW-13d(6/6 部门行)与 AD-16(浏览器渲染)实证
+临时件与快照: tests/_tmp_robot_gate_snapshot.js 与 tests/_tmp_ro_evidence.js 及 snapshot_i1_*.db 均已删, 实测 tests/_tmp_* 与 snapshot_*.db 残留各 0
+新发现的套件卫生缺陷(非 I-1 引入, 待裁定): tests/test_robot_admin.js:69,87 把夹具 opp_code 钉成常量 'PL-T-RB', finally(:395) 只按本轮 review_id 删 robot_outbox, 不删自建 reviews/opps/budgets/tasks → 单跑一次 RB 就在共享演示库累积 opps+2/reviews+17/budgets+17/opp_delivery+1/tasks+150/events+122/agent_messages+33(逐行清单 i1_residue_inventory.txt, 全带 [T]RB-* 标题与 09:49~09:51Z 时间戳, 未触碰任何真实七月行)。第二轮还原只回到「第二轮门前」= 含这批残留, 不等于本会话接手时的 opps=50/reviews=93
+
+[I-1 残留清理轮 · 控制器裁定按水位清回接手基线]
+前置说明(偏离): 控制器步骤1要求「停机→从 I-1 快照 restore」, 但 snapshot_i1_20261016_175319.db 已按 Step 6 在上一轮删除且已实测残留 0; 该快照的内容当时已逐字节还原进 data/review.db(identical=true/深比较 0/fulldiff 0), 故本轮直接在现网库上做水位清理, 未再 restore。清理前另做仓库外安全副本 prefix_cleanup_safety_20261016T1820.db(sha 7b9b7dbdb20dc953ca4761ecb5d9795f441b23e4ca4b88a912e2d885e5834927, 与当时现网逐字节同, gitignore 命中), 回读确认后删除。
+水位硬边界(取自原始 meta 接手记录): max_opp_rowid=50 / max_review_id=159 / max_budget_id=153 / max_outbox_id=131
+只读 plan 先列后将删行(证据 i1_residue_plan.txt / i1_residue_plan_post_cleanup.txt):
+  opps rowid>50 共 2 = PL-T10-4186358-c / PL-T10-4186358-g3(标题 T10 机器人建档-c / T10 三步链, 09:51Z)
+  reviews id>159 共 17 = id 186..202, opp_code 全 'PL-T-RB'(id 201 为 'PL-T10-4186358-g3'), 标题全带 [T]RB-*
+  budgets id>153 共 17 = id 173..189, 名称全为 RB 系夹具('RB 预算 [T]RB-*'×15 + 'RB 基线预算' + 'RB-10b'), opp_code 仅 188 带合成码
+  robot_outbox id>131 共 0(RB 自己的 review_id 清理已生效)
+  子行 tasks 150 / events 122 / agent_messages 33 / budget_delivery 16 / opp_delivery 1 / attachments 0 / outbox by review 0
+八条硬闸全 OK: 四张主表候选中真实码=无; opps 前缀全为合成; reviews 标题全带 [T] 或 PL-T-RB; budgets 名称 RB 前缀且无真实码; 真实六月单+锚点全在水位之下; 候选数与取证期望一致
+  过程披露: 首版 plan 曾因我自己把预算名判据写窄(只认 'RB 预算' 前缀)而判 FAIL 并 exit 2 停手, 未执行任何删除; 核对 'RB 基线预算'/'RB-10b' 同属该次 RB 跑(09:51、id 在水位之上、码为 PL-T10 合成)后, 把判据改为「RB 前缀且非真实码」重跑 plan 才放行
+删除(事务内先子行后主行, ROLLBACK 分支就位) changes: tasks=150 events=122 attachments=0 outbox=0 agent_messages=33 budget_delivery=16 opp_delivery=1 reviews=17 budgets=17 opps=2 → COMMIT
+清理前→后计数: opps 52→50 / reviews 110→93 / budgets 115→98 / outbox 90→90
+清理后逐项=接手基线: reviews{archived 21,draft 23,returned 25,reviewing 24}; light{NULL 59,green 16,red 13,yellow 5}; budgets{draft 12,locked 86}; opp_delivery{confirmed 11,draft 15}; 三表 0/0/90 且 outbox 全 preview; real_opps=7/fixture_opps=43; watermark 回落 50/159/153/131
+七月六份逐行复核(清理后): PL00006204/8026/8210/8314/8330 = archived+yellow+round1 且 budget locked 且 delivery confirmed; PL00007297 = returned+red+round1(budget_id=1) 且 locked 且 confirmed; 锚点 PL00008572 reviews=0 budgets=0 delivery=confirmed
+与接手态 19 表逐表比对: 17 张 SAME; 仅剩 llm_calls 41(接手 38, Δ+3) 与 sessions 261(接手 237, Δ+24) 两张为日志/会话表(非业务夹具, 控制器清单未含, 未动)
+DB SHA: 清理前(停机) 7b9b7dbd…; 清理后停机窗口 d21094ea80ed8c605792929545fbff3e683df9da27a96b7d6a6447831b5e16ae; 收工重启后现网 6da05b85bb9270f1834d2e151645531adabbf0a98ccc2fd8fd5a821d3e011c1d(差值仍仅头部记账位, 大小 52826112B 不变)
+config.json 清理前后实测 270B + f285c66ad4790370c4d30b2b0fbb51e8cc312deed99596d19164ced5d9285fcf, 未被 git 跟踪
+真实外发: 清理未触碰 robot_outbox 主体(仍 90 全 preview, sent_at 非空 0, attempts>0 0, last_error 非空 0), deadline_hint_rows=0 属预期(库内 90 行为改动前历史行, 带该字段的新行已被第二轮还原抹掉; 字段上线由 RW-13d 6/6 与 AD-16 实证)
+服务与临时件: 双采样 16832 独占→停→清理→起 15168(日志 server_robot_t9g.log/.err 新建)/api/me=401; tests/_tmp_robot_gate_snapshot.js、tests/_tmp_ro_evidence.js、tests/_tmp_robot_residue_cleanup.js、安全副本与 I-1 快照全部删除, 实测 tests/_tmp_* 与 sdd 目录 *.db 残留各 0; git 仍 HEAD=186b251 / staged=0 / 186b251..HEAD 提交数 0
+根因递延(控制器裁定本轮不修, 标 P1): tests/test_robot_admin.js:69,87 夹具 opp_code 钉常量 'PL-T-RB' 且 finally(:395) 不自清 reviews/opps/budgets → 应改每轮唯一前缀 + finally 自清自身业务表夹具(对齐既有 fixture-key 须唯一规则), 供用户拍板

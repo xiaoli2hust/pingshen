@@ -1,0 +1,48 @@
+PASS - R-31 红灯自动打回 status=returned
+PASS - R-31 打回路由
+PASS - R-31 auto_return 事件留痕
+PASS - R-31 S-06 重提后轮次=2
+PASS - R-31 S-06 二轮复判转绿(judged)
+PASS - R-31 S-06 一轮旧任务作废
+PASS - SEC SEC-05 登录态可看报告
+PASS - SEC SEC-05 裸访问被拒(403)
+PASS - SEC SEC-03 report-link 需登录(401)
+PASS - SEC SEC-03 签名链接可看报告
+PASS - SEC SEC-03 链接有效期=7天
+PASS - SEC SEC-03 过期签名被拒(403)
+PASS - SEC SEC-04 篡改签名被拒(403)
+FAIL - R-01 流程异常:/api/reviews/308/preview-light -> 接口不存在
+FAIL - R-02 流程异常:/api/reviews/309/preview-light -> 接口不存在
+FAIL - R-03 流程异常:/api/reviews/310/preview-light -> 接口不存在
+FAIL - R-04 流程异常:/api/reviews/311/preview-light -> 接口不存在
+FAIL - R-05 流程异常:/api/reviews/312/preview-light -> 接口不存在
+FAIL - R-06 流程异常:/api/reviews/313/preview-light -> 接口不存在
+FAIL - R-07 流程异常:/api/reviews/314/preview-light -> 接口不存在
+FAIL - R-08 流程异常:/api/reviews/315/preview-light -> 接口不存在
+FAIL - R-09 流程异常:/api/reviews/316/preview-light -> 接口不存在
+FAIL - R-10 流程异常:/api/reviews/317/preview-light -> 接口不存在
+FAIL - R-11 流程异常:/api/reviews/318/preview-light -> 接口不存在
+FAIL - R-12 流程异常:/api/reviews/319/preview-light -> 接口不存在
+FAIL - R-13 流程异常:/api/reviews/320/preview-light -> 接口不存在
+FAIL - R-14 流程异常:/api/reviews/321/preview-light -> 接口不存在
+FAIL - R-15 流程异常:/api/reviews/322/preview-light -> 接口不存在
+FAIL - R-16 流程异常:/api/reviews/323/preview-light -> 接口不存在
+FAIL - R-17 流程异常:/api/reviews/324/preview-light -> 接口不存在
+FAIL - R-18 流程异常:/api/reviews/325/preview-light -> 接口不存在
+FAIL - R-19 流程异常:/api/reviews/326/preview-light -> 接口不存在
+FAIL - R-20 流程异常:/api/reviews/327/preview-light -> 接口不存在
+FAIL - R-21 流程异常:/api/reviews/328/preview-light -> 接口不存在
+FAIL - R-22 流程异常:/api/reviews/329/preview-light -> 接口不存在
+FAIL - R-23 流程异常:/api/reviews/330/preview-light -> 接口不存在
+FAIL - R-24 流程异常:/api/reviews/331/preview-light -> 接口不存在
+FAIL - R-25 流程异常:/api/reviews/332/preview-light -> 接口不存在
+FAIL - R-26 流程异常:/api/reviews/333/preview-light -> 接口不存在
+FAIL - R-27 流程异常:/api/reviews/334/preview-light -> 接口不存在
+FAIL - R-28 流程异常:/api/reviews/335/preview-light -> 接口不存在
+FAIL - R-29 流程异常:/api/reviews/336/preview-light -> 接口不存在
+FAIL - R-30 流程异常:/api/reviews/337/preview-light -> 接口不存在
+FAIL - R-32 流程异常:/api/reviews/338/preview-light -> 接口不存在
+FAIL - R-34 流程异常:/api/reviews/339/preview-light -> 接口不存在
+
+13 passed, 32 failed -> SOME FAIL
+红绿用例(★red): 13 PASS / 7 FAIL (红绿未闭合)

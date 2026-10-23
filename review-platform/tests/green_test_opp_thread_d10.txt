@@ -1,0 +1,13 @@
+PASS - OC-01 Excel 预算导入 opp_code 落列=PL00008572 | "PL00008572"
+PASS - OC-01b budgets.opp_code 列=DB 值 | PL00008572
+PASS - OC-02 Excel 评审导入(在线) opp_code 落列=PL00008068 | PL00008068
+PASS - OC-02b reviews.opp_code 列=DB 值 | PL00008068
+PASS - OC-02c history 导入 opp_code 落列 | PL00008572
+PASS - OC-03 表单路径 opp_code 落列=PL-OC-0001 | PL-OC-0001
+PASS - OC-04 存量回填(form_json 有 opp_code 的单列值一致) | n=2538 all=true
+PASS - OC-05a type=bid 筛选只回 bid | rows=34
+PASS - OC-05b q=商机代码模糊命中 | hit=true
+PASS - OC-05c q=% 被转义为字面量不全表 | rows=0
+PASS - OC-06 预算列表 q=PL00008572 命中 opp_code | rows=63
+
+11 passed, 0 failed -> ALL PASS

@@ -1,0 +1,9 @@
+PASS - RW-01 非 admin 对 bindings/targets/outbox/preview/cancel 全部 403 | 403,403,403,403,403
+PASS - RW-02 admin 可读写已有 user_id binding；不存在 user_id=400；不改变 users.role/dept | put=200 get=200 bad=400 role=项目经理
+PASS - RW-03 target_key/status/provider/target_type 枚举校验且未绑定是合法状态 | 400,400,400,400,200
+PASS - RW-07 outbox payload 无 token/key/secret/file data，只含工作台深链与可显示文字 | preview=200 list=200 row=true bad=
+PASS - RW-08 provider 未激活时 active target/binding 也不访问本地监听桩且状态仍 preview | binding=200 target=200 invite=200/preview hits=0
+PASS - RW-15 outbox cancel 仅 preview/ready 可取消，重复取消幂等；sent 由服务端守卫拒绝 | preview=200 cancel=200/200 guard=true
+CLEANUP - PL-RW-1792124409216 opps/budgets/reviews=0/0/0
+
+6 passed, 0 failed -> ALL PASS

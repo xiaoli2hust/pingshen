@@ -1,0 +1,20 @@
+PASS - EI-01 预算 Excel 导入 200 + draft 状态
+PASS - EI-02 17 字段白名单清洗落库(fields 数) | fields=16
+PASS - EI-03a income=226415.09(六组锚定①) | 226415.09433962262
+PASS - EI-03b salesLabor=41448(②) | 41448
+PASS - EI-03c tax=2264.15(③) | 2264.1509433962265
+PASS - EI-03d incentive=13298.13(④) | 13298.126641509432
+PASS - EI-03e contribution=12508.82(⑤) | 12508.816754716954
+PASS - EI-03f margin=5.52(⑥) | 5.5247
+PASS - EI-03g 未自动锁定(人确认门)
+PASS - EI-04 真实评审表导入: contract=240000 + matched>=8 | matched=11
+PASS - EI-05 评审 Excel 导入 200 + draft
+PASS - EI-06 评审核心字段命中(customer/contract_amount/gross_margin) | {"c":"Excel导入测试客户","ca":24,"gm":15}
+PASS - EI-06b gross_margin 归一化(0.15→15)
+PASS - EI-06c 小数格式毛利率自动×100(15) | gm=15
+PASS - EI-07 真实评审表导入: matched>=10 + opp_code 命中 | matched=15
+PASS - EI-08a 毒件拒绝(400/502) | status=502
+PASS - EI-08b 结构键注入被白名单丢弃
+PASS - EI-09 单次导入耗时<4s(python 启动+机器负载波动) | 2999ms
+
+18 passed, 0 failed -> ALL PASS

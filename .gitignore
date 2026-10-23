@@ -1,0 +1,56 @@
+# ============================================================
+# f:\workbuddy\9 · 首次 git init 前必读
+# 原则：密钥、运行数据、可重跑产物、外部下载物 一律不入库
+# ============================================================
+
+# ---- 1. 密钥（最高优先级，误提交即视为泄露）----
+# 含真实 DeepSeek API Key + 报告签名密钥 REPORT_SECRET
+review-platform/config.json
+
+# ---- 2. 运行数据（含账号口令哈希与真实客户业务数据）----
+review-platform/data/
+*.db
+*.db-journal
+*.sqlite
+
+# ---- 3. 阶段备份目录（内含 review.db 副本，同样带密钥与业务数据）----
+review-platform/.bak_20261008/
+review-platform/.bak_stage1_20261008/
+review-platform/.bak_stage2_20261009/
+review-platform/.bak_*/
+
+# ---- 4. 测试运行产物（可由脚本重跑生成）----
+review-platform/tests/shots/
+
+# ---- 5. IDE / 工具生成物 ----
+.qoder/
+node_modules/
+
+# ---- 6. 工作区临时文件与外部下载物 ----
+# _skinstall/ 是技能市场下载解压的临时目录（9.6MB，含两个第三方仓库副本），
+# 不忽略会严重污染 better-harness 的项目画像（源文件计数、语言识别）
+_skinstall/
+_mq_out2.txt
+clean_log.txt
+mem_log.txt
+.workbuddy/memory/*.png
+
+# ============================================================
+# 可调项（默认策略已定，如需改动只动这里）
+# ============================================================
+# A. 真实判例原件（tests/realdata/*.xlsx + 黄灯研判 HTML，约 430KB）
+#    默认【入库】——它们是回归用例期望值的唯一来源，不入库则测试不可复现。
+#    ⚠️ 风险：含真实客户项目名/合同额。本仓库仅限本地，一旦要推远端（尤其公网），
+#    必须先取消下面一行的注释：
+# review-platform/tests/realdata/
+
+# B. Agent 工作日志（.workbuddy/memory/*.md）默认【入库】，仅忽略其中截图。
+#    如不希望留痕，取消下一行注释：
+# .workbuddy/
+
+# SDD 子代理执行工作区(计划账本/简报/评审包, 可再生)
+.superpowers/
+
+# 部署打包产物(内含 config.json 与 review.db, 任何情况下不得入库)
+deploy_review_platform.zip
+review-platform/deploy_review_platform.zip

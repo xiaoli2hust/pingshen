@@ -1,0 +1,449 @@
+{
+  "sourceSha256": "6485ea543b7597d1d5e6e87f1c19d5d2843fd71bc49a414545606cde02c126fa",
+  "records": [
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "--test",
+        "tests/test_finance.js"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_01_stdout.txt",
+      "suiteLog": null
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "--test",
+        "tests/test_agent_core.js"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_02_stdout.txt",
+      "suiteLog": null
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "--test",
+        "tests/test_robot_orchestrator.js"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_03_stdout.txt",
+      "suiteLog": null
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_budget_api.js",
+        "--log=tests\\rm_gateclean_04_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_04_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_04_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_agent_chat.js",
+        "--log=tests\\rm_gateclean_05_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_05_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_05_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_robot_workbench.js",
+        "--log=tests\\rm_gateclean_06_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_06_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_06_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_rules_e2e.js",
+        "--log=tests\\rm_gateclean_07_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_07_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_07_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_security_notify.js",
+        "--log=tests\\rm_gateclean_08_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_08_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_08_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_delivery.js",
+        "--log=tests\\rm_gateclean_09_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_09_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_09_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_bi.js",
+        "--log=tests\\rm_gateclean_10_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_10_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_10_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_gate_presale.js",
+        "--log=tests\\rm_gateclean_11_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_11_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_11_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_excel_import.js",
+        "--log=tests\\rm_gateclean_12_suite.txt"
+      ],
+      "status": 1,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_12_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_12_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_history_import.js",
+        "--log=tests\\rm_gateclean_13_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_13_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_13_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_opp_thread.js",
+        "--log=tests\\rm_gateclean_14_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_14_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_14_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_opp_api.js",
+        "--log=tests\\rm_gateclean_15_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_15_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_15_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_delivery_opp.js",
+        "--log=tests\\rm_gateclean_16_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_16_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_16_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_chain.js",
+        "--log=tests\\rm_gateclean_17_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_17_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_17_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_required.js",
+        "--log=tests\\rm_gateclean_18_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_18_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_18_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_opp360.js",
+        "--log=tests\\rm_gateclean_19_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_19_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_19_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_parser_audit.js",
+        "--log=tests\\rm_gateclean_20_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_20_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_20_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_parser_lab.js",
+        "--log=tests\\rm_gateclean_21_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_21_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_21_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_llm_admin.js",
+        "--log=tests\\rm_gateclean_22_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_22_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_22_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_robot_admin.js",
+        "--log=tests\\rm_gateclean_23_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_23_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_23_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_opp_dialog.js",
+        "--log=tests\\rm_gateclean_24_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_24_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_24_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/h_lab_shots.js",
+        "--log=tests\\rm_gateclean_25_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_25_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_25_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/h_nav_shots.js",
+        "--log=tests\\rm_gateclean_26_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_26_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_26_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/h_ia_shots.js",
+        "--log=tests\\rm_gateclean_27_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_27_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_27_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/h_robot_workbench_shots.js",
+        "--log=tests\\rm_gateclean_28_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_28_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_28_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/h_admin_shots.js",
+        "--log=tests\\rm_gateclean_29_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_29_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_29_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_flow_remediation.js",
+        "--log=tests\\rm_gateclean_30_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_30_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_30_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/h_remediation_shots.js",
+        "--log=tests\\rm_gateclean_31_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_31_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_31_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_run_all_contract.js",
+        "--log=tests\\rm_gateclean_32_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_32_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_32_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_budget_preselect.js",
+        "--log=tests\\rm_gateclean_33_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_33_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_33_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/test_frontend_semantics.js",
+        "--log=tests\\rm_gateclean_34_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_34_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_34_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "test_flow.js",
+        "--log=tests\\rm_gateclean_35_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_35_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_35_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "test_p15_flow.js",
+        "--log=tests\\rm_gateclean_36_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_36_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_36_suite.txt"
+    },
+    {
+      "command": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+      "args": [
+        "tests/data_feasibility_check.js",
+        "--log=tests\\rm_gateclean_37_suite.txt"
+      ],
+      "status": 0,
+      "signal": null,
+      "error": "",
+      "fullLog": "tests\\rm_gateclean_37_stdout.txt",
+      "suiteLog": "tests\\rm_gateclean_37_suite.txt"
+    }
+  ]
+}

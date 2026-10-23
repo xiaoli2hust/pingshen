@@ -1,0 +1,23 @@
+{
+  "name": "iron-laws",
+  "displayName": "铁律（全局）",
+  "version": "0.1.0",
+  "description": "Always-on working rules injected into every Qoder session across all projects: verify before claiming done, ship copy-pasteable commands, never touch global config, hit regression anchors, and known local network facts.",
+  "descriptionZh": "跨项目全局生效的工作铁律：先验证再声明完成、命令可直接复制粘贴、不擅动全局配置、计算改动必须命中回归锚定值、本机网络事实。",
+  "author": {
+    "name": "01386380"
+  },
+  "keywords": [
+    "qoder-plugin",
+    "rules",
+    "always-apply",
+    "verification",
+    "workflow"
+  ],
+  "category": "developer-tools",
+  "tags": [
+    "rules",
+    "workflow"
+  ],
+  "rules": "./rules/"
+}

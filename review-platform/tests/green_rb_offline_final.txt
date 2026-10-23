@@ -1,0 +1,65 @@
+PASS - RB-01 sales1 对 12 个机器人管理端点一律 403 且文案前缀「仅 admin」 | 403,403,403,403,403,403,403,403,403,403,403,403
+PASS - RB-01 zhichizu 对 12 个机器人管理端点一律 403 且文案前缀「仅 admin」 | 403,403,403,403,403,403,403,403,403,403,403,403
+PASS - RB-03 四类非法 webhook 各 400 | 400,400,400,400
+PASS - RB-03 四条拒绝文案两两可区分 | webhook 不能为空 / webhook 不得以 - 开头(会被 curl 当选项解析) / webhook 不是合法 URL / webhook 仅允许 http/https
+PASS - RB-03 「-」开头文案点名 curl 选项解析
+PASS - RB-03 PUT 同样过参数位面校验(400) | 400:webhook 不得以 - 开头(会被 curl 当选项解析)
+PASS - RB-02 带 secret 建实例 200 | 200:
+PASS - RB-02 GET 列表只回 **** 掩码, 不含 secret 明文 | secret_masked=SEC****9876
+PASS - RB-02 PUT 不带 secret 不清空原值(仍 has_secret)
+PASS - RB-02 探活出站带钉钉加签参数 timestamp+sign(secret 真正参与发送) | access_token=TOKrb027420349abcd&timestamp=1792527422214&sign=…
+PASS - RB-07 DB 有 enabled 实例时 active.notify.source=db | {"notify":{"source":"db","name":"[T]RB-07n-7420349","id":77,"configured":true},"committee":{"source":"db","name":"[T]RB-07c-7420349","id":78,"configured":true}}
+PASS - RB-07 DB 优先: 桩只在 /db-notify 收到且恰 1 次(config 侧未双推) | /db-notify
+PASS - RB-07b 新外发箱入箱后既有 notify webhook 仍恰一次，不因 outbox 双发 | outbox=6 webhook=1
+PASS - RB-07 探活响应标注 source=db 且 ok | {"ok":true,"ms":742,"source":"db","id":78,"name":"[T]RB-07c-7420349","channel":"committee","error":""}
+PASS - RB-07 删除后回落 config: active.notify.source=config | {"notify":{"source":"config","name":"NOTIFY_WEBHOOK_URL","id":null,"configured":true},"committee":{"source":"config","name":"COMMITTEE_WEBHOOK_URL","id":null,"configured":true}}
+PASS - RB-07 config 两键只读展示且掩码(不回原值全文)
+PASS - RB-07 回落后桩只在 /cfg-notify 收到且恰 1 次 | /cfg-notify
+PASS - RB-04 矩阵 PUT task_dispatch enabled=0 → 200 | 200:
+PASS - RB-04 enabled=0: 提交仍 200 但桩 0 次 | submit=200 hits=0
+PASS - RB-04 改回 enabled=1 后立即恢复(1 次) | hits=1
+PASS - RB-04 矩阵拒绝新造事件名与错配接收人(400, 防死行) | 400/400
+PASS - RB-05 删行后矩阵视图标注未配置(configured=false)且仍放行(enabled=1) | {"event":"task_dispatch","label":"前置评审任务分发","target":"dept","channel":"notify","configured":false,"enabled":1}
+PASS - RB-05 矩阵视图列出 8 个实名事件(与调用点一致, 无第九名)
+PASS - RB-05 无行事件照常出站到 DB 实例(1 次) | /db-notify
+PASS - RB-06 前提: 红灯流自动打回(returned)、绿流归档(archived)
+PASS - RB-06 全开: task_dispatch(评审任务分发) 桩收到 1 次 | hits=1
+PASS - RB-06 全开: judged(研判完成) 桩收到 1 次 | hits=1
+PASS - RB-06 全开: red_reject(红灯自动打回) 桩收到 1 次 | hits=1
+PASS - RB-06 全开: green_publish(评审结论发布) 桩收到 1 次 | hits=1
+PASS - RB-06 全开: archived(评审归档) 桩收到 1 次 | hits=1
+PASS - RB-06 全开: returned(评审退回) 桩收到 1 次 | hits=1
+PASS - RB-06 关 judged/archived/returned: task_dispatch 1 次(未受牵连) | hits=1
+PASS - RB-06 关 judged/archived/returned: judged 0 次(被矩阵关断) | hits=0
+PASS - RB-06 关 judged/archived/returned: red_reject 1 次(未受牵连) | hits=1
+PASS - RB-06 关 judged/archived/returned: green_publish 1 次(未受牵连) | hits=1
+PASS - RB-06 关 judged/archived/returned: archived 0 次(被矩阵关断) | hits=0
+PASS - RB-06 关 judged/archived/returned: returned 0 次(被矩阵关断) | hits=0
+PASS - RB-06 关 task_dispatch/green_publish/red_reject: task_dispatch 0 次(被矩阵关断) | hits=0
+PASS - RB-06 关 task_dispatch/green_publish/red_reject: judged 1 次(未受牵连) | hits=1
+PASS - RB-06 关 task_dispatch/green_publish/red_reject: red_reject 0 次(被矩阵关断) | hits=0
+PASS - RB-06 关 task_dispatch/green_publish/red_reject: green_publish 0 次(被矩阵关断) | hits=0
+PASS - RB-06 关 task_dispatch/green_publish/red_reject: archived 1 次(未受牵连) | hits=1
+PASS - RB-06 关 task_dispatch/green_publish/red_reject: returned 1 次(未受牵连) | hits=1
+PASS - RB-06 green_publish 走 committee 频道实例(/db-committee) | /db-committee
+PASS - RB-08 通知全故障: 提交仍 200 且 <5s | status=200 ms=2174
+PASS - RB-08 通知全故障: 打灯后自动研判正常(judged)
+PASS - RB-08 探活对断开的实例如实报失败(200 + ok=false, 不抛 500) | 200:{"ok":false,"ms":868,"source":"db","id":79,"name":"[T]RB-N-7420349","channel":"notify","error":"请求失败:Failed to connect\n"}
+PASS - RB-09 未入白名单: 机器人路径查询 403 | 403:机器人白名单未授权: 当前身份无查询权限
+PASS - RB-09 query 身份: 查询 200 | 200/200
+PASS - RB-09 query 身份: 建档 403(不得触发建档/提交) | 403:机器人白名单未授权: 当前身份无建档/提交权限
+PASS - RB-09 create 身份: 建档 200 | 200/200:
+PASS - RB-09 白名单重复 409、非法 kind 400 | 409/400
+PASS - RB-10 机器人路径(create 白名单)提交未确认①: 同样 400 三步链未闭合 | lock=200 submit=400:三步链未闭合:商机 PL-T10-7420349-g3 的交付预算未确认或缺失(① 交付预算 → ② 项目预算 → ③ 评审单),请先确认再提交
+PASS - RB-10 机器人路径缺必填: 同样 400 必填缺失: | 400:必填缺失:签约路径
+PASS - RB-10 两单状态仍 draft(门禁拦下未落库)
+PASS - RB-11 server.js 含三表建表语句(IF NOT EXISTS)
+PASS - RB-11 建表语句重复执行两遍不报错、三表行数不变 | 4,6,0 -> 4,6,0
+PASS - RB-11 config 导入两次: 第二次 inserted=0 且行数不变 | 200/200 inserted=2,0 rows=6,6
+PASS - RB-11 导入行默认停用(enabled=0, 不抢真源也不双推) | [{"name":"config:COMMITTEE_WEBHOOK_URL","enabled":0},{"name":"config:NOTIFY_WEBHOOK_URL","enabled":0}]
+PASS - RB-02 本轮 26 个管理端点响应体均不含任何 secret 明文
+PASS - RB-02 本轮管理端点响应体不含 webhook 的 access_token 明文
+CLEANUP - RB 本轮 review=15 robot_outbox 删除=90 残留=0
+PASS - POST config.json 按原始字节复位且四键完好
+
+62 passed, 0 failed -> ALL PASS

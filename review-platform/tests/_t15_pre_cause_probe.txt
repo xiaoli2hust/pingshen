@@ -1,0 +1,8 @@
+起点 config 字节数=549
+起点 LLM_PROFILES={"budget":{"base":"http://127.0.0.1:9801","model":"stub-budget","key":"sk-t9budget-0001-abcdef"},"review":{"base":"http://127.0.0.1:9801","model":"stub-review","key":"sk-t9review-0002-ghijkl"}}
+C1 与现网 LLM_PROFILES 逐字相同的 profile 写入 => status=400 body={"error":"未提交任何要修改的键"}
+C2 profile base 空串 + 其它键同值 => status=400 body={"error":"未提交任何要修改的键"}
+C3 同 base 但 model 改名(确有变更) => status=200 body={"ok":true,"updated":1,"LLM_API_KEY_MASKED":"sk-****8125"}
+C4 显式非法 base => status=400 body={"error":"profile budget 的 base 不是 http(s):// 地址"}
+C5 顶层 base 空串 => status=400 body={"error":"未提交任何要修改的键"}
+已复位, 字节相等=true

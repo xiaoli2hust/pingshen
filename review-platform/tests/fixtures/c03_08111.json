@@ -1,0 +1,69 @@
+{
+  "_meta": {
+    "case": "C-03",
+    "source": "tests/realdata/【投标决策】PL00008111-坪山区三维数据更新2026项目评审（20260810).xlsx · 投标决策评审 sheet + 黄灯研判 HTML",
+    "extracted": "2026-10-08",
+    "notes": [
+      "真实表单毛利率为小数 0.050215915561446，已 ×100 归一化为 5.02——数据可行性发现#3",
+      "分包占比 179.903692/205.852 = 87.4% ≥70%：现状代码判 red（打回），判例真实判黄灯'过单项目(XO级)'上会——规则偏差#1（修正项 1.6）",
+      "测绘类分包 0 且 survey='是'：广东升红规则不触发（province=广东省 但 survey_sub_amount=0）",
+      "前置人工黄灯 2 项：财务-客户历史欠款（25年合同半年款13万逾期）、财务-付款条件"
+    ]
+  },
+  "pl": "PL00008111",
+  "title": "坪山区三维数据更新2026",
+  "form": {
+    "opp_code": "PL00008111",
+    "opp_stage": "投标决策",
+    "region": "华南营销处",
+    "customer": "深圳市坪山区政务服务和数据管理局",
+    "biz_line": "G1",
+    "contract_amount": "205.852",
+    "sales": "熊惠",
+    "pm": "邓先明",
+    "sign_date": "2026-09-01",
+    "gross_margin": "5.02",
+    "cost_happened": "0",
+    "ops_years": "",
+    "sign_path": "深圳市坪山区政务服务和数据管理局→丰图科技（深圳）有限公司",
+    "sub_amount": "179.9",
+    "designated_sub_amount": "179.9",
+    "survey_sub_amount": "0",
+    "sub_core": "否",
+    "survey": "是",
+    "jiadao": "否",
+    "secret": "否",
+    "province": "广东省",
+    "product_type": "非标品",
+    "promo_target": "无",
+    "promo_amount": "0",
+    "settle_method": "银行转账",
+    "payback_time": "预计26年Q3回款50%，27年Q2回款35%，27年Q3回款5%",
+    "b2b_scene": "回款+验收=均非背靠背",
+    "revenue_confirm": "2026.9-2027.8，按月分摊确收110.9万元，终验确收其他份额，预计27年Q3终验",
+    "payment_terms": "第一次付款：服务方案通过甲方确认后申请支付合同款50%；第二次付款：服务期满半年后申请支付35%；第三次付款：合同期满验收合格后申请支付剩余（15%-扣款-违约金）",
+    "guarantee": "否",
+    "non_compete": "否",
+    "sub_limit": "否",
+    "summary": "坪山区三维数据更新2026项目，涉及测绘（外业采集/地图），分包由甲方指定",
+    "data_review": "否",
+    "data_plan": "",
+    "data_content": "",
+    "data_compliance": ""
+  },
+  "preLights": {
+    "fin": {
+      "arrears": "yellow",
+      "arrears_opinion": "25年合同的半年款还未回完，13万逾期未回，仅同意逾期款回后签合同",
+      "payment": "yellow",
+      "payment_opinion": "无预付条款；软件销售部分不满足免上会条件，且非背靠背"
+    }
+  },
+  "expect": {
+    "light": "yellow",
+    "routeIncludes": ["XO"],
+    "yellowNames": ["贡献利润", "分包占比", "指定供应商", "前置评审·客户历史欠款", "前置评审·付款条件"],
+    "redNames": [],
+    "verdict": "判例 08111 真实结论：黄灯-部门级→XO 两段式；黄项：贡毛 5.02%、分包占比≥70% 过单、指定供应商 179.9 万、付款条件、客户历史欠款"
+  }
+}

@@ -1,0 +1,47 @@
+PASS - PRE CH_BID_BASE 含 bid req 全集 14 键(缺=无)
+PASS - PRE CH_PRESALE_BASE 含 presale req 全集 9 键(缺=无)
+PASS - PRE CH_CHANGE_BASE 含 change req 全集 4 键(缺=无)
+PASS - PRE 建档可用(三步链第一步就绪, 实 200)
+PASS - CH-01 缺①(商机无明细行)锁定 400(实 400) | error=锁定前请先完成交付预算编制:商机 PL-T3-5901277-ch01 尚无明细行(① 交付预算 → ② 项目预算 → ③ 评审单)
+PASS - CH-01 400 文案指到商机级交付预算门(含「交付预算」与商机码)
+PASS - CH-01 锁定未生效(状态仍 draft)
+PASS - CH-02 ①草稿态锁定 400(实 400) | error=锁定前请先确认交付预算:商机 PL-T3-5901277-ch02 的交付预算仍为草稿,请在信息收集页签点「确认交付预算」
+PASS - CH-02 400 文案含「草稿」或「确认」
+PASS - CH-03 ①confirmed 后锁定 200(实 200) | error=
+PASS - CH-04 ①②齐后 bid 提交 200(实 200) | error=
+PASS - CH-05 归档 200(实 200) | error=
+PASS - CH-05 归档前档案未翻转(实 pending)
+PASS - CH-05 在线单全部归档后档案 status=reviewed(实 reviewed)
+PASS - CH-06 前置②锁定 200(实 200) | error=
+PASS - CH-06 ①漂移回草稿后提交被二次核验拦下 400(实 400) | error=三步链未闭合:商机 PL-T3-5901277-ch06 的交付预算未确认或缺失(① 交付预算 → ② 项目预算 → ③ 评审单),请先确认再提交
+PASS - CH-06 400 文案含「三步链」或「交付预算未确认」(非必填文案)
+PASS - CH-07 presale 链齐提交 200(实 锁200/提200) | error=
+PASS - CH-07 presale ①退草稿后新建单提交 400(实 400) | error=三步链未闭合:商机 PL-T3-5901277-ch07 的交付预算未确认或缺失(① 交付预算 → ② 项目预算 → ③ 评审单),请先确认再提交
+PASS - CH-07 400 文案指到三步链(与 bid 同严)
+PASS - CH-08 change 不带 budget_id 提交仍 200(实 200) | error=
+PASS - CH-09 前置②锁定 200(实 200) | error=
+PASS - CH-09 change 关联①draft 的锁定单提交 400(实 400) | error=三步链未闭合:商机 PL-T3-5901277-ch09 的交付预算未确认或缺失(① 交付预算 → ② 项目预算 → ③ 评审单),请先确认再提交
+PASS - CH-09 400 文案指到三步链
+PASS - CH-10 无挂靠预算单带附3底稿锁定仍 200(实 200) | error=
+PASS - CH-10 无挂靠且无底稿锁定 400 且文案为现网原文(实 400) | error=锁定前请先上传或编制交付明细表(附3-交付成本评估,递进附件)
+PASS - CH-11 11a 前置②锁定 200(实 200) | error=
+PASS - CH-11 11a 前置提交 200(实 200) | error=
+PASS - CH-11 11a 归档前(在线单未归档)未翻转(实 pending)
+PASS - CH-11 11a 已归档历史单不阻断翻转: 归档在线单后 reviewed(实 reviewed, 归档 200)
+PASS - CH-11 11b 前置②锁定 200(实 200) | error=
+PASS - CH-11 11b 前置提交 200(实 200) | error=
+PASS - CH-11 11b 未归档历史单不参与计数: 归档在线单后仍 reviewed(实 reviewed, 归档 200)
+PASS - CH-13 前置①经 A 写行后 confirm 200(实 200) | error=
+PASS - CH-13 D-12 共享: 未经 B 写行, A 确认后 B 直接锁定 200(实 200) | error=
+PASS - CH-14 ①draft 时 A 锁定 400(实 400) | error=锁定前请先确认交付预算:商机 PL-T3-5901277-ch14 的交付预算仍为草稿,请在信息收集页签点「确认交付预算」
+PASS - CH-14 ①draft 时同商机 B 锁定亦 400(共享不放宽状态门)(实 400) | error=锁定前请先确认交付预算:商机 PL-T3-5901277-ch14 的交付预算仍为草稿,请在信息收集页签点「确认交付预算」
+PASS - CH-14 两条 400 均指明缺「① 交付预算确认」
+PASS - CH-15 链①②齐后 newversion 派生仍 200 且继承商机码 | lock=200 nv=200
+PASS - CH-15 派生新版本不改写 opp_delivery 状态(仍 confirmed) | status=confirmed
+PASS - CH-16 16 前置: 无挂靠预算单凭附3底稿锁定 200(实 200) | error=
+PASS - CH-16 D-23 反事实锚: 无挂靠锁定单 + 表单带 draft 商机码 → 提交 200(实 200) | error=
+PASS - CH-16b 16b 前置: confirm 后挂靠单锁定 200(实 confirm200/锁200) | error=
+PASS - CH-16b 同商机经 opp 锚定路径仍拦 400(实 400) | error=三步链未闭合:商机 PL-T3-5901277-ch16 的交付预算未确认或缺失(① 交付预算 → ② 项目预算 → ③ 评审单),请先确认再提交
+PASS - CH-16b 400 文案指到三步链
+
+45 passed, 0 failed -> ALL PASS

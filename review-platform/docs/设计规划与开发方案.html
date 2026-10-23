@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>项目评审平台 · 设计规划与开发方案</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:"Microsoft YaHei","PingFang SC",sans-serif; background:#f5f6f8; color:#2c2c2a; line-height:1.75; padding:32px 16px; }
+  .wrap { max-width:1060px; margin:0 auto; }
+  h1 { font-size:24px; font-weight:600; }
+  h2 { font-size:18px; font-weight:600; margin:34px 0 12px; padding-left:12px; border-left:4px solid #534AB7; }
+  h3 { font-size:15px; font-weight:600; margin:16px 0 6px; }
+  p, li { font-size:13.5px; color:#444; }
+  ul { padding-left:20px; } li { margin:3px 0; }
+  .hero { background:linear-gradient(135deg,#26215C,#534AB7); color:#fff; border-radius:14px; padding:30px 34px; }
+  .hero p { color:#d9d7f5; margin-top:8px; font-size:13.5px; }
+  .hero .tag { display:inline-block; background:rgba(255,255,255,.15); border-radius:20px; padding:2px 12px; font-size:12px; margin:12px 8px 0 0; color:#fff; }
+  .card { background:#fff; border:1px solid #e6e7ea; border-radius:12px; padding:18px 20px; margin-bottom:14px; }
+  .card h4 { font-size:14px; font-weight:600; margin-bottom:6px; }
+  .card p, .card li { font-size:13px; }
+  .grid { display:grid; gap:14px; }
+  .g2 { grid-template-columns:1fr 1fr; } .g3 { grid-template-columns:1fr 1fr 1fr; }
+  @media(max-width:820px){ .g2,.g3 { grid-template-columns:1fr; } }
+  table { width:100%; border-collapse:collapse; background:#fff; font-size:13px; }
+  th { background:#f0f1f4; text-align:left; padding:8px 12px; font-weight:600; color:#333; white-space:nowrap; }
+  td { padding:8px 12px; border-top:1px solid #eef0f2; color:#444; vertical-align:top; }
+  .pill { display:inline-block; border-radius:6px; padding:1px 9px; font-size:12px; font-weight:600; }
+  .p-g { background:#EAF3DE; color:#27500A; } .p-y { background:#FAEEDA; color:#633806; }
+  .p-r { background:#FCEBEB; color:#791F1F; } .p-b { background:#E6F1FB; color:#0C447C; } .p-p { background:#EEEDFE; color:#3C3489; }
+  .flow { display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin:8px 0; }
+  .step { background:#fff; border:1px solid #e6e7ea; border-top:3px solid #534AB7; border-radius:9px; padding:9px 13px; font-size:12.5px; }
+  .step b { display:block; font-size:13px; }
+  .step.new { border-top-color:#BA7517; background:#FFFBEB; }
+  .arr { color:#9a99a8; }
+  .note { background:#FFFBEB; border:1px solid #F3E3B3; border-radius:10px; padding:12px 16px; font-size:13px; color:#6b5310; margin-top:10px; }
+  .fix { border-left:4px solid #BA7517; }
+  code { background:#f0f1f4; border-radius:4px; padding:1px 6px; font-size:12px; }
+  .vs { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media(max-width:820px){ .vs { grid-template-columns:1fr; } }
+  .vs .bad { border-top:3px solid #A32D2D; } .vs .good { border-top:3px solid #3B6D11; }
+  .footer { text-align:center; color:#999; font-size:12px; margin-top:36px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hero">
+  <h1>项目评审平台 · 设计规划与开发方案</h1>
+  <p>版本 V1.1 · 2026-09-24 · 基于《商机-项目关键节点评审管理流程指引 V1.0》与 PL00008572 真实评审案例校准</p>
+  <span class="tag">已上线 MVP</span><span class="tag">两条设计修正待实施</span><span class="tag">P2 迭代规划</span>
+</div>
+
+<h2>一、系统定位</h2>
+<p>把项目评审的 <b>信息收集 → 预算编制 → 前置评审 → 红黄绿灯研判 → 归档</b> 全流程线上化；评审会（部门级每周二 / XO级每周五）保留线下召开，系统负责让<b>信息在会前流转到位、风险在会前到人、结论在会后留痕</b>。</p>
+<div class="flow">
+  <div class="step"><b>1 填单</b>基础信息(申请人)</div><span class="arr">→</span>
+  <div class="step new"><b>2 预算表</b>在线填/AI辅助(前置环节)</div><span class="arr">→</span>
+  <div class="step"><b>3 提交</b>自动分发前置评审</div><span class="arr">→</span>
+  <div class="step"><b>4 前置评审</b>各部门打灯+意见</div><span class="arr">→</span>
+  <div class="step"><b>5 AI研判</b>红黄绿灯+升级路由</div><span class="arr">→</span>
+  <div class="step"><b>6 归档</b>材料+报告留档</div>
+</div>
+<p style="font-size:12.5px;color:#888">黄色高亮为本次设计修正①：预算表从"事后补附件"前置为"提交前的必填环节"。退回修改可在 4 → 1/2 之间循环（轮次+1）。</p>
+
+<h2>二、已上线功能（MVP 现状）</h2>
+<table>
+  <tr><th style="width:150px">模块</th><th>已实现</th></tr>
+  <tr><td>账号与角色</td><td>9 个角色账号（销售经理/项目经理/FDE/财务BP/采购BP/法务/合规BP/数据BP/销售支持组），登录鉴权，会话管理</td></tr>
+  <tr><td>在线填单</td><td>三类评审单（售前立项/投标决策/关键事项），字段按真实提交版（含涉密/省份/产品类型/推广激励/回款/背靠背/确收/数据评审等）</td></tr>
+  <tr><td>在线预算表</td><td>成本项录入 + 财务口径自动测算（收入=合同÷1.06、税金1%、销售人力=净签单×1727元/万、激励7.7%、贡献毛利/率）；AI 文本识别填充（DeepSeek，Flash/Pro 可选）；与上传 Excel 附件二选一</td></tr>
+  <tr><td>前置评审</td><td>提交后按指标责任矩阵自动分发（投标决策 10 项/售前 5 项/关键事项 4 项），各部门在线打红黄绿灯+意见，48h 内处理；支持退回修改 → 申请人改后重新提交（轮次+1，任务重分发，历史留痕）</td></tr>
+  <tr><td>AI 研判</td><td>量化指标自动判（分包占比/毛利率/合同金额/运维周期/转包次数等）+ 人工灯态合并 → 综合灯态 + XO/杜总升级路由 + 文本研判报告；已用真实案例回归验证（判定=实际结论）</td></tr>
+  <tr><td>正式报告</td><td>复刻线下《项目风险评估报告》版式 HTML：状态卡/基础信息/风险详述(仅红黄灯)/前置评审意见汇总/会议准备(参会人+汇报准备+材料清单)，免登录链接可分享</td></tr>
+  <tr><td>归档</td><td>材料+预算+报告+流转记录归档库，可查可下载</td></tr>
+</table>
+
+<h2>三、技术架构</h2>
+<div class="grid g3">
+  <div class="card"><h4>运行时</h4><p>Node.js 22 免安装版 + <b>零 npm 依赖</b>（内置 http + node:sqlite）。不受公司网络/编译环境限制，拷贝即跑。</p></div>
+  <div class="card"><h4>存储</h4><p>SQLite 单文件 <code>data/review.db</code>（备份=复制文件）+ 附件目录 <code>data/uploads/</code>。轻量迁移用 try/catch ALTER。</p></div>
+  <div class="card"><h4>前端</h4><p>原生 HTML/JS 单页应用，无构建步骤；卡片式 UI，红黄绿灯色彩体系。</p></div>
+  <div class="card"><h4>大模型</h4><p>DeepSeek（config.json 本机凭据，服务端代理调用）；界面可选 Flash(deepseek-chat)/Pro(deepseek-reasoner)；公司防火墙拦截 Node 原生 TLS，已改走系统 curl 转发。</p></div>
+  <div class="card"><h4>部署</h4><p>双击 start.bat，端口 8600；局域网内 <code>http://本机IP:8600</code> 访问。正式部署可放部门共用机器常开。</p></div>
+  <div class="card"><h4>安全</h4><p>凭据（DeepSeek Key）仅服务端 config.json；研判报告链接免登录（为推送领导设计），其余接口登录鉴权。</p></div>
+</div>
+
+<h3>数据模型（核心表）</h3>
+<table>
+  <tr><th>表</th><th>关键字段</th><th>说明</th></tr>
+  <tr><td>users</td><td>username, name, role, dept</td><td>角色驱动任务分发与权限</td></tr>
+  <tr><td>reviews</td><td>type, title, status, round, form_json, budget_json, light, route, report, report_html</td><td>评审单主表；status: draft/reviewing/returned/judged/archived</td></tr>
+  <tr><td>tasks</td><td>review_id, round, ind_key, ind_name, dept, status, light, opinion</td><td>前置评审任务，按轮次留痕</td></tr>
+  <tr><td>attachments</td><td>review_id, field, filename, filepath</td><td>预算表/变更申请表/其他材料</td></tr>
+  <tr><td>events</td><td>review_id, action, actor, detail, created_at</td><td>全程流转审计</td></tr>
+</table>
+
+<h2>四、设计修正①：预算表前置到填单环节 <span class="pill p-y">待实施·高优先</span></h2>
+<div class="vs">
+  <div class="card bad"><h4>现状（有问题）</h4>
+    <p>预算表入口藏在单据详情页中部，申请人容易找不到；语义上变成"提交后再补材料"，与真实流程（预算表是评审的<b>前置输入</b>，前置评审各部门要看预算表才能打灯）不符。</p>
+  </div>
+  <div class="card good"><h4>目标设计</h4>
+    <p>新建评审单改为<b>两步向导</b>：</p>
+    <ul>
+      <li><b>第 1 步 · 基础信息</b>：现有表单（合同金额等字段同时作为预算表输入）</li>
+      <li><b>第 2 步 · 项目预算表</b>：在线填写（AI 辅助）或上传 Excel，实时显示贡献毛利率测算结果</li>
+      <li>两步完成才出现「提交评审」按钮；预算表缺失时提交按钮置灰并提示</li>
+      <li>前置评审人打开任务时，同屏可见基础信息 + 预算表测算，打灯有据</li>
+    </ul>
+  </div>
+</div>
+<div class="note">影响面：前端表单流程改造（向导化）+ 提交校验前置到按钮层；后端逻辑不变（预算校验已有）。退回修改时申请人可同时改基础信息和预算表。</div>
+
+<h2>五、设计修正②：评审过程与结果全员可见 <span class="pill p-y">待实施·高优先</span></h2>
+<div class="vs">
+  <div class="card bad"><h4>现状（有问题）</h4>
+    <p>工作台只显示"我的评审单"，其他人看不到别人的单；前置评审各部门的灯态和意见、最终研判结果，只有申请人和销售支持组能看到。</p>
+  </div>
+  <div class="card good"><h4>目标设计</h4>
+    <ul>
+      <li><b>全部评审单列表全员可见</b>（工作台增加"全部评审单"区，不再限销售支持组）：项目、类型、申请人、状态、灯态</li>
+      <li><b>单据详情全员只读</b>：基础信息、预算表测算、前置评审各部门灯态+意见、最终灯态、研判报告，任何登录用户可看</li>
+      <li><b>操作权不变</b>：只有申请人能改单，只有责任部门能打灯，只有销售支持组能归档——<b>看得见 ≠ 动得了</b></li>
+      <li><b>敏感信息分级</b>：法务涉诉详情、客户信用细节按现行规则只显示结论性灯态与概括意见（录入时由法务把握口径），与线下规则一致</li>
+    </ul>
+  </div>
+</div>
+<div class="note">影响面：后端列表接口放开 scope 限制 + 前端工作台加"全部评审单"区 + 详情页按角色隐藏操作按钮（只读视图）。透明化也倒逼各部门认真打灯——意见所有人都看得到。</div>
+
+<h2>六、后续迭代路线</h2>
+<table>
+  <tr><th>批次</th><th>内容</th><th>状态</th></tr>
+  <tr><td><b>P1.5</b></td><td>设计修正①（预算表前置向导）+ 修正②（结果全员可见）</td><td><span class="pill p-y">下一批先做</span></td></tr>
+  <tr><td><b>P2</b></td><td>钉钉通知催办（任务到人/退回/研判完成自动提醒）；会前风险卡片推送领导（周一汇总首推+会前一天终版，复用免登录报告链接）；会上投屏看板；会议结论线上录入</td><td><span class="pill p-b">规划</span></td></tr>
+  <tr><td><b>P3</b></td><td>规则配置后台（阈值/指标/责任部门可视化维护，不改代码）；LLM 增强研判（合同条款类文字指标解读、汇报准备话术个性化）；CRM 商机/PMS 项目数据打通；统计报表（红黄灯率/评审周期/超时部门）</td><td><span class="pill p-b">规划</span></td></tr>
+</table>
+
+<h2>七、运维备忘</h2>
+<div class="grid g2">
+  <div class="card"><h4>日常</h4><p>启动：双击 <code>start.bat</code>；备份：复制 <code>data\</code> 目录；演示账号密码均 123456（正式上线前需改密并建真实账号）。</p></div>
+  <div class="card"><h4>回归验证</h4><p><code>node test_flow.js</code> 用 PL00008572 真实案例跑全链路：预算校验→前置评审→研判→报告→归档，预期输出 ALL PASS。</p></div>
+</div>
+
+<div class="footer">项目评审平台 · 设计规划与开发方案 V1.1 · 2026-09-24</div>
+</div>
+</body>
+</html>

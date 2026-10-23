@@ -1,0 +1,15 @@
+[V4.0-T1] delivery moved=0 opps backfilled=0
+(node:35460) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+项目评审平台 MVP 已启动: http://localhost:8600
+数据目录: F:\workbuddy\9\review-platform\data
+Error: database is locked
+    at auth (F:\workbuddy\9\review-platform\server.js:285:70)
+    at Server.<anonymous> (F:\workbuddy\9\review-platform\server.js:795:18)
+    at Server.emit (node:events:519:28)
+    at parserOnIncoming (node:_http_server:1186:12)
+    at HTTPParser.parserOnHeadersComplete (node:_http_common:125:17) {
+  code: 'ERR_SQLITE_ERROR',
+  errcode: 5,
+  errstr: 'database is locked'
+}

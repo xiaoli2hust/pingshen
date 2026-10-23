@@ -1,0 +1,10 @@
+PASS - AC-01 非 admin GET 403 | status=403
+PASS - AC-02 支持组(非 admin)GET 403 | status=403
+PASS - AC-03 GET 200 且 key 掩码(不含明文) | sk-****8125
+PASS - AC-04 POST 更新键+REPORT_SECRET 保留
+PASS - AC-05 改不可达地址后 chat 降级 200(degraded)
+PASS - AC-06 恢复后 chat 200(真网关可能降级也可接受)
+PASS - AC-07 空提交 400 | status=400
+PASS - AC-08 未登录 GET 401 | status=401
+
+8 passed, 0 failed -> ALL PASS

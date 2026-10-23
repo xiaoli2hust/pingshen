@@ -1,0 +1,72 @@
+PASS - DL-01 新建商机 GET delivery 空态 delivery===null(实 200)
+PASS - DL-02 PUT 200 且回显 3 行(实 200 rows=3)
+PASS - DL-02 sum.cost=19980 且 >0(仅外包科目计价, rate=null)
+PASS - DL-02 GET delivery.status=draft 且落 opp_delivery(3 行)
+PASS - DL-02 rate_source=none 且 rate 不兜底(实 rate=null)
+PASS - DL-03 4 行进 3 行出(实 rows=3)
+PASS - DL-03 无空内容行
+PASS - DL-04 空明细 confirm 400 含「无明细行」(G1, 实 400 交付预算无明细行，不能确认(请先在线编制或上传附3))
+PASS - DL-05 confirm 200 status=confirmed(实 200)
+PASS - DL-05 GET 回显 confirmed
+PASS - DL-06 确认后修订回 draft(G1 重确认纪律, 实 draft)
+PASS - DL-07 预算单已建(前置条件, id=2396)
+PASS - DL-07 rate_source=budget 且 rate=1696(实 rate=1696 src=budget)
+PASS - DL-07 sum.cost=35820 与手算一致((pm+own)×1696+rd×995+prod×320, 实 35820)
+PASS - DL-08 商机级导入 200(实 200 )
+PASS - DL-08 rows>=2 且 status=draft(实 rows=2)
+PASS - DL-08 解析锚定 pm_pd=7/own_pd=39/prod_pd=184(与 D-01 同源)
+PASS - DL-08 响应带 audit.row_sources 与 rows 等长
+PASS - DL-09 导入后可确认(实 200)
+PASS - DL-09 确认后重导回 draft(重确认纪律, 实 200)
+PASS - DL-10 FDE 非建档人编制 403(实 403)
+PASS - DL-11 项目经理(建档人)编制 200(实 200)
+PASS - DL-12 表单路径建单后 budgets.opp_code 派生列已落值(实 "PL-T2-7053438-dl12")
+PASS - DL-12 PUT 旧端点 200 且回显 1 行(实 200)
+PASS - DL-12 商机级端点读到同一份(写入落 opp_delivery 而非仅 budget_delivery)
+PASS - DL-12 同商机另一张预算单读到同一份(商机级共享语义)
+PASS - DL-13 无挂靠单 PUT 200(实 200)
+PASS - DL-13 行成本按本单 dev_dept 实算=133504((5+39)×1696+184×320, 与 D-01 同锚)
+PASS - DL-13 GET 回显同数据(1 行, sum 四科目齐)
+PASS - DL-13 rate 取本单 dev_dept=交付处 档 1696(旧路径口径零变化)
+PASS - DL-14 有挂靠单读新表(非空 rows, 实 1)
+PASS - DL-14 无挂靠单读旧表(非空 rows, 实 1)
+PASS - DL-14 预算级 GET 优先新表(商机级改写即刻可见)
+PASS - DL-15 T1 迁移落地的 PL00008572 可读 200(实 200)
+PASS - DL-15 delivery!==null 且 rows>0(存量底稿承接, 实 rows=2)
+PASS - DL-16 未登录 GET 商机级交付预算 401(实 401)
+PASS - DL-17 未知商机码 POST /api/budget 400 含「商机档案不存在」与「三步链」(实 400 商机档案不存在:PL-NOT-EXIST-7053438-17,请先新建待评审商机(三步链: 建档 → ① 交付预算 →)
+PASS - DL-17 被拦建单未顺手造档(GET /api/opp 仍 404) | 实 404
+PASS - DL-18 带 fields+opp_code 建单 200(实 200 id=2400)
+PASS - DL-18 budget.opp_code 即刻等于建档码(不依赖重启) | "PL-T2-7053438-dl18"
+PASS - DL-18 budget.fields.dev_dept=交付处(建单即收 fields)
+PASS - DL-18 建单响应回显 opp_code 且 id 仍为 number
+PASS - DL-18 建单后不重启, 预算级写行即落 opp_delivery(实 200)
+PASS - DL-18 商机级 GET 与预算级写入同内容同科目
+PASS - DL-18 分流后 rate 取该商机最新预算单 dev_dept(D-5 budget)
+PASS - DL-19 PUT 改挂已建档码 200(实 200)
+PASS - DL-19 GET 回显新码且原字段未被清空 | "PL-T2-7053438-dl19"
+PASS - DL-19 原商机档案仍 200(改挂不伤档) | 实 200
+PASS - DL-19 改挂到不存在码被拦 400(实 400)
+PASS - DL-19 被拦后原值未被清空(仍为 code19)
+PASS - DL-19 PUT 不含 opp_code 的 fields 仍 200(实 200)
+PASS - DL-19 不含 opp_code 时派生列与 fields 均保持原值(不清空)
+PASS - DL-19 opp_delivery 行不丢(实 rows=1)
+PASS - DL-20 父单锁定 200(前置条件, 实 200)
+PASS - DL-20 newversion 200 且派生列即继承父单商机码(实 "PL-T2-7053438-dl20")
+PASS - DL-20 v2 的 opp_code 列与 fields.opp_code 一致
+PASS - DL-21 对账语句数(实测 6, 期望 >=6: Excel/POST/PUT/newversion/apply/技能①)
+PASS - DL-21 写 fields 的 budgets 语句全部同句投影 opp_code(漏点=无)
+PASS - DL-21 投影取序含「该单既有列值」兜底(违规=无)
+PASS - DL-21 反例自测-洗列 UPDATE 被抓(实 1 条)
+PASS - DL-21 反例自测-跨行 INSERT 写死 null 被抓(实 1 条)
+PASS - DL-21 反例自测-合规写法放过(实 wash=0 leak=0)
+PASS - DL-22 只送顶层 opp_code 建单 200(实 200)
+PASS - DL-22 前置态成立: 派生列有值而 fields 内无 opp_code | "PL-T2-7053438-dl22"
+PASS - DL-22 对话技能① 200(降级亦 200)(实 200)
+PASS - DL-22 对话后派生列仍为原码(D-15 兜底生效, 未洗成 null) | "PL-T2-7053438-dl22"
+PASS - DL-22 对话后仍走商机级分流(GET 200 且 rate_source 有值)
+PASS - DL-23 apply 刷新交付科目 200(实 200)
+PASS - DL-23 apply 后派生列未被洗(实 "PL-T2-7053438-dl23")
+PASS - DL-23 apply 后四科目按明细刷新(dev_pd=6)
+
+70 passed, 0 failed -> ALL PASS

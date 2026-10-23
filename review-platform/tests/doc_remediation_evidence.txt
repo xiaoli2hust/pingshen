@@ -1,0 +1,21 @@
+PASS 19 unique document rows
+PASS presale.tech identity/category/facts/anchors/focus
+PASS presale.resource identity/category/facts/anchors/focus
+PASS presale.survey_deliver identity/category/facts/anchors/focus
+PASS presale.sub_early identity/category/facts/anchors/focus
+PASS presale.credit_history identity/category/facts/anchors/focus
+PASS bid.sub_reason identity/category/facts/anchors/focus
+PASS bid.tech identity/category/facts/anchors/focus
+PASS bid.arrears identity/category/facts/anchors/focus
+PASS bid.credit identity/category/facts/anchors/focus
+PASS bid.related_tx identity/category/facts/anchors/focus
+PASS bid.payment identity/category/facts/anchors/focus
+PASS bid.upstream identity/category/facts/anchors/focus
+PASS bid.subcontract_limit identity/category/facts/anchors/focus
+PASS bid.compliance identity/category/facts/anchors/focus
+PASS bid.data identity/category/facts/anchors/focus
+PASS change.tech identity/category/facts/anchors/focus
+PASS change.sub_reason identity/category/facts/anchors/focus
+PASS change.sign_diff identity/category/facts/anchors/focus
+PASS change.deduction identity/category/facts/anchors/focus
+{"pass":20,"fail":0}

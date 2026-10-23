@@ -1,0 +1,26 @@
+# T12 EI-09 分类取证(总线 D-54 ②): 单跑 tests/test_excel_import.js x3, 断言口径零改动
+# 门槛原文 test_excel_import.js:130 -> check('EI-09', '单次导入耗时<4s(python 启动+机器负载波动)', tOne < 4000, tOne + 'ms')
+# 门内红值: 4482ms(见 tests/_t12_gate_run1_27of28.txt); 裁定前已有一次单跑绿值 2401ms(tests/_t12_ei_recheck.txt)
+
+第 1 次 单跑 @2026-10-15T01:38:25.917Z  整轮=30.3s  exit=0
+  PASS - EI-09 单次导入耗时<4s(python 启动+机器负载波动) | 2484ms
+  末行: 18 passed, 0 failed -> ALL PASS
+  机器状态: node=3 python=0 freeMem=3721MB/total=16292MB load=0.00,0.00,0.00 cpus=12
+  分类: 环境型(EI-09 <4000ms 可绿)
+
+第 2 次 单跑 @2026-10-15T01:38:57.883Z  整轮=30.6s  exit=0
+  PASS - EI-09 单次导入耗时<4s(python 启动+机器负载波动) | 2890ms
+  末行: 18 passed, 0 failed -> ALL PASS
+  机器状态: node=3 python=0 freeMem=3699MB/total=16292MB load=0.00,0.00,0.00 cpus=12
+  分类: 环境型(EI-09 <4000ms 可绿)
+
+第 3 次 单跑 @2026-10-15T01:39:30.225Z  整轮=31.2s  exit=0
+  PASS - EI-09 单次导入耗时<4s(python 启动+机器负载波动) | 2893ms
+  末行: 18 passed, 0 failed -> ALL PASS
+  机器状态: node=3 python=0 freeMem=3616MB/total=16292MB load=0.00,0.00,0.00 cpus=12
+  分类: 环境型(EI-09 <4000ms 可绿)
+
+======== 分类结论 ========
+三次 ms = 2484 / 2890 / 2893 (另附裁定前一次单跑 2401ms)
+三次里有 <4000ms 的绿 = true ; 三次全部 >=4000ms = false
+判定 = (b) 环境型负载红 -> 可重跑全量门取 28/28; 断言阈值未作任何放宽

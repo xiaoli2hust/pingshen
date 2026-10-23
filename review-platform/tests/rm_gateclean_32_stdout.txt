@@ -1,0 +1,11 @@
+PASS - RG-01 全部套件实际完成且四条声明缺口在位才汇总 ALL PASS | exit=0
+PASS - RG-02 未登记缺口即使不在末六行也禁止全绿 | exit=1
+PASS - RG-03 stderr 未登记缺口禁止全绿 | exit=1
+PASS - RG-04 子套件失败仍汇总失败 | exit=1
+PASS - RG-05 超时未完成不能算通过 | exit=1
+PASS - RG-06 非行首的 NOT EXECUTABLE 字样不得被误认成缺口 | exit=0
+PASS - RG-08 声明缺口消失(见证静默删除或能力恢复)必须红 | exit=1
+PASS - RG-09 全绿日志仍须逐条落声明缺口 id, 禁止读作零覆盖 | exit=0
+PASS - RG-07 自有树护栏接管超时，聚合器不得提前只杀测试Node
+9 passed, 0 failed -> ALL PASS
+

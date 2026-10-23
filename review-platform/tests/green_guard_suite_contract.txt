@@ -1,0 +1,193 @@
+{
+  "at": "2026-10-20T20:36:48.599Z",
+  "scope": "actual guard VM; fake subprocess/identity/FS/DB/HTTP; no process killed or application loaded",
+  "guardSha256": "59b5a54cde6127f7bda1ed3fd6daa2e2da0a9abb61307cbe6bf0adfde9ea2ad8",
+  "passed": 5,
+  "failed": 0,
+  "rows": [
+    {
+      "name": "GT-01 超时先终止自有测试树，再停服务并还原",
+      "mode": "timeout",
+      "events": [
+        "snap",
+        "suite-spawn",
+        "tree-kill",
+        "app-stop",
+        "diff",
+        "restore"
+      ],
+      "error": "cycle cleanup failed: suite: ETIMEDOUT: owned suite tree terminated",
+      "summary": {
+        "tag": "controlled",
+        "script": "controlled.js",
+        "log": "controlled.txt",
+        "exit": null,
+        "secs": "0.0",
+        "diff": "controlled-diff.json",
+        "stopped": true,
+        "suiteStopped": true,
+        "timedOut": true,
+        "suitePid": 4321,
+        "suiteTree": [
+          {
+            "ProcessId": 4321,
+            "Name": "node.exe",
+            "CommandLine": "node controlled.js",
+            "Created": "2026-10-21 04:00:00.000"
+          },
+          {
+            "ProcessId": 4322,
+            "Name": "chrome.exe",
+            "CommandLine": "owned chrome",
+            "Created": "owned-child"
+          }
+        ],
+        "restored": true,
+        "errors": [
+          "suite: ETIMEDOUT: owned suite tree terminated"
+        ],
+        "configUnchanged": true,
+        "offline": true,
+        "preload": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+        "preloadSha256": "43a7988fa8cc40067190d3d193234d5296a769c16855a4d2413d071a4d8156c9",
+        "at": "2026-10-21 04:36:48 CST"
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "GT-02 PID身份已变拒杀且绝不还原数据库",
+      "mode": "identity",
+      "events": [
+        "snap",
+        "suite-spawn",
+        "app-stop"
+      ],
+      "error": "测试进程身份不符, 拒绝树终止",
+      "summary": {
+        "tag": "controlled",
+        "script": "controlled.js",
+        "log": "controlled.txt",
+        "exit": null,
+        "secs": "0.0",
+        "diff": null,
+        "stopped": true,
+        "suiteStopped": false,
+        "timedOut": false,
+        "suitePid": null,
+        "suiteTree": [],
+        "restored": false,
+        "errors": [
+          "run: 测试进程身份不符, 拒绝树终止"
+        ],
+        "configUnchanged": true,
+        "offline": true,
+        "preload": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+        "preloadSha256": "43a7988fa8cc40067190d3d193234d5296a769c16855a4d2413d071a4d8156c9",
+        "at": "2026-10-21 04:36:48 CST"
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "GT-03 树终止失败显式失败且绝不还原数据库",
+      "mode": "kill",
+      "events": [
+        "snap",
+        "suite-spawn",
+        "tree-kill",
+        "app-stop"
+      ],
+      "error": "TASKKILL_FAILED",
+      "summary": {
+        "tag": "controlled",
+        "script": "controlled.js",
+        "log": "controlled.txt",
+        "exit": null,
+        "secs": "0.0",
+        "diff": null,
+        "stopped": true,
+        "suiteStopped": false,
+        "timedOut": false,
+        "suitePid": null,
+        "suiteTree": [],
+        "restored": false,
+        "errors": [
+          "run: TASKKILL_FAILED"
+        ],
+        "configUnchanged": true,
+        "offline": true,
+        "preload": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+        "preloadSha256": "43a7988fa8cc40067190d3d193234d5296a769c16855a4d2413d071a4d8156c9",
+        "at": "2026-10-21 04:36:48 CST"
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "GT-04 正常非零测试保持结果并安全还原，不杀树",
+      "mode": "normal",
+      "events": [
+        "snap",
+        "suite-spawn",
+        "app-stop",
+        "diff",
+        "restore"
+      ],
+      "error": "",
+      "summary": {
+        "tag": "controlled",
+        "script": "controlled.js",
+        "log": "controlled.txt",
+        "exit": 1,
+        "secs": "0.0",
+        "diff": "controlled-diff.json",
+        "stopped": true,
+        "suiteStopped": true,
+        "timedOut": false,
+        "suitePid": 4321,
+        "suiteTree": [],
+        "restored": true,
+        "errors": [],
+        "configUnchanged": true,
+        "offline": true,
+        "preload": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+        "preloadSha256": "43a7988fa8cc40067190d3d193234d5296a769c16855a4d2413d071a4d8156c9",
+        "at": "2026-10-21 04:36:48 CST"
+      },
+      "status": "PASS"
+    },
+    {
+      "name": "GT-05 无PID起动错误可安全还原并明确失败",
+      "mode": "spawn",
+      "events": [
+        "snap",
+        "suite-spawn",
+        "app-stop",
+        "diff",
+        "restore"
+      ],
+      "error": "cycle cleanup failed: suite: ENOENT",
+      "summary": {
+        "tag": "controlled",
+        "script": "controlled.js",
+        "log": "controlled.txt",
+        "exit": null,
+        "secs": "0.0",
+        "diff": "controlled-diff.json",
+        "stopped": true,
+        "suiteStopped": true,
+        "timedOut": false,
+        "suitePid": null,
+        "suiteTree": [],
+        "restored": true,
+        "errors": [
+          "suite: ENOENT"
+        ],
+        "configUnchanged": true,
+        "offline": true,
+        "preload": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+        "preloadSha256": "43a7988fa8cc40067190d3d193234d5296a769c16855a4d2413d071a4d8156c9",
+        "at": "2026-10-21 04:36:48 CST"
+      },
+      "status": "PASS"
+    }
+  ]
+}

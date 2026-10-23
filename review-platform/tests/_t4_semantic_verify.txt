@@ -1,0 +1,33 @@
+(node:29548) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+opp=PL-A-DL-1792126527654 stored_delivery_status=draft http=200
+top_keys=opp,delivery,budgets,reviews,capabilities,provider
+delivery.status=draft rows=1 rate=null rd_price=995 prod_price=320 rate_source=none
+row0={"content":"原草稿","stage":"实施","pm_pd":0,"own_pd":1,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0}
+row0.cost=0 recomputed=0 一致=true
+存行cost=0 回显cost=0 (rate 来源不同时两者可不等, 回显一律按服务端 rate 重算)
+sum={"pm_pd":0,"own_pd":1,"rd_pd":0,"prod_pd":0,"travel_cost":0,"cost":0}
+sum.cost=0 rows_cost合计=0 一致=true
+budgets=0 reviews=0 budget_keys=[] review_keys=[]
+provider={"name":"dingtalk","active":false,"mode":"preview","message":"本地预演，未连接钉钉"}
+capabilities={"can_edit_delivery":true,"can_invite_review":true,"provider_send":false} opp.created_by=2
+敏感键扫描=无 写接口路径扫描=无
+--- 角色差异(同一条商机) ---
+sales1/销售经理 http=200 capabilities={"can_edit_delivery":true,"can_invite_review":false,"provider_send":false}
+admin http=200 capabilities={"can_edit_delivery":true,"can_invite_review":true,"provider_send":false}
+fin1/财务BP http=403 error=仅项目经理/销售经理/销售支持组可使用机器人工作台
+--- A-DL 夹具残留(本会话跑了两次 test_agent_chat) ---
+PL-A-DL% opps=2
+(node:19984) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PL-RW-1792092523199-DISPATCH http=200 status=confirmed rows=1 rate=1696 rate_source=budget sum.cost=9659
+  回显cost=[9659] 按当前基准重算=[9659] 逐行一致=true 存行cost=[2875]
+  回显键=["content","stage","pm_pd","own_pd","rd_pd","prod_pd","travel_cost","note","cost"] 越权键=无
+PL-RW-1792092523199-MAIN http=200 status=draft rows=1 rate=1696 rate_source=budget sum.cost=16755
+  回显cost=[16755] 按当前基准重算=[16755] 逐行一致=true 存行cost=[8275]
+  回显键=["content","stage","pm_pd","own_pd","rd_pd","prod_pd","travel_cost","note","cost"] 越权键=无
+PL-AW-1792092371951 http=200 status=draft rows=1 rate=1696 rate_source=budget sum.cost=6648
+  回显cost=[6648] 按当前基准重算=[6648] 逐行一致=true 存行cost=[1560]
+  回显键=["content","stage","pm_pd","own_pd","rd_pd","prod_pd","travel_cost","note","cost"] 越权键=无
+不存在的商机 http=404 {"error":"商机档案不存在"}
+无交付明细 PL-AD-RB-1792092075165 http=200 delivery={"status":"none","rows":[],"sum":null,"rate":null,"rd_price":995,"prod_price":320,"rate_source":"none","updated_at":null}

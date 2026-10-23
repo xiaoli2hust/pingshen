@@ -1,0 +1,15 @@
+# 红证据：改造前聚合器 vs 新契约用例
+聚合器: F:/workbuddy/9/.superpowers/sdd/2026-10-20-business-flow-remediation/run_all_prev.js (无 DECLARED_GAPS 白名单，任何缺口行一律判 COVERAGE GAP)
+套件: tests/test_run_all_contract.js 的 8+1 条用例原文，仅把被测 src 指回改造前副本
+exitCode=1
+
+FAIL - RG-01 全部套件实际完成且四条声明缺口在位才汇总 ALL PASS | exit=1 last=36/37 套通过, 失败 0, 覆盖缺口 1, 耗时 0.0s -> COVERAGE GAP
+PASS - RG-02 未登记缺口即使不在末六行也禁止全绿 | exit=1
+PASS - RG-03 stderr 未登记缺口禁止全绿 | exit=1
+PASS - RG-04 子套件失败仍汇总失败 | exit=1
+PASS - RG-05 超时未完成不能算通过 | exit=1
+FAIL - RG-06 非行首的 NOT EXECUTABLE 字样不得被误认成缺口 | exit=1 last=36/37 套通过, 失败 0, 覆盖缺口 1, 耗时 0.0s -> COVERAGE GAP
+FAIL - RG-08 声明缺口消失(见证静默删除或能力恢复)必须红 | exit=0 last=37/37 套通过, 失败 0, 覆盖缺口 0, 耗时 0.0s -> ALL PASS
+FAIL - RG-09 全绿日志仍须逐条落声明缺口 id, 禁止读作零覆盖 | exit=1 last=36/37 套通过, 失败 0, 覆盖缺口 1, 耗时 0.0s -> COVERAGE GAP
+FAIL - RG-07 自有树护栏接管超时，聚合器不得提前只杀测试Node
+4 passed, 5 failed -> SOME FAIL

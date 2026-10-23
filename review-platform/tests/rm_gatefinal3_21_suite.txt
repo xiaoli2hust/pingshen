@@ -1,0 +1,14 @@
+PASS - PL-01 普通销售 parser-lab 403 | status=403
+PASS - PL-02 支持组上传实测 200+audit 对账返回 | known=15 ok=15
+PASS - PL-02b 对账全一致(与 PA 同源) | bad=0
+PASS - PL-03 实验室不落库(单数不变) | 101→101
+PASS - PL-04a 调优前: 自定义标签未采集 contract | contract=undefined
+PASS - PL-04b 保存调优映射 200
+PASS - PL-04c 调优后: contract=24 命中 | contract=24
+PASS - PL-04d use_override 标记返回
+PASS - PL-05 GET 映射含已保存的 contract
+PASS - PL-06 非法段名 400 | status=400
+PASS - PL-07 未勾选时不应用调优(contract 仍 undefined)
+PASS - PL-08 清空调优 200
+
+12 passed, 0 failed -> ALL PASS

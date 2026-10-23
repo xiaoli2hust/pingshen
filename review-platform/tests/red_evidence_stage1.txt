@@ -1,0 +1,41 @@
+FAIL - R-31 红灯自动打回 status=returned
+PASS - R-31 打回路由
+FAIL - R-31 auto_return 事件留痕
+PASS - R-31 S-06 重提后轮次=2
+PASS - R-31 S-06 二轮复判转绿(judged)
+PASS - R-31 S-06 一轮旧任务作废
+FAIL - R-01 灯色=red 期望yellow; 路由缺[XO](红灯打回:销售/项目经理与客户重新协商后再次提交); 黄项缺[分包占比]
+PASS - R-02 (yellow/1 项非绿)
+PASS - R-03 (green/0 项非绿)
+FAIL - R-04 灯色=yellow 期望red; 路由缺[打回](黄灯:先部门级评审会,通过后上 XO 级评审会); 红项缺[测绘类分包占比]
+PASS - R-05 (yellow/1 项非绿)
+PASS - R-06 (yellow/1 项非绿)
+PASS - R-07 (yellow/1 项非绿)
+PASS - R-08 (green/0 项非绿)
+PASS - R-09 (yellow/1 项非绿)
+PASS - R-10 (yellow/1 项非绿)
+PASS - R-11 (yellow/1 项非绿)
+PASS - R-12 (red/1 项非绿)
+PASS - R-13 (yellow/1 项非绿)
+PASS - R-14 (yellow/1 项非绿)
+PASS - R-15 (yellow/1 项非绿)
+PASS - R-16 (red/1 项非绿)
+PASS - R-17 (yellow/1 项非绿)
+FAIL - R-18 灯色=green 期望yellow; 路由缺[XO](绿灯:免上会,留档备查,直接推进); 黄项缺[推广激励]
+FAIL - R-19 黄项缺[推广激励]
+FAIL - R-20 灯色=green 期望yellow; 路由缺[XO](绿灯:免上会,留档备查,直接推进); 黄项缺[条款外激励]
+PASS - R-21 (green/0 项非绿)
+PASS - R-22 (yellow/2 项非绿)
+PASS - R-23 (yellow/1 项非绿)
+PASS - R-24 (yellow/1 项非绿)
+PASS - R-25 (yellow/1 项非绿)
+PASS - R-26 (yellow/1 项非绿)
+PASS - R-27 (yellow/2 项非绿)
+PASS - R-28 (yellow/1 项非绿)
+PASS - R-29 (yellow/1 项非绿)
+PASS - R-30 (green/0 项非绿)
+FAIL - R-32 路由多[杜总](黄灯:部门级评审会 -> XO级评审会,并需推送杜总)
+FAIL - R-34 路由缺[直通](黄灯:先部门级评审会,通过后上 XO 级评审会); 路由多[先部门级](黄灯:先部门级评审会,通过后上 XO 级评审会)
+
+29 passed, 9 failed -> SOME FAIL
+红绿用例(★red): 4 PASS / 9 FAIL (红绿未闭合)

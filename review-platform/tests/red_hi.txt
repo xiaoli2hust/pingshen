@@ -1,0 +1,18 @@
+FAIL - HI-01 支持组历史导入 200 + era=history + status=archived | {"status":200}
+FAIL - HI-02a light=none(不补判) | light=undefined
+FAIL - HI-02b decision=通过(解析评审结论) | decision=undefined
+FAIL - HI-02c archived_at=2024-05-12(业务时间=评审日期) | archived_at=undefined
+FAIL - HI-02d 落库 era/light/judge_detail 元数据
+FAIL - HI-02e 原件自动挂附件(历史评审表原件)
+FAIL - HI-02f events 首条=历史数据导入
+FAIL - HI-03 普通销售补录历史 403 | status=200
+PASS - HI-04a scope=mine 不含历史单
+FAIL - HI-04b scope=all 不含历史单
+FAIL - HI-04c scope=archived 含历史单
+FAIL - HI-05a light 分布有 none 档(历史未评) | none=undefined
+FAIL - HI-05b kpi.historyTotal>=1 + historyPassRate 命中 | historyTotal=undefined passRate=undefined
+FAIL - HI-05c kpi.greenRate 分母=在线单(不被历史污染)
+FAIL - HI-05d years 年度分布含 2024 | []
+FAIL - HI-06 真实表 history 模式导入不炸(200+archived) | status=200 matched=30
+
+1 passed, 15 failed -> SOME FAIL

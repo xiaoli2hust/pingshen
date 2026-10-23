@@ -1,0 +1,53 @@
+[V4.0-T1] delivery moved=0 opps backfilled=0
+(node:67712) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+项目评审平台 MVP 已启动: http://localhost:8600
+数据目录: F:\workbuddy\9\review-platform\data
+[V4.0-T1] delivery moved=0 opps backfilled=0
+(node:70436) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+项目评审平台 MVP 已启动: http://localhost:8600
+数据目录: F:\workbuddy\9\review-platform\data
+Error: database is locked
+    at auth (F:\workbuddy\9\review-platform\server.js:388:70)
+    at Server.<anonymous> (F:\workbuddy\9\review-platform\server.js:1044:18)
+    at Server.emit (node:events:519:28)
+    at parserOnIncoming (node:_http_server:1186:12)
+    at HTTPParser.parserOnHeadersComplete (node:_http_common:125:17) {
+  code: 'ERR_SQLITE_ERROR',
+  errcode: 5,
+  errstr: 'database is locked'
+}
+Error: database is locked
+    at putDelivery (F:\workbuddy\9\review-platform\server.js:1307:14)
+    at Server.<anonymous> (F:\workbuddy\9\review-platform\server.js:1388:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5) {
+  code: 'ERR_SQLITE_ERROR',
+  errcode: 5,
+  errstr: 'database is locked'
+}
+Error: database is locked
+    at auth (F:\workbuddy\9\review-platform\server.js:388:70)
+    at Server.<anonymous> (F:\workbuddy\9\review-platform\server.js:1044:18)
+    at Server.emit (node:events:519:28)
+    at parserOnIncoming (node:_http_server:1186:12)
+    at HTTPParser.parserOnHeadersComplete (node:_http_common:125:17) {
+  code: 'ERR_SQLITE_ERROR',
+  errcode: 5,
+  errstr: 'database is locked'
+}
+Error: database is locked
+    at auth (F:\workbuddy\9\review-platform\server.js:388:70)
+    at Server.<anonymous> (F:\workbuddy\9\review-platform\server.js:1044:18)
+    at Server.emit (node:events:519:28)
+    at parserOnIncoming (node:_http_server:1186:12)
+    at HTTPParser.parserOnHeadersComplete (node:_http_common:125:17) {
+  code: 'ERR_SQLITE_ERROR',
+  errcode: 5,
+  errstr: 'database is locked'
+}
+[notify:db] 发送失败(已重试 1 次, 不阻断主流程):请求失败:
+[notify:config] 发送失败(已重试 1 次, 不阻断主流程):请求失败:
+[notify:config] 发送失败(已重试 1 次, 不阻断主流程):请求失败:
+[notify:config] 发送失败(已重试 1 次, 不阻断主流程):请求失败:
+[notify:db] 发送失败(已重试 1 次, 不阻断主流程):请求失败:

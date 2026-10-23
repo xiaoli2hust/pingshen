@@ -1,0 +1,10 @@
+PASS - UI-1 对话面板初始隐藏
+PASS - UI-2 点①磁贴展开面板
+PASS - UI-3 识别值回填表单(customer/title/contract_amount/biz_line) | {"title":"T11界面对话商机","customer":"江西省自然资源测绘与监测院","biz_line":"B2","contract_amount":"240","opp_stage":"","sales":"","region":"","province":"","sign_date":"","pm":"","survey":"否","summary":""}
+PASS - UI-4 回复列出缺项(商机阶段/销售/项目概述) | 售/概述), 识别结果会填入下方表单, 你可随时手改。⏎我: 江西省自然资源测绘与监测院的 T11界面对话商机, 预计 240 万, B2⏎智能体: 本轮更新:业务线=B2, 商机名称=T11界面对话商机, 客户名称=江西省自然资源测绘与监测院, 预计合同金额(万元)=240⏎建档还缺 3 项:商机阶段/销售/项目概述
+PASS - UI-5 非法代码由服务端 400 判, 文案红显 | 商机代码不合法:需 2-40 位字母数字开头, 仅可含 . _ -
+PASS - UI-6 缺项建档由服务端 400 判(含缺项键) | 待评审商机要素不齐:opp_stage, sales, summary
+PASS - UI-7 建档成功出类型卡且 URL 回写 ?opp= | #/new?opp=PL-T11-UI-7976891
+PASS - UI-8 前置评审页签渲染聚合卡两格(新档 0/0) | inflight=0 history=0
+PASS - UI-9 无 pageerror
+9 passed, 0 failed -> ALL PASS

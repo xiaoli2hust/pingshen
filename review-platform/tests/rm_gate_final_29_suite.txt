@@ -1,0 +1,27 @@
+PASS - AD-01c 非 admin 直跳 #/admin/llm 被挡回首页且不出现 LLM 配置卡 | hash=#/ 含顶层配置=false 含提示词版本=false
+PASS - AD-01d 非 admin 侧栏不出现两个管理中心入口 | set=0 robot=0
+PASS - AD-01 admin 登录后 #/admin/llm 渲染六卡(实效/顶层配置/Profile 覆盖/降级参数/提示词版本/用量) | 实得: LLM 管理中心 admin | 顶层配置（所有 profile 的最终回退） | Profile 覆盖 优先级：profile → default → 环境变量 → 顶层配置 → 内置默认 | 降级参数 | 提示词版本 只追加新版本，最高版本生效；无版本时使用冻结默认 | 近 7 日用量
+PASS - AD-01b 实效表按 default/budget/review/parser 逐 profile 一行 | tbody tr=4
+PASS - AD-02 #/admin/llm 全文不含 LLM_API_KEY 明文且无 sk- 开头的长密钥片段 | keyLen=30 明文命中=false sk-长片段=0 innerText长度=1415
+PASS - AD-03 #/admin/llm 掩码形态可见(见 **** 且掩码 token 非空值) | ****次数=5 掩码token=5
+PASS - AD-08 default profile 探针按钮发出 POST /api/admin/llm/test 且就地结果区落地不崩溃 | 按钮=1 POST次数=1 六卡仍在=6 结果="失败 488 msFailed to connect"
+PASS - AD-04 #/settings 重定向到 #/admin/llm 且六卡完成渲染(旧入口不 404 不留空页) | hash=#/admin/llm 跳转前LLM卡=0
+PASS - AD-05 admin 侧栏出现「LLM 管理中心」与「机器人管理」两项且 href 指向两页 | 实得: ["首页","全部商机","全部预算单","待办打灯","研判台","归档库","解析器实验室","LLM 管理中心","机器人管理"] set=#/admin/llm robot=#/admin/robot
+FAIL - AD-05b 点击 data-n="robot" 进入 #/admin/robot 并渲染六区(实效+实例/新增/config 只读/矩阵/白名单/业务接入) | hash=#/admin/robot 实得: LLM 管理中心 admin | 顶层配置（所有 profile 的最终回退） | Profile 覆盖 优先级：profile → default → 环境变量 → 顶层配置 → 内置默认 | 降级参数 | 提示词版本 只追加新版本，最高版本生效；无版本时使用冻结默认 | 近 7 日用量
+PASS - AD-02b #/admin/robot 全文不含 LLM_API_KEY 明文, 且无未掩码的 access_token/secret 明文 | 明文命中=false sk-长片段=0 access_token明文值=0
+FAIL - AD-06 通知矩阵八事件每事件一行且事件名逐个在 DOM 命中 | tr=0 期望=8 缺失=red_reject,judged,task_dispatch,green_publish,archived,returned,weekly,xo_push
+PASS - AD-07 实例区按现网行数正确呈现(0 行则空态不白屏) + config 只读区两键呈「未配置」或掩码 + 「导入为停用实例」按钮在场 | API实例=0 DOM行=0 空态="机器人管理 admin\n      发送目标以「" NOTIFY_WEBHOOK_URL→未配置 COMMITTEE_WEBHOOK_URL未配置 导入为停用实例 / COMMITTEE_WEBHOOK_URL→未配置 导入为停用实例 导入按钮=1 全文长度=1416
+PASS - AD-03b 有实例时 webhook 查询参数值与加签 secret 只以掩码呈现, 明文一律不出现(夹具 POST=200) | 基线行=0 id=86 行数=1 掩码webhook=true 掩码secret=true 明文残留=false 夹具名可见=true
+PASS - AD-03c 夹具已回收: DELETE 返回 200 且实例区回到基线(夹具残留 0) | DELETE=200 基线行=0 回收后行=0 夹具名仍在=false
+PASS - AD-11 机器人管理显示“生成待发送草稿（本地预演）” | card=1 文案=true
+PASS - AD-12 员工绑定/群目标/外发箱三个页签可点击且各只有一个活动页签 | [{"key":"bindings","active":1},{"key":"targets","active":1},{"key":"outbox","active":1}]
+PASS - AD-13 未绑定、preview、failed/cancelled 有明确中文且不伪装“已送达”；真实取消行显示 pill | {"unbound":true,"preview":true,"failed":true,"cancelled":true,"delivered":false,"cancelPreview":200,"cancel1":200,"cancel2":200,"cancelledPills":1}
+PASS - AD-14 外发箱 payload 以转义文本渲染，注入 HTML 不执行 | opp=200 preview=200 literal=true img=0 ran=false
+PASS - AD-16 外发箱群消息预览字面含截止提示(spec §5.4.4 前端层) | hint="请及时完成本部门前置评审并打灯" 预览命中=true
+PASS - AD-10 两页各捕获一张 PNG(H_AD_1_llm_admin / H_AD_2_robot_admin)，非 RED 必须落盘 | llm=99558B robot=73311B(文件) persisted=true
+PASS - AD-09 两页导航渲染期 console.error 与 pageerror 均为空 | console=0 pageerror=0
+PASS - AD-15 两页新增交互阶段 console.error/pageerror 为零 | console=0 pageerror=0
+PASS - AD-09b 全流程(含登录/非 admin/夹具/探针阶段)pageerror 为零 | pageerror 总数=0
+CLEANUP - PL-AD-RB-1792536924052 opps/budgets/reviews=0/0/0
+
+22 passed, 2 failed -> SOME FAIL

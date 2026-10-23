@@ -1,0 +1,14 @@
+PASS - AW-01 #/agent?opp=<code> 显示统一工作台和本地预演状态 | robotMode=1 hash=#/agent?opp=PL-AW-1792575953702
+PASS - AW-01b 缺省状态文案仍为生成待发送草稿（本地预演） | {"count":1,"text":"生成待发送草稿（本地预演）;机器人只生成草稿,确认、锁定和提交必须由你点击。"}
+PASS - AW-02 三上传控件 accept=.xlsx 且各 POST 命中既有导入端点恰一次 | {"fileCounts":[1,1,1],"accepts":[".xlsx",".xlsx",".xlsx"],"uploadCounts":[1,1,1]}
+PASS - AW-03 文字生成后只出现草稿行与人工保存/确认按钮，不自动确认 | generated=true save=1 confirm=1 status=draft
+PASS - AW-04 预算/评审真对话入口各发送确认锁定/提交评审，HTTP 200 且仍 draft | {"tabCounts":{"budget":1,"review":1},"links":{"budget":1,"review":1},"oral":{"budget":200,"review":200},"budgetStatus":"draft","reviewStatus":"draft"}
+PASS - AW-05 页面显示交付/预算/评审真实状态及下一步深链 | delivery=true budget=true review=true
+PASS - AW-07 三个页签(逐个自证确实切过去)内商机标题/交付 content·note/评审标题的注入 HTML 一律转义呈现，img 元素为零且 onerror 未执行 | active=delivery/budget/review pane标记命中=1/1/1 literal=true/true/true escaped=true/true/true imgs=0/0/0 ran=false 自证可数到注入元素=1
+PASS - AW-06 工作台 console.error/pageerror 为零并捕获截图，非 RED 必须落盘 | console=0 pageerror=0 shot=88378B(文件)
+CLEANUP - PL-AW-1792575953702 + PL-AW-1792575953702-XSS opps/budgets/reviews=0/0/0 | 0/0/0
+
+8 passed, 0 failed -> ALL PASS
+
+(node:36364) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)

@@ -1,0 +1,24 @@
+﻿阶段 3  旧代码跑红证据(2026-10-09, 改造前 server.js/agent.js, 服务 8600 运行中)
+
+== tests/test_rules_e2e.js(34 条改 preview-light 批量) ==
+
+13 passed, 32 failed -> SOME FAIL
+红绿用例(★red): 13 PASS / 7 FAIL (红绿未闭合)
+
+红项: 32 条 preview-light 全 FAIL(/api/reviews/:id/preview-light 404 接口不存在)
+绿项(维持): R-31/S-06 红灯闭环 + SEC 专项 13 条(带 budget_id 建锁预算单在旧代码"带才校验"兼容)
+
+== tests/test_agent_chat.js(A-15~18 新增) ==
+
+31 passed, 9 failed -> SOME FAIL
+红项: A-15 建单轮(旧 chat 走 budget 流程 budget_id 缺->404)/A-16 字段更新/A-17 预判/A-18 归一化 共 9 FAIL
+绿项(维持): A-01~14 + API-16~19 共 31 条
+
+== tests/test_security_notify.js(新建) ==
+
+4 passed, 17 failed -> SOME FAIL
+红项: API-23(preview-light 404)/J-02(回落断言)/J-01(取 budgets.calc)/API-21(404)/API-22(404 非 403)/R-33(404)/N-01(桩收不到)/N-03(notify.js 不存在) 共 17 FAIL
+绿项(回归防护): J-02 presale 流程/PRE 全绿单/N-02 提交 200/dry-run status 不变
+
+结论: 三脚本新用例在旧代码全红, 红绿之红成立; 双回归另见下
+

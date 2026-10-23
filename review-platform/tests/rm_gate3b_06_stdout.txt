@@ -1,0 +1,25 @@
+PASS - RW-01 非 admin 对 bindings/targets 的 GET+PUT 与 outbox/preview/cancel 共 7 项全部 403 | 403,403,403,403,403,403,403
+PASS - RW-02 admin 可读写已有 user_id binding；不存在 user_id=400；不改变 users.role/dept | put=200 get=200 bad=400 role=项目经理
+PASS - RW-03 target_key/status/provider/target_type 枚举校验且未绑定是合法状态 | 400,400,400,400,200
+PASS - RW-07 outbox payload 无 token/key/secret/file data，只含工作台深链与可显示文字 | preview=200 list=200 row=true bad=
+PASS - RW-08 provider 未激活时 active target/binding 也不访问本地监听桩且状态仍 preview | binding=200 target=200 invite=200/preview hits=0
+PASS - RW-15 outbox cancel 行为守卫: preview 可取消且重复幂等; 种子 sent/failed 均 409 且状态未被改写; ready 200 转 cancelled |  preview=200 cancel=200/200 sent→409(仍 sent) failed→409(仍 failed) ready→200(变 cancelled) 文案=当前状态 sent 不可取消(仅 preview/ready 可取消)
+PASS - RW-04 invite-review 仅销售支持组/admin 可调用，项目经理/销售经理/部门账号均 403 | denied=403,403,403 allow=200/200
+PASS - RW-05 已有任何评审记录时邀请 409；无评审商机写 preview | new=200/preview existing=409
+PASS - RW-06 同一 opp_code+target_user_id 重复邀请返回同一 outbox id 且表中一行 | status=200/200 ids=810/810 rows=1
+PASS - RW-09 GET workbench 返回 opp/delivery/budgets/reviews/provider/capabilities 且不复制写接口 | status=200 keys=opp,delivery,budgets,reviews,capabilities,provider
+PASS - RW-16 非白名单部门账号(财务BP)读工作台与口述生成均 403，且不回任何草稿行 | workbench=403 delivery=403 文案(不参与判定)=仅项目经理/销售经理/销售支持组可使用机器人工作台 草稿=null
+PASS - RW-10 skill=delivery 路由与形状: 每行键集恰好等于八列且 cost/sum/status/action 一律 undefined, 空行支自洽, 未写 opp_delivery(值由 RO-08 兜) | status=200 degraded=true rows=1 keys=content,stage,pm_pd,own_pd,rd_pd,prod_pd,travel_cost,note 恰好八列=true missing=[] actions=1 opp_delivery 未变=true
+PASS - RW-11 口头确认交付预算/锁预算/提交评审不改变三种状态 | chat=200 {"delivery":"draft","budget":"draft","review":"draft"} -> {"delivery":"draft","budget":"draft","review":"draft"}
+PASS - RW-12 Excel 三入口仍命中既有端点且解析错误不生成伪草稿 | status=502/502/502 counts=1/2->1/2
+PASS - RW-13 真实 HTTP 提交后按部门而非任务入箱，财务多任务只有一行 | submit=200 tasks=10 depts=6 outbox=6 finance=4/true
+PASS - RW-13d 每条 task_dispatch 落库正文含非空截止提示(§5.4.4 端到端) | rows=6 hints=请及时完成本部门前置评审并打灯|请及时完成本部门前置评审并打灯|请及时完成本部门前置评审并打灯|请及时完成本部门前置评审并打灯|请及时完成本部门前置评审并打灯|请及时完成本部门前置评审并打灯
+PASS - RW-14 admin preview 重放同键返回同一 outbox_id 且行数不增；双推由 RB-07b 守护 | preview=200/200 ids=820/820 rows=1->1
+PASS - RW-13b webhook 不可用时入箱仍完整且不阻断提交 | 探活=200/false/请求失败:Failed to conne 真源=db:75 矩阵放行=1 submit=200/reviewing tasks=10 depts=6 outbox=6 pend合计=10
+CLEANUP - PL-RW-1792575373367 opps/budgets/reviews=0/0/0 robot_outbox 删除/残留=21/0 故障实例残留=0
+PASS - RW-13c 本轮夹具自清: robot_outbox 零残留且故障注入实例已摘除 | outbox 删除=21 残留=0 注入实例残留=0
+
+19 passed, 0 failed -> ALL PASS
+
+(node:33512) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)

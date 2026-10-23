@@ -1,0 +1,801 @@
+{
+  "at": "2026-10-21 06:28:44 CST",
+  "scope": "read-only full gate outputs and bound source hashes; no application, network, database or credential values",
+  "checks": [
+    {
+      "name": "37 source suites and 37 completed records",
+      "ok": true
+    },
+    {
+      "name": "run_all bytes unchanged during gate",
+      "ok": true
+    },
+    {
+      "name": "guard.js launch binding unchanged",
+      "ok": true
+    },
+    {
+      "name": "gate-runner.js launch binding unchanged",
+      "ok": true
+    },
+    {
+      "name": "offline-preload.js launch binding unchanged",
+      "ok": true
+    },
+    {
+      "name": "suite 1 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 2 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 3 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 4 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 5 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 6 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 7 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 8 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 9 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 10 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 11 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 12 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 13 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 14 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 15 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 16 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 17 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 18 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 19 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 20 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 21 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 22 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 23 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 24 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 25 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 26 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 27 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 28 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 29 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 30 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 31 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 32 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 33 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 34 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 35 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 36 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "suite 37 identity and completed child",
+      "ok": true
+    },
+    {
+      "name": "outer summary matches every complete raw result",
+      "ok": true
+    },
+    {
+      "name": "cycle exit preserves failure or coverage gap",
+      "ok": true
+    },
+    {
+      "name": "normal cycle stopped and restored without errors",
+      "ok": true
+    },
+    {
+      "name": "no database lock in 37 full outputs or outer log",
+      "ok": true
+    },
+    {
+      "name": "no raw assertion failure in zero-exit suite",
+      "ok": true
+    }
+  ],
+  "auditFailures": 0,
+  "totals": {
+    "suites": 37,
+    "pass": 33,
+    "fail": 1,
+    "coverageGap": 3,
+    "uniqueGapIds": [
+      "CH-11b",
+      "C2-11-identity",
+      "OD-08-inflight",
+      "OD-09-flip"
+    ],
+    "databaseLocks": 0
+  },
+  "finalLine": "33/37 套通过, 失败 1, 覆盖缺口 3, 耗时 834.2s -> SOME FAIL",
+  "cycle": {
+    "tag": "rm_gate_pre",
+    "script": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\gate-runner.js",
+    "log": "tests/green_run_remediation_pre.txt",
+    "exit": 1,
+    "secs": "917.6",
+    "diff": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\logs\\diff_rm_gate_pre_1792534937838.json",
+    "stopped": true,
+    "suiteStopped": true,
+    "timedOut": false,
+    "suitePid": 34020,
+    "suiteTree": [],
+    "restored": true,
+    "errors": [],
+    "configUnchanged": true,
+    "offline": true,
+    "preload": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+    "preloadSha256": "669c56f487378b622b5d0c2e0894fee70adec3ffa952681d08aa7bc8602d3b1e",
+    "at": "2026-10-21 06:23:03 CST"
+  },
+  "rows": [
+    {
+      "index": 1,
+      "name": "F-01~15 财务引擎(纯函数)",
+      "file": "tests/test_finance.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "# tests 15",
+        "# pass 15",
+        "# fail 0",
+        "# cancelled 0",
+        "# skipped 0"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_01_stdout.txt",
+      "sha256": "4a4214ff5e695387f920154393178475a3defe7c7827a368e38e80a62f045f92"
+    },
+    {
+      "index": 2,
+      "name": "A-05~07/13 agent 核心(纯函数)",
+      "file": "tests/test_agent_core.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "# tests 7",
+        "# pass 7",
+        "# fail 0",
+        "# cancelled 0",
+        "# skipped 0"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_02_stdout.txt",
+      "sha256": "8449e5d1d261c215724818837ebc8cafeb4acd9cfd455c58b9bcd18177325580"
+    },
+    {
+      "index": 3,
+      "name": "RO-01~04 机器人编排纯函数",
+      "file": "tests/test_robot_orchestrator.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "# tests 9",
+        "# pass 9",
+        "# fail 0",
+        "# cancelled 0",
+        "# skipped 0"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_03_stdout.txt",
+      "sha256": "2fb5f9eaa2ceb3abc10f471ee32a5d51ec3254ac42cb0af2c50e8d207d0ad121"
+    },
+    {
+      "index": 4,
+      "name": "API-01~20+S-01~06 预算 API(HTTP)",
+      "file": "tests/test_budget_api.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "29 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_04_stdout.txt",
+      "sha256": "3e6f9106732327293b25d9c7657b39d539ff624a1c041609d1cd4c41be6b4266"
+    },
+    {
+      "index": 5,
+      "name": "A-01~04/A-08~18 对话流(HTTP+桩)",
+      "file": "tests/test_agent_chat.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "43 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_05_stdout.txt",
+      "sha256": "aa56a10de5c2f19b53c4e76e2ad7780a1f407b6fee86225b82b766c90ca24d24"
+    },
+    {
+      "index": 6,
+      "name": "RW-01~16 机器人工作台与外发箱(HTTP)",
+      "file": "tests/test_robot_workbench.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "19 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_06_stdout.txt",
+      "sha256": "d56bb67c8cad2740b9b7cc79e56e6759ccc535bf2468f274dd6886bc2ded27c1"
+    },
+    {
+      "index": 7,
+      "name": "R-01~34 规则矩阵 preview-light + 闭环/SEC",
+      "file": "tests/test_rules_e2e.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "45 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_07_stdout.txt",
+      "sha256": "fe0f4bf51d05d6094057f1324dcc058cbec150a078939fdd39144f88804cc217"
+    },
+    {
+      "index": 8,
+      "name": "API-21~23/R-33/J/N 通知与结论(HTTP+webhook 桩)",
+      "file": "tests/test_security_notify.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "21 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_08_stdout.txt",
+      "sha256": "6707e3cfe2bf20afb8dac4f79f1c662894e7f51b6741f02b103312b21167b832"
+    },
+    {
+      "index": 9,
+      "name": "D-01~08 附3交付明细(上传解析+递进门禁)",
+      "file": "tests/test_delivery.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "25 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_09_stdout.txt",
+      "sha256": "9854bc05e9200b262da63656ebad6d014c902dafc3e55c0889bc44a290019708"
+    },
+    {
+      "index": 10,
+      "name": "BI-01~12 归档库 BI(直查同源+对抗)",
+      "file": "tests/test_bi.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "13 passed, 0 failed -> ALL PASS(数据基线: 归档 26 单, 直查同源断言)"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_10_stdout.txt",
+      "sha256": "a1783582809de7a89704b2e49f3388f71e27c1a7fcb202489cb077f28c287af3"
+    },
+    {
+      "index": 11,
+      "name": "T3 门禁口径 bid+presale",
+      "file": "tests/test_gate_presale.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "3 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_11_stdout.txt",
+      "sha256": "067de73c99c38996d18301d1b3820b1cb95bb447d156d064ea05c29d9cf8a4ad"
+    },
+    {
+      "index": 12,
+      "name": "EI-01~09 Excel 导入(六组锚定+安全+性能)",
+      "file": "tests/test_excel_import.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "29 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_12_stdout.txt",
+      "sha256": "a55bf2e2c292763226dacf79a544943a0756a800a77dcdb4d1a4f99d1fa1bac4"
+    },
+    {
+      "index": 13,
+      "name": "HI-01~06 历史数据承接",
+      "file": "tests/test_history_import.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "16 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_13_stdout.txt",
+      "sha256": "3aa7fb0b171390441866995d92d15962ecf31ade6c478259486e8692ae9a4ce4"
+    },
+    {
+      "index": 14,
+      "name": "OC-01~06 商机代码贯穿",
+      "file": "tests/test_opp_thread.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "11 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_14_stdout.txt",
+      "sha256": "5ac554ab13400a0d4ce326ce08d40d4497ab4685542baf78f9f39c9bd4f7dcc7"
+    },
+    {
+      "index": 15,
+      "name": "OP-01~14 商机档案 CRUD(HTTP)",
+      "file": "tests/test_opp_api.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "24 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_15_stdout.txt",
+      "sha256": "f41892129670a914380ae4fa36f17e880f589865847db4948912d9507b78b9d2"
+    },
+    {
+      "index": 16,
+      "name": "DL-01~23 商机级交付预算(G1 确认门+分流+派生列守护)",
+      "file": "tests/test_delivery_opp.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "71 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_16_stdout.txt",
+      "sha256": "c849c57dfee83195630b2acc12cf1bdba04d5ef6ffaf92136f056d129824f5ce"
+    },
+    {
+      "index": 17,
+      "name": "CH-01~16b 三步链门禁(G2/G3/G4 六态+D-23 反事实锚)",
+      "file": "tests/test_chain.js",
+      "status": 0,
+      "result": "COVERAGE GAP",
+      "gaps": [
+        "NOT EXECUTABLE CH-11b legacy-state G4 mutation coverage gap(不可计为PASS)"
+      ],
+      "summaries": [
+        "45 passed, 0 failed, 1 NOT EXECUTABLE -> EXECUTED PASS + 1 COVERAGE GAP(不可计为全绿) [CH-11b legacy-state G4 mutation coverage gap(不可计为PASS)]"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_17_stdout.txt",
+      "sha256": "71351be69fcf5642f867b42b70ff91f4ef81cf72f23bf775fc30967804c734b4"
+    },
+    {
+      "index": 18,
+      "name": "RQ-01~10 必填单源注册表(meta/fields+提交门)",
+      "file": "tests/test_required.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "29 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_18_stdout.txt",
+      "sha256": "3c628c73278856713c1c62fa3923e004b674834a1b1afa462376f7e0fbb9d95d"
+    },
+    {
+      "index": 19,
+      "name": "C2-01~11 360 聚合契约(delivery 八键/chain 五键/D-19 403 边界/rate 分支实执行)",
+      "file": "tests/test_opp360.js",
+      "status": 0,
+      "result": "COVERAGE GAP",
+      "gaps": [
+        "NOT EXECUTABLE C2-11-identity same-row era flip identity coverage gap(不可计为PASS)"
+      ],
+      "summaries": [
+        "49 passed, 0 failed, 1 NOT EXECUTABLE -> EXECUTED PASS + 1 COVERAGE GAP(不可计为全绿) [C2-11-identity same-row era flip identity coverage gap(不可计为PASS)] [DISCLOSURE: C2-11 unsupported identity coverage replaced by paired-code business comparison]"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_19_stdout.txt",
+      "sha256": "067522f56d1898cb7b714c86287dfec105988de0e88d289431f94318aaf73162"
+    },
+    {
+      "index": 20,
+      "name": "PA-* 解析器全字段对账(原表审计)",
+      "file": "tests/test_parser_audit.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "15 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_20_stdout.txt",
+      "sha256": "c68a4cb678975044abb0ab3b55604a5a40343f2c9231acdbead91c1c35256a39"
+    },
+    {
+      "index": 21,
+      "name": "PL-01~08 解析器实验室(admin 实测+调优)",
+      "file": "tests/test_parser_lab.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "12 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_21_stdout.txt",
+      "sha256": "90ca3d5b46051a6ae7a8bd7dbeff53896fac904db3ca8b2063c3cbf31f446b0b"
+    },
+    {
+      "index": 22,
+      "name": "LM-01~14 LLM 管理中心(profile/探针/用量/降级)",
+      "file": "tests/test_llm_admin.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "58 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_22_stdout.txt",
+      "sha256": "67a492f5f1aef45569064e3fa41c9684dfbca8f3d96d556bc77d01074f0f3e7a"
+    },
+    {
+      "index": 23,
+      "name": "RB-01~11 机器人管理中心(实例/矩阵/白名单/双轨不双推)",
+      "file": "tests/test_robot_admin.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "62 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_23_stdout.txt",
+      "sha256": "607e15c61516fcf26923c0f2ead548eb5af9bb10828bead1394ae38714decfeb"
+    },
+    {
+      "index": 24,
+      "name": "OD-01~10 对话式建档 + 灯色聚合视图",
+      "file": "tests/test_opp_dialog.js",
+      "status": 0,
+      "result": "COVERAGE GAP",
+      "gaps": [
+        "NOT EXECUTABLE OD-08-inflight history-draft inflight mutation witness gap(不可计为PASS)",
+        "NOT EXECUTABLE OD-09-flip literal same-record era flip coverage gap(不可计为PASS)"
+      ],
+      "summaries": [
+        "33 passed, 0 failed, 2 NOT EXECUTABLE -> EXECUTED PASS + 2 COVERAGE GAP(不可计为全绿) [OD-08-inflight history-draft inflight mutation witness gap(不可计为PASS); OD-09-flip literal same-record era flip coverage gap(不可计为PASS)] [DISCLOSURE: OD-09 literal same-record era flip has no HTTP interface, not retained; replaced by paired-code comparison]"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_24_stdout.txt",
+      "sha256": "9a77a2162b9f25a05cb9f658d933d7b39d65937e1d698ae9b8520364e8c9c37a"
+    },
+    {
+      "index": 25,
+      "name": "HL-1~4 实验室浏览器层",
+      "file": "tests/h_lab_shots.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "8 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_25_stdout.txt",
+      "sha256": "f4992c6c411f48bcc228cf6357b4a07dbf4094a52f640546c841a1d71f96b1d9"
+    },
+    {
+      "index": 26,
+      "name": "NAV-* 商机中枢导航浏览器层",
+      "file": "tests/h_nav_shots.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "12 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_26_stdout.txt",
+      "sha256": "23b56a05f77f0cbd9211ce6c5c1257dee6bdc5ae769ab74195fcfa59ef8be624"
+    },
+    {
+      "index": 27,
+      "name": "IA-1~26 商机中枢IA浏览器层",
+      "file": "tests/h_ia_shots.js",
+      "status": 1,
+      "result": "FAIL",
+      "gaps": [],
+      "summaries": [
+        "57 passed, 1 failed -> SOME FAIL"
+      ],
+      "assertionFailures": [
+        "FAIL - IA-8 L1 共享区三卡齐在+ #opdlvTable===1 + #opdlvSum 含交付成本合计 | tbody=21 三卡=true/true/false #opdlvTable=1 汇总含交付成本合计=true"
+      ],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_27_stdout.txt",
+      "sha256": "119a44700fe6357742cc1c1b846d74f7a1a94827368e1f3436312ac44d6190a1"
+    },
+    {
+      "index": 28,
+      "name": "AW-01~07 机器人统一工作台浏览器层",
+      "file": "tests/h_robot_workbench_shots.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "8 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_28_stdout.txt",
+      "sha256": "72e339c5030baed459f8bdaaec4969babf1ff9fb755618c62571c600b10e882b"
+    },
+    {
+      "index": 29,
+      "name": "AD-01~15 管理中心浏览器层(#/admin/llm + #/admin/robot)",
+      "file": "tests/h_admin_shots.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "24 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_29_stdout.txt",
+      "sha256": "177586fd505e1166028f2c986ee603e53a365937b9a1373b99030b79e3bab2f2"
+    },
+    {
+      "index": 30,
+      "name": "EV/RD/IA/SM/NT 业务整改 HTTP 专项",
+      "file": "tests/test_flow_remediation.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "98 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_30_stdout.txt",
+      "sha256": "4f649067c53563d1a38dce76c10b89e5b73d78b37591eedc6de68da399f4bfb2"
+    },
+    {
+      "index": 31,
+      "name": "EV/RD/IA/SM/NT 业务整改浏览器专项",
+      "file": "tests/h_remediation_shots.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_31_stdout.txt",
+      "sha256": "88640732ee22da14679faaa23f3214ea3a01f5fafe8751a9acc2c32d705c1c0d"
+    },
+    {
+      "index": 32,
+      "name": "RG-01~06 全量汇总真实性(隔离子进程结果)",
+      "file": "tests/test_run_all_contract.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "7 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_32_stdout.txt",
+      "sha256": "3c33da19421f895f805163a6a36f1f885f1b1e6126becb2799b9e788f5bf1857"
+    },
+    {
+      "index": 33,
+      "name": "BP-01~06 预算预选与当前关联保真",
+      "file": "tests/test_budget_preselect.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "6 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_33_stdout.txt",
+      "sha256": "3adfc62ebbaa12ffeb8244f69133cba229a6f25fe9a5926f658d38053548fb1a"
+    },
+    {
+      "index": 34,
+      "name": "FS-01~12 前端状态与只读证据语义",
+      "file": "tests/test_frontend_semantics.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "12 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_34_stdout.txt",
+      "sha256": "327605854da2e531f5c8063eb0e33280ca3aeb2d8dd9741d53eae5bb932eccae"
+    },
+    {
+      "index": 35,
+      "name": "回归 test_flow.js",
+      "file": "test_flow.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_35_stdout.txt",
+      "sha256": "031719927f29bf9038c5e25c92b4090452e06467777f5f7842d68fe2e2bf27ac"
+    },
+    {
+      "index": 36,
+      "name": "回归 test_p15_flow.js",
+      "file": "test_p15_flow.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [
+        "10 passed, 0 failed -> ALL PASS"
+      ],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_36_stdout.txt",
+      "sha256": "5eaef560cae4bb1a6f576cbf1f87eb10cc2f5f62489c8c2736e76b82fe385b0f"
+    },
+    {
+      "index": 37,
+      "name": "数据可行性 data_feasibility_check.js",
+      "file": "tests/data_feasibility_check.js",
+      "status": 0,
+      "result": "PASS",
+      "gaps": [],
+      "summaries": [],
+      "assertionFailures": [],
+      "databaseLocks": 0,
+      "fullLog": "tests\\rm_gate_pre_37_stdout.txt",
+      "sha256": "cab6ca8815dbddf9e51ad0d5626f455800beb061b8af045527d5532c018328c7"
+    }
+  ]
+}

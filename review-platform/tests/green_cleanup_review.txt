@@ -1,0 +1,32 @@
+PASS - DG-00 dry-run 成功且数据库逐字节未变
+PASS - DG-00 显式删除清单不含真实评审预算商机
+PASS - DG-01 按清单删除成功并保留目标计数
+PASS - DG-06 reviews 保留行每个字段与快照一致
+PASS - DG-06 budgets 保留行每个字段与快照一致
+PASS - DG-06 opps 保留行每个字段与快照一致
+PASS - DG-06 opp_delivery 保留行每个字段与快照一致
+PASS - DG-06 tasks 保留行每个字段与快照一致
+PASS - DG-06 events 保留行每个字段与快照一致
+PASS - DG-06 attachments 保留行每个字段与快照一致
+PASS - DG-06 agent_messages 保留行每个字段与快照一致
+PASS - DG-01 不在清单中的 llm_calls 全表指纹未变
+PASS - DG-01 不在清单中的 notify_matrix 全表指纹未变
+PASS - DG-01 不在清单中的 robot_instances 全表指纹未变
+PASS - DG-01 不在清单中的 robot_targets 全表指纹未变
+PASS - DG-01 不在清单中的 robot_user_bindings 全表指纹未变
+PASS - DG-01 不在清单中的 robot_whitelist 全表指纹未变
+PASS - DG-01 不在清单中的 sessions 全表指纹未变
+PASS - DG-01 不在清单中的 settings 全表指纹未变
+PASS - DG-01 不在清单中的 sqlite_sequence 全表指纹未变
+PASS - DG-01 不在清单中的 users 全表指纹未变
+PASS - DG-02 证据包含删除前后每表指纹与哈希
+PASS - DG-00 缺真实review中止，零数据库写入且不碰正式证据
+PASS - DG-00 缺真实budget中止，零数据库写入且不碰正式证据
+PASS - DG-00 缺真实opp中止，零数据库写入且不碰正式证据
+PASS - DG-00 缺真实delivery中止，零数据库写入且不碰正式证据
+PASS - DG-00 清单混入真实评审时中止且数据库未变
+PASS - DG-00 dry-run 后库有漂移时拒绝 apply 且数据库未变
+PASS - DG-00 new-null-review漂移中止且不删未知真实数据
+PASS - DG-00 null-event漂移中止且不删未知真实数据
+PASS - DG-00 只读快照未被测试改写
+31 passed, 0 failed -> ALL PASS

@@ -1,0 +1,41 @@
+FAIL - R-31 红灯自动打回 status=returned
+PASS - R-31 打回路由
+FAIL - R-31 auto_return 事件留痕
+PASS - R-31 S-06 重提后轮次=2
+PASS - R-31 S-06 二轮复判转绿(judged)
+PASS - R-31 S-06 一轮旧任务作废
+PASS - R-01 (yellow/1 项非绿)
+PASS - R-02 (yellow/1 项非绿)
+PASS - R-03 (green/0 项非绿)
+PASS - R-04 (red/1 项非绿)
+PASS - R-05 (yellow/1 项非绿)
+PASS - R-06 (yellow/1 项非绿)
+PASS - R-07 (yellow/1 项非绿)
+PASS - R-08 (green/0 项非绿)
+PASS - R-09 (yellow/1 项非绿)
+PASS - R-10 (yellow/1 项非绿)
+PASS - R-11 (yellow/1 项非绿)
+PASS - R-12 (red/1 项非绿)
+PASS - R-13 (yellow/1 项非绿)
+PASS - R-14 (yellow/1 项非绿)
+PASS - R-15 (yellow/1 项非绿)
+PASS - R-16 (red/1 项非绿)
+PASS - R-17 (yellow/1 项非绿)
+PASS - R-18 (yellow/1 项非绿)
+PASS - R-19 (yellow/2 项非绿)
+PASS - R-20 (yellow/1 项非绿)
+PASS - R-21 (green/0 项非绿)
+PASS - R-22 (yellow/2 项非绿)
+PASS - R-23 (yellow/1 项非绿)
+PASS - R-24 (yellow/1 项非绿)
+PASS - R-25 (yellow/1 项非绿)
+PASS - R-26 (yellow/1 项非绿)
+PASS - R-27 (yellow/2 项非绿)
+PASS - R-28 (yellow/1 项非绿)
+PASS - R-29 (yellow/1 项非绿)
+PASS - R-30 (green/0 项非绿)
+PASS - R-32 (yellow/1 项非绿)
+PASS - R-34 (yellow/1 项非绿)
+
+36 passed, 2 failed -> SOME FAIL
+红绿用例(★red): 11 PASS / 2 FAIL (红绿未闭合)

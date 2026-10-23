@@ -1,0 +1,23 @@
+head=b9f8554 (V4.0 终局门运行并提交于 T15 之后的 HEAD; 元信息由总线在 green_run_v4.txt 之上刷新, 提交面=跑绿面按 D-46)
+collected_at=2026-10-15T03:24:36.032Z
+node=v22.22.2
+suites=29 (run_all.js SUITES 数组正则计数 ^    [' 实测)
+run_all_last_line=29/29 套通过, 耗时 469.7s -> ALL PASS
+health=401 (GET /api/me 期望 401, http.get 实测)
+lm_in_gate=(no count line) (段名含 LM-21 / D-56 空值语义)
+ad_in_gate=(no count line)
+c2_in_gate=(no count line) (含 D-41 的 C2-04b)
+a_in_gate=(no count line)
+rb_in_gate=(no count line)
+od_in_gate=(no count line)
+v4_final_gate=P0 八任务(96d6dcd 门 25/25) + P1 T9 c5cfbe9 / T10 4193ec2 / T11 d0c01b6 / T12 6230a4e / T13 b3da703 / T14 c3e4c52+52f5494 / T15 b9f8554
+config_json_bytes=270 sha256_16=f285c66ad4790370 (未入库, 只读采集)
+db_open_mode=node:sqlite readOnly:true, 仅 SELECT COUNT(*)
+opps=1433
+opp_delivery=1045
+budgets=3705
+reviews=6175
+tasks=19769
+llm_calls=519
+db_error=(none)
+p1_completion_criteria=①三套门内真跑(T12) ②管理中心浏览器层门内真跑(T13/T15) ③凭据单一入口+写侧校验且无过度收紧(T14/T15)

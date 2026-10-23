@@ -1,0 +1,15 @@
+全属性对账 app.js FIELDS ≡ server.js REQUIRED.review (总线, 只读文本)
+
+### presale: FE 14 项 / BE 14 项
+req 集 FE=customer,biz_line,contract_amount,sign_date,survey,sub_early_flag,presale_invest,presale_period,summary | BE=customer,biz_line,contract_amount,sign_date,survey,sub_early_flag,presale_invest,presale_period,summary
+=> 全属性逐键逐项(含 t/o/ph/full)完全一致
+
+### bid: FE 38 项 / BE 38 项
+req 集 FE=customer,biz_line,contract_amount,gross_margin,ops_years,sign_path,survey,secret,settle_method,guarantee,non_compete,payment_terms,summary,data_review | BE=customer,biz_line,contract_amount,gross_margin,ops_years,sign_path,survey,secret,settle_method,guarantee,non_compete,payment_terms,summary,data_review
+=> 全属性逐键逐项(含 t/o/ph/full)完全一致
+
+### change: FE 22 项 / BE 22 项
+req 集 FE=biz_line,proj_stage,change_type,summary | BE=biz_line,proj_stage,change_type,summary
+=> 全属性逐键逐项(含 t/o/ph/full)完全一致
+
+ALL MATCH (0 处差异)

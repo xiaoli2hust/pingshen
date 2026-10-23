@@ -1,0 +1,33 @@
+PASS - RQ-01 GET /api/meta/fields 200 | status=200 
+PASS - RQ-01 含 presale/bid/change/opp/budget 五键且每项为数组 | presale=14项, bid=38项, change=22项, opp=7项, budget=5项
+PASS - RQ-02 FE FIELDS 文本解析成功(不 require 浏览器文件) | presale 14 项 / bid 38 项 / change 22 项
+PASS - RQ-02 presale req 集 FE≡BE(含顺序) | FE(9)=customer,biz_line,contract_amount,sign_date,survey,sub_early_flag,presale_invest,presale_period,summary | BE(9)=customer,biz_line,contract_amount,sign_date,survey,sub_early_flag,presale_invest,presale_period,summary
+PASS - RQ-02 bid req 集 FE≡BE(含顺序) | FE(14)=customer,biz_line,contract_amount,gross_margin,ops_years,sign_path,survey,secret,settle_method,guarantee,non_compete,payment_terms,summary,data_review | BE(14)=customer,biz_line,contract_amount,gross_margin,ops_years,sign_path,survey,secret,settle_method,guarantee,non_compete,payment_terms,summary,data_review
+PASS - RQ-02 change req 集 FE≡BE(含顺序) | FE(4)=biz_line,proj_stage,change_type,summary | BE(4)=biz_line,proj_stage,change_type,summary
+PASS - RQ-03 presale req 项中文标签逐项全等 | FE=客户名称/业务线/预计合同金额(万元)/预计签单时间/是否涉及测绘(外业采集或地图)/是否涉及分包提前进场/预计售前投入成本(万元)/预计售前实施周期(月)/项目概述 | BE=客户名称/业务线/预计合同金额(万元)/预计签单时间/是否涉及测绘(外业采集或地图)/是否涉及分包提前进场/预计售前投入成本(万元)/预计售前实施周期(月)/项目概述
+PASS - RQ-03 bid req 项中文标签逐项全等 | FE=最终客户名称/业务线/预计合同金额(万元)/预计贡献毛利率(%)/项目运维周期(年)/签约路径/是否涉及测绘/是否涉密项目/结算方式/合同是否存在担保/合同是否存在竞业条款/付款条件(写明合同条款)/项目概述/是否涉及数据评审 | BE=最终客户名称/业务线/预计合同金额(万元)/预计贡献毛利率(%)/项目运维周期(年)/签约路径/是否涉及测绘/是否涉密项目/结算方式/合同是否存在担保/合同是否存在竞业条款/付款条件(写明合同条款)/项目概述/是否涉及数据评审
+PASS - RQ-03 change req 项中文标签逐项全等 | FE=业务线/项目阶段/决策事项类型/决策事项概述 | BE=业务线/项目阶段/决策事项类型/决策事项概述
+PASS - RQ-04 meta.opp 为键名数组(与 OPP_REQUIRED 同序) | ["title","customer","biz_line","contract_amount","opp_stage","sales","summary"]
+PASS - RQ-04 POST /api/opp 全缺 400 且 missing ≡ meta.opp(含顺序) | status=400 missing=["title","customer","biz_line","contract_amount","opp_stage","sales","summary"] meta.opp=["title","customer","biz_line","contract_amount","opp_stage","sales","summary"]
+PASS - RQ-05 夹具预算单无挂靠(G3 天然跳过, 判别力落在必填门) | GET /api/budget/244 实测 opp_code=""
+PASS - RQ-05 对话追问独有键求集非空且全部不在提交 req 集 | BID_REQUIRED 17 键: 交叠 7(customer,contract_amount,secret,settle_method,sign_path,guarantee,non_compete) / 独有 10(sub_amount,province,jiadao,product_type,b2b_scene,revenue_confirm,promo_target,promo_amount,promo_outside,sub_limit)
+PASS - RQ-05 载荷含 req 集全 14 键且不含任何对话追问独有键 | req 键数=14
+PASS - RQ-05 req 集全齐但缺 BID_REQUIRED 独有键 → 提交 200(D-1: 提交门只认注册表 req 集) | status=200 
+PASS - RQ-06 缺 req 键 sign_path 提交被拦 400 | status=400 必填缺失:签约路径
+PASS - RQ-06 error 以「必填缺失」开头且 missing 含 sign_path(防测到 G3 的 400) | error="必填缺失:签约路径" missing=["sign_path"]
+PASS - RQ-06 error 含中文标签「签约路径」 | error="必填缺失:签约路径"
+PASS - RQ-07 同残缺载荷 submit:false 建草稿 200(门只作用于提交动作) | status=200 id=285 
+PASS - RQ-08 presale 缺 presale_invest 提交 400(取 presale 集) | status=400 error="必填缺失:预计售前投入成本(万元)" missing=["presale_invest"]
+PASS - RQ-08 change 只带 change req 集提交 200(按 review.type 取集, 不串台) | status=200  | change req 集=biz_line,proj_stage,change_type,summary
+PASS - RQ-09 SUBMIT_REQUIRED_GATE 常量存在(一行回退点) | 当前值=true
+PASS - RQ-09 必填门块在 /submit 处理器内 | gate 偏移=154374
+PASS - RQ-09 块内含 reqKeys(review.type) 必填校验 | 块 531 字符
+PASS - RQ-09 D-31 门序: 预算必带门 → G3 三步链 → 必填门 | budget=1021 g3=2071 gate=2297
+PASS - RQ-09 开关只关必填校验(块内不含预算必带门/G3/opp_delivery) | 块内命中禁用关键词=[]
+PASS - RQ-09 POST /api/reviews 未重复加门(§C: submit:true 已被现网硬拦) | POST 块 1187 字符, 含开关=false
+PASS - RQ-10 解析仅用 fs + 正则(无第三方模块、不 require app.js) | require 集=["fs","path","../agent.js"]
+PASS - RQ-10 meta 响应为可 JSON 解析的纯数据(无函数/无 DOM) | bid 项数=38
+
+29 passed, 0 failed -> ALL PASS
+日志已写入: tests\rm_gate3b_18_suite.txt
+

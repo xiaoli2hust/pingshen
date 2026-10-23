@@ -1,0 +1,14 @@
+PASS - FE-1 360 页渲染(opp 变整行后不炸) | seen=200 /api/opp/PL00008572/360
+PASS - FE-2 七标签齐(IA-7 等价) | 实得:概览,预算,评审表,前置灯态,结论,对话,归档
+PASS - FE-3 概览四指标卡仍渲染 | tiles=4
+PASS - FE-4 评审表标签行>=1(IA-8 等价) | rows=147
+PASS - FE-5 前置灯态含评判指标/部门列(IA-9 等价)
+PASS - FE-6 建档无单商机进 360 渲染而非「不存在」(404 放宽 FE 面) | hash=PL-T5FE-6738234 文案含「不存在」=false
+PASS - FE-7 无单商机概览计数为 0 而非崩溃 | 概览文案前 40 字= 商机 360° PL-T5FE-6738234 T5 FE 冒烟无
+PASS - FE-7b 无单商机切「评审表」标签出空态提示(非异常)
+PASS - FE-7c 无单商机切「预算」标签出空态提示
+PASS - FE-8 fde1 读 360 仍渲染(明细门收紧未伤链路引导) | seen=200 /api/opp/PL00008572/360 ; 200 /api/opp/PL00008572/360 ; 200 /api/opp/PL00008572/360 ; 200 /api/opp/PL-T5FE-6738234/360 ; 200 /api/opp/PL-T5FE-6738234/360 ; 200 /api/opp/PL-T5FE-6738234/360 ; 200 /api/opp/PL-T5FE-6738234/360
+PASS - FE-9 全程零 JS 报错
+  FE 侧 360/明细请求观测: 200 /api/opp/PL00008572/360 ; 200 /api/opp/PL00008572/360 ; 200 /api/opp/PL00008572/360 ; 200 /api/opp/PL-T5FE-6738234/360 ; 200 /api/opp/PL-T5FE-6738234/360 ; 200 /api/opp/PL-T5FE-6738234/360 ; 200 /api/opp/PL-T5FE-6738234/360
+
+11 passed, 0 failed -> ALL PASS

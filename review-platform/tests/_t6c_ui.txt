@@ -1,0 +1,13 @@
+PASS - UI-01 登录页(深色 login-panel)
+PASS - UI-02 工作台(metric 卡+sparkline+灯色分布条)
+PASS - UI-03 新建表单(深色表单+侧边栏)
+PASS - UI-04 评审详情(灯色条幅+部门进度条+风险分级条)
+PASS - UI-05 agent 对话窗(气泡+预览+margin 卡)
+PASS - UI-06 预算单列表(状态分布条)
+PASS - UI-07 交付明细(行成本占比条+汇总卡)
+PASS - UI-08 归档 BI(4 KPI+八维度图渲染)
+PASS - 全程无 JS 报错
+
+9 passed, 0 failed -> ALL PASS
+
+EXITCODE=0

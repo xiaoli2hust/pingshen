@@ -1,0 +1,14 @@
+PASS - NAV-1 zhichizu 导航六项 | 实得:首页,全部商机,待办打灯,研判台,归档库,解析器实验室
+PASS - NAV-2 扁平无分组div + 归档库文本(h_flicker 锚)
+PASS - NAV-3 商机列表搜索命中 | rows=1
+PASS - NAV-4 行展开单据链(评审单+预算单)
+PASS - NAV-5 进入360°(hash+#oppPage) | hash=#/opp/PL00008572
+PASS - NAV-6 任务中心(待打灯/已处理/全部监控)
+PASS - NAV-7 全部监控有任务行(指标+部门列)
+PASS - NAV-8 研判台四队列+灯色分布
+PASS - NAV-9 fde1 两项(首页/待办打灯) | 实得:首页,待办打灯
+PASS - NAV-10 sales1 三项(首页/我的商机/新建待评审商机) | 实得:首页,我的商机,新建待评审商机
+PASS - NAV-11 sales1 不见待办打灯/研判台/归档库/解析器实验室
+PASS - NAV-12 财务BP 四项(含待办打灯) | 实得:首页,我的商机,新建待评审商机,待办打灯
+
+12 passed, 0 failed -> ALL PASS

@@ -1,0 +1,22 @@
+PASS - D-01 上传解析 200
+PASS - D-01 解析锚定: 正编39/生产184/PM合计7
+PASS - D-01 与原件合计行一致(total_row 对照)
+PASS - D-01 两行(实施+运维)且内容来自建设内容回退链
+PASS - D-01 实施行成本=133504(=(5+39)×1696+184×320, 与附3合计行 col13 同源)
+PASS - D-01 运维行成本=3392(=2×1696, 与附3运维 PM 金额同源)
+PASS - DA-01 import 响应附 audit(row_sources 与 rows 等长 + grid 非空)
+PASS - DA-02 逐格对账: content_pos 与 cols 坐标上的原表值与解析行一致
+PASS - DA-03 audit.meta 含 sheet 名与列定位 cols
+PASS - D-02 回显两行+sum+源文件名
+PASS - D-03 修改+加行保存(正编 40+3=43)
+PASS - D-03 行成本实算(新增行 (1+3)×1696+6×320=8704)
+PASS - D-04 无交付明细锁定被拦(400 递进门禁)
+PASS - D-04 有交付明细锁定 200
+PASS - D-05 四科目回写(dev_pd=39/pm_cost=11872/prod_pd=184)
+PASS - D-05 预算重算(delivery=39×1696+184×320+11872+20000差旅=156896)
+PASS - D-06 非 owner 编辑交付明细 403
+PASS - D-07 锁定后编辑明细 400(提示新建版本)
+PASS - D-08 非 owner 上传 403
+PASS - D-08 非 xlsx 文件解析失败提示(不崩, 提示可手编)
+
+20 passed, 0 failed -> ALL PASS

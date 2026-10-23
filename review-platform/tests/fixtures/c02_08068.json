@@ -1,0 +1,64 @@
+{
+  "_meta": {
+    "case": "C-02",
+    "source": "tests/realdata/【投标决策】PL00008068-260921-昆山市消防要素可视化分析平台 (1).xlsx · 投标决策评审 sheet + 黄灯研判 HTML",
+    "extracted": "2026-10-08",
+    "notes": [
+      "真实表单毛利率为小数 0.150832377714284，已 ×100 归一化为 15.08（系统口径为百分数）——数据可行性发现#3",
+      "promo_target='内部'（XO-10 规则应不触发，验证 R-21）",
+      "前置评审人工灯：六部门全绿（财务欠款绿/付款条件绿）"
+    ]
+  },
+  "pl": "PL00008068",
+  "title": "昆山市消防要素可视化分析平台",
+  "form": {
+    "opp_code": "PL00008068",
+    "opp_stage": "投标决策",
+    "region": "华北营销处-区域",
+    "customer": "昆山市消防救援大队",
+    "biz_line": "G1",
+    "contract_amount": "35",
+    "sales": "陈俊",
+    "pm": "樊茫",
+    "sign_date": "2026-10-20",
+    "gross_margin": "15.08",
+    "cost_happened": "2.8",
+    "ops_years": "2",
+    "sign_path": "昆山数字智能科技有限公司→丰图科技（深圳）有限公司",
+    "sub_amount": "5",
+    "designated_sub_amount": "5",
+    "survey_sub_amount": "0",
+    "sub_core": "否",
+    "survey": "否",
+    "jiadao": "否",
+    "secret": "否",
+    "province": "江苏省",
+    "product_type": "非标品",
+    "promo_target": "内部",
+    "promo_amount": "0",
+    "settle_method": "银行转账",
+    "payback_time": "预计26年Q4回款30%，27年Q2回款60%，29年Q2回款10%",
+    "b2b_scene": "回款+验收=均非背靠背",
+    "revenue_confirm": "终验100%确收，预计27年Q2终验",
+    "payment_terms": "",
+    "guarantee": "否",
+    "non_compete": "否",
+    "sub_limit": "否",
+    "summary": "自主进行技术开发与系统集成，按网格管理平台→消防GIS可视化展示两大模块实施建设，统一交付后由甲方验收",
+    "data_review": "否",
+    "data_plan": "不涉及独立数据交付。项目交付物为软件系统、代码及技术文档",
+    "data_content": "",
+    "data_compliance": "无"
+  },
+  "preLights": {
+    "fin": { "arrears": "green", "payment": "green" }
+  },
+  "expect": {
+    "light": "yellow",
+    "routeIncludes": ["XO", "直通"],
+    "routeExcludes": ["先部门级"],
+    "yellowNames": ["指定供应商"],
+    "redNames": [],
+    "verdict": "判例 08068 真实结论：黄灯-XO 直通；黄项仅指定供应商（指定类分包 5 万）"
+  }
+}

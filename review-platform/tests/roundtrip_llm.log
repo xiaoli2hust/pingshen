@@ -1,0 +1,25 @@
+{
+  "report": [
+    {
+      "case": "PL00008572(真实案例 Excel 提取 17 字段)",
+      "degraded": false,
+      "hit": 16,
+      "total": 16,
+      "rate": 100,
+      "miss": []
+    },
+    {
+      "case": "天地图剧本(§3.2 十项锚定同源)",
+      "degraded": false,
+      "hit": 16,
+      "total": 16,
+      "rate": 100,
+      "miss": []
+    }
+  ],
+  "totalFields": 32,
+  "hitFields": 32,
+  "rate": 100,
+  "llmFail": 0,
+  "verdict": "通过(>=90%)"
+}

@@ -1,0 +1,13 @@
+SETUP opp={"opp":{"opp_code":"PL-AWFIX-1792132695908","title":"AWFIX 禁用口径探针","customer":"A
+A0 status=undefined btn={"exists":true,"disabled":false} save={"exists":true,"disabled":false}
+A1 空行集点确认 -> toast=["交付预算无明细行，不能确认(请先在线编制或上传附3)"] status=undefined
+B0 PUT=200 status=draft
+B1 btn={"exists":true,"disabled":false}
+B2 点确认后 toast=["交付预算已确认 → 下一步可锁定项目预算(②)"] status=confirmed
+C1 confirmed 态 btn={"exists":true,"disabled":false} save={"exists":true,"disabled":false}
+C2 无草稿点保存 -> toast=["当前表内没有待保存的草稿行:请先口述生成或上传附3"] PUT发出=[] status=confirmed
+D1 有内存草稿 btn={"exists":true,"disabled":false} rows=1 提示=true
+D2 点确认 -> toast=["当前表内没有待保存的草稿行:请先口述生成或上传附3","已生成 1 行草稿(未写库),请核对后点保存","请先保存交付草稿再确认"] status=confirmed
+D3 点保存 -> status=draft toast=["已生成 1 行草稿(未写库),请核对后点保存","请先保存交付草稿再确认","交付预算草稿已保存(1 行,合计 200 元),尚未确认"]
+ERRS=["Failed to load resource: the server responded with a status of 400 (Bad Request)"]
+CLEANUP PL-AWFIX-1792132695908 opps=0 dlv=0

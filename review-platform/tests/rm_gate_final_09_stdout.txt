@@ -1,0 +1,29 @@
+PASS - D-01 上传解析 200
+PASS - D-01 解析锚定: 正编39/生产184/PM合计7
+PASS - D-01 与原件合计行一致(total_row 对照)
+PASS - D-01 12 行(含零人天建设内容底稿)且内容来自建设内容回退链
+PASS - D-01 附3差旅字段存在且进入 sum
+PASS - D-01 实施行成本=139504(=(5+39)×1696+184×320+6000差旅)
+PASS - D-01 运维行成本=3392(=2×1696, 与附3运维 PM 金额同源)
+PASS - DA-01 import 响应附 audit(row_sources 与 rows 等长 + grid 非空)
+PASS - DA-02 逐格对账: content_pos 与 cols 坐标上的原表值与解析行一致
+PASS - DA-02b 每条解析行都有差旅来源坐标
+PASS - DA-03 audit.meta 含 sheet 名与列定位 cols
+PASS - D-02 回显 12 行+sum+源文件名
+PASS - D-03 修改+加行保存(正编 40+3=43)
+PASS - D-03 差旅保存并计入行成本
+PASS - D-04 无交付明细锁定被拦(400 递进门禁)
+PASS - D-04 有交付明细锁定 200
+PASS - D-05 五科目回写含 del_travel=6000
+PASS - D-05 预算重算含交付差旅
+PASS - D-06 非 owner 编辑交付明细 403
+PASS - D-07 锁定后编辑明细 400(提示新建版本)
+PASS - D-08 非 owner 上传 403
+PASS - D-08 非 xlsx 文件解析失败提示(不崩, 提示可手编)
+PASS - D-09 附1上下文四金额字段进入预算草稿
+PASS - D-09 附1上下文字段都有原表值坐标
+PASS - D-09 G19/G21 金额未污染 dev_pd/prod_pd
+
+25 passed, 0 failed -> ALL PASS
+日志已写入: tests\rm_gate_final_09_suite.txt
+

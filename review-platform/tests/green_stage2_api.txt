@@ -1,0 +1,30 @@
+PASS - API-02 未登录建单 401
+PASS - API-01 建单 200 返回 id/code
+PASS - API-01 初始 status=draft
+PASS - API-15 不存在 id 404
+PASS - API-07 preview 200 返回 §3.2 结构 calc
+PASS - API-08 未知字段静默丢弃(200 且 calc 不受污染)
+PASS - API-03 owner PUT 白名单字段 200 且 calc 同步
+PASS - API-04 结构字段注入被白名单丢弃(status 不变)
+PASS - API-04 注入单业务字段放行 sub_cost=800000
+PASS - API-05 非 owner 非 admin 403
+PASS - API-10 缺必填 400 且列出全部缺失项(不只第一个)
+PASS - API-09 lock 200 status=locked
+PASS - S-01 calc/settings_snapshot 快照落库
+PASS - API-11 重复锁定 409
+PASS - S-02/API-06 locked 后 PUT 400 含已锁定
+PASS - API-12 newversion 200 v2 draft
+PASS - S-03 v2 parent_id 指向 v1 且拷贝 fields
+PASS - S-03 v1 保持 locked 不动
+PASS - API-13 无锁定版 newversion 409
+PASS - API-14 versions 长度 2
+PASS - S-04 第1张评审单关联同一 locked 预算合法
+PASS - S-04 第2张评审单关联同一 locked 预算合法
+PASS - S-05/API-20 提交关联 draft 单 400 拦截
+PASS - S-06 红灯自动打回 returned
+PASS - S-06 重提 round=2
+PASS - S-06 一轮旧任务作废留痕
+PASS - S-06 二轮任务重新分发(bid 10 项指标)
+PASS - S-06 二轮复判转绿 judged
+
+28 passed, 0 failed -> ALL PASS

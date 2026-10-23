@@ -1,0 +1,7 @@
+PASS - RL-01 judge逐字符不变 | sha256=2013b2b604746a2aabb19f8f3d177ddaa3a2490a4ed24b64a6a02b397e76e74a
+PASS - RL-02 finance逐字节不变 | sha256=0f348636fed172f9d6bd4fdab9fb64843e9ac21596518b47973556cb214146fb
+PASS - RL-SCHEMA CREATE TABLE逐字符不变 | count=19
+PASS - RL-SCHEMA ALTER语句零新增零改动 | count=11
+PASS - RL-05 config原字节指纹不变 | bytes=270 sha16=f285c66ad4790370
+PASS - RL-06 前端夹具谓词不另存正则
+6 passed, 0 failed -> ALL PASS

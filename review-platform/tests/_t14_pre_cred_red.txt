@@ -1,0 +1,54 @@
+PASS - LM-01 非 admin GET /api/admin/llm/profiles 403 且文案前缀「仅 admin」 | 403:仅 admin 可管理 LLM / 403:仅 admin 可管理 LLM
+PASS - LM-01 非 admin POST /api/admin/llm/test 403 且文案前缀「仅 admin」 | 403:仅 admin 可管理 LLM / 403:仅 admin 可管理 LLM
+PASS - LM-01 非 admin GET /api/admin/llm/usage 403 且文案前缀「仅 admin」 | 403:仅 admin 可管理 LLM / 403:仅 admin 可管理 LLM
+PASS - LM-01 非 admin POST /api/admin/llm/settings 403 且文案前缀「仅 admin」 | 403:仅 admin 可管理 LLM / 403:仅 admin 可管理 LLM
+PASS - LM-09 空提交 400 且文案「未提交任何要修改的键」 | 400:未提交任何要修改的键
+PASS - LM-03 写 profile 200 后 config.json 可 parse、四键在场且值未被吞 | status=200 keys=LLM_BASE_URL,LLM_API_KEY,LLM_MODEL,REPORT_SECRET,PUBLIC_BASE_URL,DEMO_HINT,LLM_PROFILES
+PASS - LM-03 profile 经唯一写者落盘(budget/review 三键)
+PASS - LM-02 GET /api/admin/config 回 LLM_PROFILES_MASKED 且 key 为掩码 | budget.key=sk-****cdef
+PASS - LM-02 两端点响应 JSON 不含任何明文 key/secret | profiles status=200
+PASS - LM-04 回灌掩码 key 不改写原值 | status=400
+PASS - LM-05 桩在跑: 200 ok=true ms 为数 | {"ok":true,"ms":353,"profile":"review","error":""}
+PASS - LM-05 探针走 review profile 且 1-token | {"model":"stub-review","max_tokens":1}
+PASS - LM-05 桩断开: HTTP 仍 200 且 ok=false、error 非空 | {"ok":false,"ms":2386,"profile":"review","error":"curl 退出码 7(连接失败)"}
+PASS - LM-05 探针 error 不泄露明文 key
+PASS - LM-06 技能①走 budget profile(桩收到 model=stub-budget)且未降级 | degraded=false model=stub-budget
+PASS - LM-06 llm_calls 行数 0→1→2 单调增长 | c0=0 c1=1 c2=2
+PASS - LM-06 桩在跑行 ok=1/degraded=0, 桩断开行 ok=0/degraded=1, profile=budget | [{"ok":1,"degraded":0,"ms":259,"profile":"budget"},{"ok":0,"degraded":1,"ms":2329,"profile":"budget"}]
+PASS - LM-06 桩断开时技能① HTTP 200 且 degraded=true
+PASS - LM-07 技能② 桩断开 HTTP 200 且 degraded=true | rv=6044 status=200
+PASS - LM-07 降级回复点选字段齐备(reply/draft/missing/review_id)
+PASS - LM-07 form_json 未被 LLM 输出污染(前后逐字相等)
+PASS - LM-07 技能② 降级同样落 llm_calls(profile=review, degraded=1) | [{"ok":0,"degraded":1,"ms":2289,"profile":"review"}]
+PASS - LM-08 parser 未配置 + 顶层指拒连 -> ok=false(确实回落顶层) | {"ok":false,"ms":2221,"profile":"parser","error":"curl 退出码 7(连接失败)"}
+PASS - LM-08 顶层改指桩 -> parser ok=true 且 model 回落顶层 LLM_MODEL | model=deepseek-chat
+PASS - LM-08 顶层拒连 + default.base 指桩 -> parser 经 default 回落 ok=true | {"ok":true,"ms":256,"profile":"parser","error":""}
+PASS - LM-08 profiles 端点回显 parser 实效值与来源(base←default, model←顶层) | {"base":"http://127.0.0.1:9801","base_src":"default","model":"deepseek-chat","model_src":"config"}
+PASS - LM-08 default.base 显式 null 清除后回落顶层拒连(ok=false 且文件内已删)
+PASS - LM-10 timeout_ms=1000 + 桩延迟 3s -> 探针 ok=false 且 ms<2500 | ms=1120
+PASS - LM-10 同设置下技能① 也按 1s 超时降级(HTTP 200 degraded=true) | degraded=true
+PASS - LM-10 timeout_ms=8000 -> 探针 ok=true 且 ms≥2900(确为同一桩) | ms=3298
+PASS - LM-12 enabled=false: 技能① 200 degraded=true 且桩零命中 | hits+0
+PASS - LM-12 enabled=false: 探针照常 ok=true
+PASS - LM-13 v2 覆盖技能② 提示词(桩收到 LM13-PROMPT-V2)且字段照常归一化 | sys=LM13-PROMPT-V2
+PASS - LM-13 删除版本后回落冻结默认 BID 提示词
+PASS - LM-14 timeout_ms 越界 400 | 400:timeout_ms 须在 1000~60000
+PASS - LM-14 合法 degrade 落 settings 原始 JSON 串且记操作人 | {"value":"{\"timeout_ms\":5000,\"retries\":1,\"enabled\":true}","updated_by":"admin"}
+PASS - LM-14 提示词两次写入为 v1→v2 追加, profiles 回显版本与降级参数 | {"c":{"ok":true,"prompt":{"skill":"review","v":1}},"d":{"ok":true,"prompt":{"skill":"review","v":2}},"v":[2,1]}
+PASS - LM-14 非白名单 skill 400(判灯等路径不受提示词管理)
+PASS - LM-11 30 天前行不计入 ?days=7(n=0) | n=0 since=2026-10-08T02:25:17.637Z
+PASS - LM-11 再插当前行 n 恰为 1 | n=1
+PASS - LM-11 /stats 别名与 /usage 同口径
+FAIL - LM-15 fill-budget 经 budget profile 指桩: 200 且 degraded=false 且桩实收 model=stub-budget | status=502 degraded=undefined hits+0 model=null err=大模型调用失败:请求失败:
+FAIL - LM-16 成功轮落 llm_calls 恰增一行且 profile=budget/ok=1/degraded=0 | rows 0→0 last=null
+FAIL - LM-16 GET /api/admin/llm/usage?days=7 的 budget 计数恰 +1(管理中心用量不再少这条真实路径) | n=131→131
+FAIL - LM-17 桩断开: fill-budget HTTP 恰 200 且 degraded=true(自动降级为手填, 不 5xx 不抛错) | status=502 body={"error":"大模型调用失败:请求失败:"}
+FAIL - LM-17 降级轮同样落一行 profile=budget/ok=0/degraded=1 | rows 0→0 last=null
+FAIL - LM-18 写 LLM_BASE_URL=file:///etc/passwd → 400 且 config.json 逐字节未变(不写文件) | status=200 unchanged=false err=
+FAIL - LM-18 拒绝文案含「不是 http(s):// 地址」(与读侧探针同口径)且响应不回显任何明文 key/secret | {"ok":true,"updated":1,"LLM_API_KEY_MASKED":"sk-****8125"}
+FAIL - LM-19 写 LLM_BASE_URL="-X POST"(- 开头) → 400 且 config.json 逐字节未变 | status=200 unchanged=false err=
+PASS - LM-20 合法 http://127.0.0.1:9801 写入 200 且真实落盘 | status=200 base=http://127.0.0.1:9801
+PASS - LM-20 响应只回 LLM_API_KEY_MASKED(掩码)且无 LLM_API_KEY 明文键/不含任何明文 key/secret | {"ok":true,"updated":1,"LLM_API_KEY_MASKED":"sk-****8125"}
+config.json 已按原始字节复位; 四键在场=true 字节相等=true
+
+43 passed, 8 failed -> SOME FAIL

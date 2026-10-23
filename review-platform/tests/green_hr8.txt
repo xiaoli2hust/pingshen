@@ -1,0 +1,16 @@
+PASS - HR-1 导入后出核对视图(不再直接跳走)
+PASS - HR-2 字段表含来源标签与坐标
+PASS - HR-3 原表网格有高亮单元格(标签框+取值底) | lab=10 val=11
+PASS - HR-4 核对视图显示 contract=240000
+PASS - HR-8 左表行可点击且有来源 | contract 240000 合同金额 
+PASS - HR-8b 点击后右侧出现聚焦格(imp-rv-pick) | impRvC_4_1,impRvC_4_3
+PASS - HR-10 核对视图左右明确分区(独立面板) | imp-rv-panel imp-rv-left,imp-rv-panel imp-rv-right
+PASS - HR-5 「下一步」跳转预算单对话页 | hash=#/agent?b=1278
+PASS - HR-6 评审导入同样出核对视图
+PASS - HR-7 评审核对显示商机名称短名
+PASS - HR-9 附3 上传出行级核对视图(明细行+原表)
+PASS - HR-9e 附3 核对视图左右明确分区 | panels=2
+PASS - HR-9b 明细行可点击 | 1 实施 南昌市POI数
+PASS - HR-9c 点击行→右侧聚焦高亮(内容格+人天格) | impRvC_4_3,impRvC_4_18,impRvC_4_19,impRvC_4_20,impRvC_4_21
+PASS - HR-9d 确认后进明细编辑页(可保存)
+15 passed, 0 failed -> ALL PASS

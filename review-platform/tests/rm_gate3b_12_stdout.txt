@@ -1,0 +1,32 @@
+PASS - EI-01 预算 Excel 导入 200 + draft 状态
+PASS - EI-02 17 字段白名单清洗落库(fields 数) | fields=16
+PASS - EI-03a income=226415.09(六组锚定①) | 226415.09433962262
+PASS - EI-03b salesLabor=41448(②) | 41448
+PASS - EI-03c tax=2264.15(③) | 2264.1509433962265
+PASS - EI-03d incentive=13298.13(④) | 13298.126641509432
+PASS - EI-03e contribution=12508.82(⑤) | 12508.816754716954
+PASS - EI-03f margin=5.52(⑥) | 5.5247
+PASS - EI-03g 未自动锁定(人确认门)
+PASS - EI-04 真实评审表导入: contract=240000 + matched>=8 | matched=14
+PASS - EI-05 评审 Excel 导入 200 + draft
+PASS - EI-06 评审核心字段命中(customer/contract_amount/gross_margin) | {"c":"Excel导入测试客户","ca":24,"gm":15}
+PASS - EI-06b gross_margin 归一化(0.15→15)
+PASS - EI-06c 小数格式毛利率自动×100(15) | gm=15
+PASS - EI-07 真实评审表导入: matched>=10 + opp_code 命中 | matched=15
+PASS - EI-08a 毒件拒绝(400/502) | status=502
+PASS - EI-08b 结构键注入被白名单丢弃
+PASS - EI-09 单次导入耗时<4s(python 启动+机器负载波动) | 2996ms
+PASS - EI-10 评审单标题=商机名称(非项目概述长文) | title="EI-10 真项目名"
+PASS - EI-10b 标题不得以「项目建设内容：」开头 | title="EI-10 真项目名"
+PASS - EI-10c 商机锚点 title 同源=商机名称 | opp.title="EI-10 真项目名"
+PASS - EI-12 1年经既有 mergeDraft 数字链归一为 1 | 1
+PASS - EI-12b 已发生成本命中 3.5 | 3.5
+PASS - EI-12c 两字段都有原表来源坐标 | {"opp_code":{"label":"商机代码","lab_pos":[0,0],"val_pos":[0,1]},"opp_stage":{"label":"商机阶段","lab_pos":[1,0],"val_pos":[1,1]},"region":{"label":"营销区域","lab_pos":[2,0],"val_pos":[2,1]},"customer":{"label":"最终客户名称","lab_pos":[3,0],"val_pos":[3,1]},"biz_line":{"label":"业务线","lab_pos":[4,0],"val_pos":[4,1]},"contract_amount":{"label":"预计合同金额","lab_pos":[5,0],"val_pos":[5,1]},"sales":{"label":"销售经理","lab_pos":[6,0],"val_pos":[6,1]},"pm":{"label":"项目经理","lab_pos":[7,0],"val_pos":[7,1]},"sign_date":{"label":"预计签单时间","lab_pos":[8,0],"val_pos":[8,1]},"gross_margin":{"label":"预计贡献毛利率","lab_pos":[9,0],"val_pos":[9,1]},"sign_path":{"label":"签约路径","lab_pos":[10,0],"val_pos":[10,1]},"sub_amount":{"label":"分包总金额","lab_pos":[11,0],"val_pos":[11,1]},"secret":{"label":"是否涉密项目","lab_pos":[12,0],"val_pos":[12,1]},"province":{"label":"项目所在地省份","lab_pos":[13,0],"val_pos":[13,1]},"settle_method":{"label":"结算方式","lab_pos":[14,0],"val_pos":[14,1]},"ops_years":{"label":"项目运维周期","lab_pos":[15,0],"val_pos":[15,1]},"cost_happened":{"label":"项目已发生成本（万元）","lab_pos":[16,0],"val_pos":[16,1]}}
+PASS - EI-11a 前置 G1/G2 夹具自洽 | 200/200/200
+PASS - EI-11b 评审 PUT 挂上同商机已锁定预算 | 216
+PASS - EI-11c 仅挂预算不清空 form_json | {"opp_code":"PL-EI11-1792575504647","opp_name":"EI-11 挂链测试","contract_amount":24,"sub_amount":0,"gross_margin":15,"cost_happened":0,"ops_years":1,"survey":"否","secret":"否","guarantee":"否","non_compete":"否","data_review":"否","opp_stage":"投标决策","region":"华北营销处","customer":"Excel导入测试客户","biz_line":"G1","sales":"测试销售","pm":"测试PM","sign_date":"2026-12-31","sign_path":"客户→丰图科技","province":"江西省","settle_method":"银行转账","payment_terms":"验收后付款","summary":"否"}
+PASS - EI-11d 不存在预算被唯一裁判拒绝 | 预算单不存在
+PASS - EI-11e 挂链后真实提交到 reviewing 并创建任务 | {"submit":200,"status":"reviewing","tasks":10}
+
+29 passed, 0 failed -> ALL PASS
+

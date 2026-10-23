@@ -1,0 +1,48 @@
+PASS - A-01 首轮 200
+PASS - API-16 响应六键结构(reply/draft/calc/missing/actions/degraded)
+PASS - A-01 未降级
+PASS - A-01 reply 含不含税收入 226.4 万
+PASS - A-01 缺 3 项清单(交付部门/人天/差旅)
+PASS - A-01 draft 更新 contract/sub_cost
+PASS - A-01 calc.income 锚定
+PASS - A-02 missing 清零
+PASS - A-02 actions=[confirm_lock]
+PASS - A-02 calc 与 §3.2 一致(十项抽核)
+PASS - A-04 reply 含 68.2 万/46.6%
+PASS - A-04 draft.sub_cost=800000
+PASS - A-04 calc 重算 contribution/margin
+PASS - A-09 口头确认 200 且不降级
+PASS - A-09 状态仍 draft(人确认门)
+PASS - A-09 reply 引导点按钮
+PASS - A-03 调 lock 端点 200 且 locked
+PASS - A-03 agent_messages 有确认轮记录
+PASS - A-10 提示走 newversion
+PASS - A-10 fields 不变
+PASS - A-12 每轮 user+assistant 成对可按序回放
+PASS - A-14 回显 draft+calc
+PASS - A-14 历史消息回显
+PASS - A-11/API-19 非该单 owner chat 403
+PASS - API-18 budget 不存在 404
+PASS - API-17/A-13 空消息 400
+PASS - A-08 降级仍 HTTP 200
+PASS - A-08 degraded=true
+PASS - A-08 missing 数组完整(5 项)
+PASS - A-08 LLM 失败跳过 merge(fields 不变)
+PASS - A-08 reply 为点选补齐引导
+PASS - A-DL skill=delivery HTTP 200 且只回八键
+PASS - A-DL LLM 越权 cost/status/action 全丢弃
+PASS - A-DL 口头“确认”仍 HTTP 200 且 opp_delivery.status=draft
+PASS - A-15 建单轮 200 且返回 review_id
+PASS - A-15 预算字段带入(contract 240 万/customer/sub_amount)
+PASS - A-15 返回评审必填缺失清单(含 province, ≥5 项)
+PASS - A-15 reply 含评审草稿与单号引导
+PASS - A-16 评审字段更新(customer/contract_amount)
+PASS - A-16 必填清单清零
+PASS - A-17 预判返回灯色+路由+风险项
+PASS - A-17 reply 含灯色与风险项摘要
+PASS - A-18 小数格式自动×100 归一化
+
+43 passed, 0 failed -> ALL PASS
+config.json LLM_BASE_URL 已恢复
+日志已写入: tests\rm_gate3b_05_suite.txt
+

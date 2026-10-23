@@ -1,0 +1,19 @@
+PASS - BI-00 端点 200
+PASS - BI-01 KPI 四值与 SQL 直查一致 | {"total":10,"online":10,"historyTotal":0,"greenRate":40,"historyPassRate":0,"avgRound":1.2,"decisionRate":70}
+PASS - BI-02 灯色分布一致 | {"green":4,"yellow":6,"red":0,"none":0}
+PASS - BI-03 类型占比一致 | {"presale":1,"bid":9,"change":0}
+PASS - BI-04 月度归档趋势逐月一致(近3月位齐) | [{"m":"2026-09","c":0},{"m":"2026-10","c":10}]
+PASS - BI-05 Top10 风险项与直查聚合一致 | [{"name":"指定供应商","count":4},{"name":"分包占比","count":3},{"name":"贡献利润","count":2}]
+PASS - BI-06 部门黄/红命中率与直查一致(排序同) | [{"dept":"采购BP","total":12,"yellow":1,"red":0},{"dept":"FDE","total":13,"yellow":1,"red":0}]
+PASS - BI-07 金额四档+总额+有效数与直查一致 | [{"range":"<50万","count":5},{"range":"50~100万","count":1},{"range":"100~500万","count":4},{"range":"≥500万","count":0}] total=807.4
+PASS - BI-08 路由三段与直查一致 | {"xo":5,"dept":1,"green":4}
+PASS - BI-09 结构完整兜底(空库时同结构 0/[] 不崩)
+PASS - BI-10 恶意 query 参数被忽略(200 不注入不 500)
+PASS - BI-11 聚合只含归档单(非归档 41 单不混入)
+PASS - BI-12 聚合性能 < 300ms | 5ms
+
+13 passed, 0 failed -> ALL PASS(数据基线: 归档 10 单, 直查同源断言)
+日志已写入: tests\rm_gateclean_10_suite.txt
+
+(node:36040) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)

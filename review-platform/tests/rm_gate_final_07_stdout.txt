@@ -1,0 +1,51 @@
+PASS - R-31 红灯自动打回 status=returned
+PASS - R-31 打回路由
+PASS - R-31 auto_return 事件留痕
+PASS - R-31 S-06 重提后轮次=2
+PASS - R-31 S-06 二轮复判转绿(judged)
+PASS - R-31 S-06 一轮旧任务作废
+PASS - SEC SEC-05 登录态可看报告
+PASS - SEC SEC-05 裸访问被拒(403)
+PASS - SEC SEC-03 report-link 需登录(401)
+PASS - SEC SEC-03 签名链接可看报告
+PASS - SEC SEC-03 链接有效期=7天
+PASS - SEC SEC-03 过期签名被拒(403)
+PASS - SEC SEC-04 篡改签名被拒(403)
+PASS - R-01 (yellow/1 项非绿)
+PASS - R-02 (yellow/1 项非绿)
+PASS - R-03 (green/0 项非绿)
+PASS - R-04 (red/1 项非绿)
+PASS - R-05 (yellow/1 项非绿)
+PASS - R-06 (yellow/1 项非绿)
+PASS - R-07 (yellow/1 项非绿)
+PASS - R-08 (green/0 项非绿)
+PASS - R-09 (yellow/1 项非绿)
+PASS - R-10 (yellow/1 项非绿)
+PASS - R-11 (yellow/1 项非绿)
+PASS - R-12 (red/1 项非绿)
+PASS - R-13 (yellow/1 项非绿)
+PASS - R-14 (yellow/1 项非绿)
+PASS - R-15 (yellow/1 项非绿)
+PASS - R-16 (red/1 项非绿)
+PASS - R-17 (yellow/1 项非绿)
+PASS - R-18 (yellow/1 项非绿)
+PASS - R-19 (yellow/2 项非绿)
+PASS - R-20 (yellow/1 项非绿)
+PASS - R-21 (green/0 项非绿)
+PASS - R-22 (yellow/2 项非绿)
+PASS - R-23 (yellow/1 项非绿)
+PASS - R-24 (yellow/1 项非绿)
+PASS - R-25 (yellow/1 项非绿)
+PASS - R-26 (yellow/1 项非绿)
+PASS - R-27 (yellow/2 项非绿)
+PASS - R-28 (yellow/1 项非绿)
+PASS - R-29 (yellow/1 项非绿)
+PASS - R-30 (green/0 项非绿)
+PASS - R-32 (yellow/1 项非绿)
+PASS - R-34 (yellow/1 项非绿)
+preview-light 批量 32 条耗时 6272ms (性能冒烟门槛 <10s, 不硬卡)
+
+45 passed, 0 failed -> ALL PASS
+红绿用例(★red): 20 PASS / 0 FAIL (绿证据: 旧代码已先行 FAIL 留档则红绿成立)
+日志已写入: tests\rm_gate_final_07_suite.txt
+

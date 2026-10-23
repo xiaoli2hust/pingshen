@@ -1,0 +1,25 @@
+{
+  "_meta": {
+    "source": "tests/realdata/【投标决策】PL00008572-260918-江西省天地图POI数据服务项目（20260917).xlsx · 附1-预算表 + 附3-交付成本评估",
+    "extracted": "2026-10-08",
+    "note": "PL00008572 真实预算字段集（元）。交付成本 146896 = 39人天×1696 + 184人天×320 + PM 11872(7人天×1696) + 差旅8000(差旅3000+市内交通5000) + 其他2000(验收招待1000+综合办公1000)；sales_labor 手填值 41448 恰等于公式估值 24万×1727（双路径收敛）"
+  },
+  "project_name": "江西省天地图POI数据服务项目",
+  "customer": "江西省自然资源测绘与监测院",
+  "contract": 240000,
+  "sub_cost": 0,
+  "sw_outsource": 0,
+  "flex_labor": 0,
+  "sales_labor": 41448,
+  "sales_travel": 5000,
+  "sales_entertain": 5000,
+  "sales_marketing": 0,
+  "incentive_factor": 1,
+  "dev_dept": "交付处",
+  "dev_pd": 39,
+  "prod_pd": 184,
+  "rd_outsource": 0,
+  "pm_cost": 11872,
+  "del_travel": 8000,
+  "del_other": 2000
+}

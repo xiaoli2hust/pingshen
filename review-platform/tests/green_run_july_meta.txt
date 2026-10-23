@@ -1,0 +1,17 @@
+HEAD=186b2513c0353e8af2419b91a7cfe2ebd631cb81
+full_gate=29/29 套通过, 耗时 438.7s -> ALL PASS
+D=25 passed, 0 failed -> ALL PASS
+DL=71 passed, 0 failed -> ALL PASS
+EI=29 passed, 0 failed -> ALL PASS
+IA=43 passed, 0 failed -> ALL PASS
+records=[{"code":"PL00007297","opp":1,"delivery":"confirmed","lockedBudgets":1,"terminalReviews":1,"expectedReview":"returned"},{"code":"PL00008330","opp":1,"delivery":"confirmed","lockedBudgets":1,"terminalReviews":1,"expectedReview":"archived"},{"code":"PL00006204","opp":1,"delivery":"confirmed","lockedBudgets":1,"terminalReviews":1,"expectedReview":"archived"},{"code":"PL00008026","opp":1,"delivery":"confirmed","lockedBudgets":1,"terminalReviews":1,"expectedReview":"archived"},{"code":"PL00008210","opp":1,"delivery":"confirmed","lockedBudgets":1,"terminalReviews":1,"expectedReview":"archived"},{"code":"PL00008314","opp":1,"delivery":"confirmed","lockedBudgets":1,"terminalReviews":1,"expectedReview":"archived"}]
+anchor_PL00008572=1
+PL00007297={"rows":10,"contentRows":10,"travelTotal":20000}
+config_before=270B/f285c66ad4790370
+config_after=270B/f285c66ad4790370
+database_is_locked=0
+SOME_FAIL=0
+browser_error_lines=0
+browser_error_filter=含 pageerror 或 console.error 且不以 PASS 开头
+snapshot=F:\workbuddy\review-platform-backups\review-july-pre-gate-2026-10-15T18-17-03-120Z.db
+snapshot_sha256=c03f866877fb5c155d1b0a03e0f4f19474c1fd933bcaac1d4338a472c9991233

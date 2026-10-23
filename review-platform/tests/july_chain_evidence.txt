@@ -1,0 +1,364 @@
+七月第二周六单真实 HTTP 全链路开始 2026-10-15T18:12:43.991Z
+约束 | {"writes":"authenticated HTTP only","sqlWorkflowWrites":false,"documents":6}
+HTTP 200 POST login sales1 | {"keys":["token","user"]}
+PASS 登录成功 sales1 | {"role":"销售经理"}
+HTTP 200 POST login zhichizu | {"keys":["token","user"]}
+PASS 登录成功 zhichizu | {"role":"销售支持组"}
+HTTP 200 POST login fde1 | {"keys":["token","user"]}
+PASS 登录成功 fde1 | {"role":"FDE"}
+HTTP 200 POST login fin1 | {"keys":["token","user"]}
+PASS 登录成功 fin1 | {"role":"财务BP"}
+HTTP 200 POST login pur1 | {"keys":["token","user"]}
+PASS 登录成功 pur1 | {"role":"采购BP"}
+HTTP 200 POST login legal1 | {"keys":["token","user"]}
+PASS 登录成功 legal1 | {"role":"法务"}
+HTTP 200 POST login comp1 | {"keys":["token","user"]}
+PASS 登录成功 comp1 | {"role":"合规BP"}
+HTTP 200 POST login data1 | {"keys":["token","user"]}
+PASS 登录成功 data1 | {"role":"数据BP"}
+
+=== PL00007297 【合同签订】PL00007297-百望云区域企业白名单服务合作.xlsx ===
+PASS PL00007297 原始工作簿存在 | {"file":"【合同签订】PL00007297-百望云区域企业白名单服务合作.xlsx"}
+PASS PL00007297 本地解析具备建档必填字段 | {"missing":[],"title":"百望云区域企业白名单服务"}
+PL00007297 本地只读解析 | {"matched":34,"title":"百望云区域企业白名单服务","customer":"百望云科技（北京）有限公司"}
+HTTP 200 POST PL00007297 商机建档 | {"keys":["opp"]}
+HTTP 200 POST PL00007297 附3导入 | {"ok":true,"status":"draft","rows":[{"content":"丰图物流数据服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":20000,"note":"","cost":20000},{"content":"地址服务平台","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据更新服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据更新服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据更新服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据更新服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据更新服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据更新服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据更新服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据更新服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0}],"sum":{"pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":20000,"cost":20000}}
+PASS PL00007297 附3解析出内容行 | {"rows":10}
+PASS PL00007297 附3保留逐行来源坐标 | {"rowSources":10}
+PASS PL00007297 零人天内容行未丢失 | {"rows":10}
+PASS PL00007297 差旅招待合计精确为20000 | {"travelTotal":20000}
+HTTP 200 POST PL00007297 确认交付预算 | {"ok":true,"status":"confirmed","rows":10}
+HTTP 200 POST PL00007297 附1项目预算导入 | {"ok":true,"id":1,"meta":{"sheet":"附1-预算表","pairs_total":105,"matched":14}}
+PASS PL00007297 项目预算草稿已创建 | {"budgetId":1}
+PASS PL00007297 附1预算商机代码命中 | {"imported":"PL00007297"}
+PL00007297 原件附1交付金额 | {"rd_outsource":0,"del_travel":20000,"pm_cost":0,"del_other":0}
+HTTP 200 PUT PL00007297 人工确认交付部门 | {"ok":true}
+PL00007297 dev_dept人工确认 | {"dev_dept":"交付处"}
+HTTP 200 POST PL00007297 交付明细投影预算候选值 | {"ok":true}
+PL00007297 预算对比块 | {"rd_outsource":{"attached":0,"projected":0,"difference":0},"del_travel":{"attached":20000,"projected":20000,"difference":0},"pm_cost":{"attached":0,"projected":0,"difference":0},"del_other":{"attached":0,"projected":0,"difference":0}}
+HTTP 200 PUT PL00007297 人工核对并恢复附1金额 | {"ok":true}
+HTTP 200 POST PL00007297 锁定项目预算 | {"ok":true,"status":"locked","version":1}
+HTTP 200 POST PL00007297 信息收集表导入 | {"ok":true,"id":1,"meta":{"sheet":"投标决策评审-信息收集与前置评审","pairs_total":148,"matched":34}}
+PASS PL00007297 评审草稿已创建 | {"reviewId":1,"type":"bid"}
+HTTP 200 PUT PL00007297 关联同商机锁定预算 | {"ok":true,"budget_id":1}
+HTTP 200 POST PL00007297 提交评审 | {"ok":true,"round":1}
+HTTP 200 GET PL00007297 读取前置任务 | {"keys":["review","tasks","events","attachments","budget"]}
+PASS PL00007297 已按指标分发真实部门任务 | {"tasks":10,"round":1}
+PASS PL00007297 任务部门有真实账号 | {"dept":"采购BP","indicator":"分包合理性"}
+HTTP 200 POST PL00007297 采购BP/分包合理性 提交red | {"ok":true,"autoJudged":false}
+PASS PL00007297 任务部门有真实账号 | {"dept":"FDE","indicator":"技术可行性"}
+HTTP 200 POST PL00007297 FDE/技术可行性 提交green | {"ok":true,"autoJudged":false}
+PASS PL00007297 任务部门有真实账号 | {"dept":"财务BP","indicator":"客户历史欠款"}
+HTTP 200 POST PL00007297 财务BP/客户历史欠款 提交green | {"ok":true,"autoJudged":false}
+PASS PL00007297 任务部门有真实账号 | {"dept":"财务BP","indicator":"签约客户/最终客户信用评估"}
+HTTP 200 POST PL00007297 财务BP/签约客户/最终客户信用评估 提交green | {"ok":true,"autoJudged":false}
+PASS PL00007297 任务部门有真实账号 | {"dept":"财务BP","indicator":"集团公司关联交易金额"}
+HTTP 200 POST PL00007297 财务BP/集团公司关联交易金额 提交green | {"ok":true,"autoJudged":false}
+PASS PL00007297 任务部门有真实账号 | {"dept":"财务BP","indicator":"付款条件"}
+HTTP 200 POST PL00007297 财务BP/付款条件 提交green | {"ok":true,"autoJudged":false}
+PASS PL00007297 任务部门有真实账号 | {"dept":"法务","indicator":"上游签约路径公司情况"}
+HTTP 200 POST PL00007297 法务/上游签约路径公司情况 提交green | {"ok":true,"autoJudged":false}
+PASS PL00007297 任务部门有真实账号 | {"dept":"法务","indicator":"转包限制风险"}
+HTTP 200 POST PL00007297 法务/转包限制风险 提交green | {"ok":true,"autoJudged":false}
+PASS PL00007297 任务部门有真实账号 | {"dept":"合规BP","indicator":"合规风险"}
+HTTP 200 POST PL00007297 合规BP/合规风险 提交green | {"ok":true,"autoJudged":false}
+PASS PL00007297 任务部门有真实账号 | {"dept":"数据BP","indicator":"数据合规性"}
+HTTP 200 POST PL00007297 数据BP/数据合规性 提交green | {"ok":true,"autoJudged":true}
+PASS PL00007297 仅最后一项任务触发自动研判 | {"autoJudgedCount":1}
+HTTP 200 GET PL00007297 读取研判结果 | {"keys":["review","tasks","events","attachments","budget"]}
+PL00007297 原报告与平台灯态比较 | {"source":"red","platform":"red","match":true}
+PASS PL00007297 红灯按真实状态机自动打回 | {"status":"returned"}
+PL00007297 未录结论且未归档 | {"reason":"红灯自动打回后 decision/archive 状态门禁止；保留原意见，不改输入凑绿"}
+HTTP 200 GET PL00007297 读取360终态 | {"keys":["opp","reviews","budgets","tasks","lights","delivery","chain"]}
+PASS PL00007297 360显示交付预算已确认 | {"status":"confirmed","rows":10,"total_cost":20000,"dev_dept":"交付处","rate":1696,"rate_source":"budget","updated_at":"2026-10-15T18:12:51.050Z","can_write":true}
+PASS PL00007297 360显示项目预算已锁定 | {"id":1,"code":"B-2026-0001","version":1,"status":"locked","project_name":"百望云区域企业白名单服务","updated_at":"2026-10-15T18:12:54.266Z"}
+PASS PL00007297 360显示评审真实终态 | {"id":1,"type":"bid","title":"百望云区域企业白名单服务","status":"returned","round":1,"light":"red","era":"online","decision_result":null,"archived_at":null,"updated_at":"2026-10-15T18:13:00.019Z"}
+PASS PL00007297 360显示本轮部门任务均完成
+
+=== PL00008330 【售前投入】PL00008330-深圳市供电局三维数据采购决策表-20260630.xlsx ===
+PASS PL00008330 原始工作簿存在 | {"file":"【售前投入】PL00008330-深圳市供电局三维数据采购决策表-20260630.xlsx"}
+PASS PL00008330 本地解析具备建档必填字段 | {"missing":[],"title":"深圳供电局三维数据合作项目"}
+PL00008330 本地只读解析 | {"matched":16,"title":"深圳供电局三维数据合作项目","customer":"深圳供电局"}
+HTTP 200 POST PL00008330 商机建档 | {"keys":["opp"]}
+HTTP 200 POST PL00008330 附3导入 | {"ok":true,"status":"draft","rows":[{"content":"三维数据采购","stage":"实施","pm_pd":5,"own_pd":18,"rd_pd":15,"prod_pd":10,"travel_cost":6000,"note":"","cost":24125},{"content":"数据运营","stage":"实施","pm_pd":7,"own_pd":45,"rd_pd":15,"prod_pd":150,"travel_cost":9000,"note":"","cost":71925},{"content":"交付管理","stage":"实施","pm_pd":5,"own_pd":5,"rd_pd":3,"prod_pd":0,"travel_cost":6000,"note":"","cost":8985},{"content":"日常工作","stage":"实施","pm_pd":3,"own_pd":5,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0}],"sum":{"pm_pd":20,"own_pd":73,"rd_pd":33,"prod_pd":160,"travel_cost":21000,"cost":105035}}
+PASS PL00008330 附3解析出内容行 | {"rows":4}
+PASS PL00008330 附3保留逐行来源坐标 | {"rowSources":4}
+HTTP 200 POST PL00008330 确认交付预算 | {"ok":true,"status":"confirmed","rows":4}
+HTTP 200 POST PL00008330 附1项目预算导入 | {"ok":true,"id":2,"meta":{"sheet":"附1-预算表（项目全周期）","pairs_total":104,"matched":14}}
+PASS PL00008330 项目预算草稿已创建 | {"budgetId":2}
+PASS PL00008330 附1预算商机代码命中 | {"imported":"PL00008330"}
+PL00008330 原件附1交付金额 | {"rd_outsource":32835,"del_travel":21000,"pm_cost":33280,"del_other":0}
+HTTP 200 PUT PL00008330 人工确认交付部门 | {"ok":true}
+PL00008330 dev_dept人工确认 | {"dev_dept":"公共服务业务处-交付运营"}
+HTTP 200 POST PL00008330 交付明细投影预算候选值 | {"ok":true}
+PL00008330 预算对比块 | {"rd_outsource":{"attached":32835,"projected":32835,"difference":0},"del_travel":{"attached":21000,"projected":21000,"difference":0},"pm_cost":{"attached":33280,"projected":33280,"difference":0},"del_other":{"attached":0,"projected":0,"difference":0}}
+HTTP 200 PUT PL00008330 人工核对并恢复附1金额 | {"ok":true}
+HTTP 200 POST PL00008330 锁定项目预算 | {"ok":true,"status":"locked","version":1}
+HTTP 200 POST PL00008330 信息收集表导入 | {"ok":true,"id":2,"meta":{"sheet":"售前立项评审-信息收集与前置评审","pairs_total":77,"matched":16}}
+PASS PL00008330 评审草稿已创建 | {"reviewId":2,"type":"presale"}
+HTTP 200 PUT PL00008330 关联同商机锁定预算 | {"ok":true,"budget_id":2}
+HTTP 200 POST PL00008330 提交评审 | {"ok":true,"round":1}
+HTTP 200 GET PL00008330 读取前置任务 | {"keys":["review","tasks","events","attachments","budget"]}
+PASS PL00008330 已按指标分发真实部门任务 | {"tasks":5,"round":1}
+PASS PL00008330 任务部门有真实账号 | {"dept":"FDE","indicator":"技术可行性"}
+HTTP 200 POST PL00008330 FDE/技术可行性 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008330 任务部门有真实账号 | {"dept":"FDE","indicator":"交付资源风险"}
+HTTP 200 POST PL00008330 FDE/交付资源风险 提交yellow | {"ok":true,"autoJudged":false}
+PASS PL00008330 任务部门有真实账号 | {"dept":"合规BP","indicator":"合同交付物(测绘项目)"}
+HTTP 200 POST PL00008330 合规BP/合同交付物(测绘项目) 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008330 任务部门有真实账号 | {"dept":"采购BP","indicator":"存在分包提前投入"}
+HTTP 200 POST PL00008330 采购BP/存在分包提前投入 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008330 任务部门有真实账号 | {"dept":"财务BP","indicator":"客户过往合作信誉"}
+HTTP 200 POST PL00008330 财务BP/客户过往合作信誉 提交green | {"ok":true,"autoJudged":true}
+PASS PL00008330 仅最后一项任务触发自动研判 | {"autoJudgedCount":1}
+HTTP 200 GET PL00008330 读取研判结果 | {"keys":["review","tasks","events","attachments","budget"]}
+PL00008330 原报告与平台灯态比较 | {"source":"yellow","platform":"yellow","match":true}
+PL00008330 分类法差异 | {"note":"原报告“数据所有权与法务风险”在当前 presale 指标表中无对应项，仅记录差异，不硬映射。"}
+PASS PL00008330 非红灯进入已研判 | {"status":"judged"}
+HTTP 200 POST PL00008330 销售支持组录入会后结论 | {"ok":true}
+HTTP 200 POST PL00008330 销售支持组归档 | {"ok":true}
+HTTP 200 GET PL00008330 读取360终态 | {"keys":["opp","reviews","budgets","tasks","lights","delivery","chain"]}
+PASS PL00008330 360显示交付预算已确认 | {"status":"confirmed","rows":4,"total_cost":259787,"dev_dept":"公共服务业务处-交付运营","rate":1664,"rate_source":"budget","updated_at":"2026-10-15T18:13:05.450Z","can_write":true}
+PASS PL00008330 360显示项目预算已锁定 | {"id":2,"code":"B-2026-0002","version":1,"status":"locked","project_name":"深圳供电局三维数据合作项目","updated_at":"2026-10-15T18:13:08.340Z"}
+PASS PL00008330 360显示评审真实终态 | {"id":2,"type":"presale","title":"深圳供电局三维数据合作项目","status":"archived","round":1,"light":"yellow","era":"online","decision_result":"同意","archived_at":"2026-10-15T18:13:12.649Z","updated_at":"2026-10-15T18:13:12.649Z"}
+PASS PL00008330 360显示本轮部门任务均完成
+
+=== PL00006204 【投标决策】PL00006204-武汉市GA地图地址服务项目.xlsx ===
+PASS PL00006204 原始工作簿存在 | {"file":"【投标决策】PL00006204-武汉市GA地图地址服务项目.xlsx"}
+PASS PL00006204 本地解析具备建档必填字段 | {"missing":[],"title":"武汉市GA地图地址服务项目"}
+PL00006204 本地只读解析 | {"matched":32,"title":"武汉市GA地图地址服务项目","customer":"武汉市公安局"}
+HTTP 200 POST PL00006204 商机建档 | {"keys":["opp"]}
+HTTP 200 POST PL00006204 附3导入 | {"ok":true,"status":"draft","rows":[{"content":"一标三实数据资源库建设（政务外网）","stage":"实施","pm_pd":10,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据接入处理服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"实有人口治理、实有单位和实有房屋映射关联","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"地址数据更新服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"警务通移动地图更新、融合定位服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0}],"sum":{"pm_pd":10,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"cost":0}}
+PASS PL00006204 附3解析出内容行 | {"rows":5}
+PASS PL00006204 附3保留逐行来源坐标 | {"rowSources":5}
+HTTP 200 POST PL00006204 确认交付预算 | {"ok":true,"status":"confirmed","rows":5}
+HTTP 200 POST PL00006204 附1项目预算导入 | {"ok":true,"id":3,"meta":{"sheet":"附1-预算表","pairs_total":105,"matched":14}}
+PASS PL00006204 项目预算草稿已创建 | {"budgetId":3}
+PASS PL00006204 附1预算商机代码命中 | {"imported":"PL00006204"}
+PL00006204 原件附1交付金额 | {"rd_outsource":9950,"del_travel":3000,"pm_cost":16960,"del_other":1500}
+HTTP 200 PUT PL00006204 人工确认交付部门 | {"ok":true}
+PL00006204 dev_dept人工确认 | {"dev_dept":"交付处"}
+HTTP 200 POST PL00006204 交付明细投影预算候选值 | {"ok":true}
+PL00006204 预算对比块 | {"rd_outsource":{"attached":9950,"projected":0,"difference":9950},"del_travel":{"attached":3000,"projected":0,"difference":3000},"pm_cost":{"attached":16960,"projected":16960,"difference":0},"del_other":{"attached":1500,"projected":1500,"difference":0}}
+HTTP 200 PUT PL00006204 人工核对并恢复附1金额 | {"ok":true}
+HTTP 200 POST PL00006204 锁定项目预算 | {"ok":true,"status":"locked","version":1}
+HTTP 200 POST PL00006204 信息收集表导入 | {"ok":true,"id":3,"meta":{"sheet":"投标决策评审-信息收集与前置评审","pairs_total":135,"matched":32}}
+PASS PL00006204 评审草稿已创建 | {"reviewId":3,"type":"bid"}
+HTTP 200 PUT PL00006204 人工补录涉密判断 | {"ok":true,"budget_id":null}
+PL00006204 涉密字段审计 | {"source":"原工作簿及黄灯报告全文无涉密/秘密/保密字段或字样","stored":"否","note":"原模板缺项，否为人工判断，不冒充机器解析"}
+HTTP 200 PUT PL00006204 关联同商机锁定预算 | {"ok":true,"budget_id":3}
+HTTP 200 POST PL00006204 提交评审 | {"ok":true,"round":1}
+HTTP 200 GET PL00006204 读取前置任务 | {"keys":["review","tasks","events","attachments","budget"]}
+PASS PL00006204 已按指标分发真实部门任务 | {"tasks":10,"round":1}
+PASS PL00006204 任务部门有真实账号 | {"dept":"采购BP","indicator":"分包合理性"}
+HTTP 200 POST PL00006204 采购BP/分包合理性 提交green | {"ok":true,"autoJudged":false}
+PASS PL00006204 任务部门有真实账号 | {"dept":"FDE","indicator":"技术可行性"}
+HTTP 200 POST PL00006204 FDE/技术可行性 提交green | {"ok":true,"autoJudged":false}
+PASS PL00006204 任务部门有真实账号 | {"dept":"财务BP","indicator":"客户历史欠款"}
+HTTP 200 POST PL00006204 财务BP/客户历史欠款 提交green | {"ok":true,"autoJudged":false}
+PASS PL00006204 任务部门有真实账号 | {"dept":"财务BP","indicator":"签约客户/最终客户信用评估"}
+HTTP 200 POST PL00006204 财务BP/签约客户/最终客户信用评估 提交green | {"ok":true,"autoJudged":false}
+PASS PL00006204 任务部门有真实账号 | {"dept":"财务BP","indicator":"集团公司关联交易金额"}
+HTTP 200 POST PL00006204 财务BP/集团公司关联交易金额 提交green | {"ok":true,"autoJudged":false}
+PASS PL00006204 任务部门有真实账号 | {"dept":"财务BP","indicator":"付款条件"}
+HTTP 200 POST PL00006204 财务BP/付款条件 提交green | {"ok":true,"autoJudged":false}
+PASS PL00006204 任务部门有真实账号 | {"dept":"法务","indicator":"上游签约路径公司情况"}
+HTTP 200 POST PL00006204 法务/上游签约路径公司情况 提交green | {"ok":true,"autoJudged":false}
+PASS PL00006204 任务部门有真实账号 | {"dept":"法务","indicator":"转包限制风险"}
+HTTP 200 POST PL00006204 法务/转包限制风险 提交green | {"ok":true,"autoJudged":false}
+PASS PL00006204 任务部门有真实账号 | {"dept":"合规BP","indicator":"合规风险"}
+HTTP 200 POST PL00006204 合规BP/合规风险 提交green | {"ok":true,"autoJudged":false}
+PASS PL00006204 任务部门有真实账号 | {"dept":"数据BP","indicator":"数据合规性"}
+HTTP 200 POST PL00006204 数据BP/数据合规性 提交green | {"ok":true,"autoJudged":true}
+PASS PL00006204 仅最后一项任务触发自动研判 | {"autoJudgedCount":1}
+HTTP 200 GET PL00006204 读取研判结果 | {"keys":["review","tasks","events","attachments","budget"]}
+PL00006204 原报告与平台灯态比较 | {"source":"yellow","platform":"yellow","match":true}
+PASS PL00006204 非红灯进入已研判 | {"status":"judged"}
+HTTP 200 POST PL00006204 销售支持组录入会后结论 | {"ok":true}
+HTTP 200 POST PL00006204 销售支持组归档 | {"ok":true}
+HTTP 200 GET PL00006204 读取360终态 | {"keys":["opp","reviews","budgets","tasks","lights","delivery","chain"]}
+PASS PL00006204 360显示交付预算已确认 | {"status":"confirmed","rows":5,"total_cost":16960,"dev_dept":"交付处","rate":1696,"rate_source":"budget","updated_at":"2026-10-15T18:13:18.253Z","can_write":true}
+PASS PL00006204 360显示项目预算已锁定 | {"id":3,"code":"B-2026-0003","version":1,"status":"locked","project_name":"武汉市GA地图地址服务项目","updated_at":"2026-10-15T18:13:21.793Z"}
+PASS PL00006204 360显示评审真实终态 | {"id":3,"type":"bid","title":"武汉市GA地图地址服务项目","status":"archived","round":1,"light":"yellow","era":"online","decision_result":"同意","archived_at":"2026-10-15T18:13:27.502Z","updated_at":"2026-10-15T18:13:27.502Z"}
+PASS PL00006204 360显示本轮部门任务均完成
+
+=== PL00008026 【投标决策】PL00008026-武汉市地图产品采购项目（滴滴智驾采集）.xlsx ===
+PASS PL00008026 原始工作簿存在 | {"file":"【投标决策】PL00008026-武汉市地图产品采购项目（滴滴智驾采集）.xlsx"}
+PASS PL00008026 本地解析具备建档必填字段 | {"missing":[],"title":"武汉市地图产品采购项目"}
+PL00008026 本地只读解析 | {"matched":33,"title":"武汉市地图产品采购项目","customer":"北京沃芽科技有限公司"}
+HTTP 200 POST PL00008026 商机建档 | {"keys":["opp"]}
+HTTP 200 POST PL00008026 附3导入 | {"ok":true,"status":"draft","rows":[{"content":"地址标准化治理工程","stage":"实施","pm_pd":12,"own_pd":0,"rd_pd":0,"prod_pd":300,"travel_cost":29500,"note":"","cost":125500},{"content":"地址服务平台","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据更新服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据更新服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据更新服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据更新服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据更新服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据更新服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据更新服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据更新服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0}],"sum":{"pm_pd":12,"own_pd":0,"rd_pd":0,"prod_pd":300,"travel_cost":29500,"cost":125500}}
+PASS PL00008026 附3解析出内容行 | {"rows":10}
+PASS PL00008026 附3保留逐行来源坐标 | {"rowSources":10}
+HTTP 200 POST PL00008026 确认交付预算 | {"ok":true,"status":"confirmed","rows":10}
+HTTP 200 POST PL00008026 附1项目预算导入 | {"ok":true,"id":4,"meta":{"sheet":"附1-预算表","pairs_total":104,"matched":14}}
+PASS PL00008026 项目预算草稿已创建 | {"budgetId":4}
+PASS PL00008026 附1预算商机代码命中 | {"imported":"PL00008026"}
+PL00008026 原件附1交付金额 | {"rd_outsource":0,"del_travel":29500,"pm_cost":28200,"del_other":35500}
+HTTP 200 PUT PL00008026 人工确认交付部门 | {"ok":true}
+PL00008026 dev_dept人工确认 | {"dev_dept":"行业售前部"}
+HTTP 200 POST PL00008026 交付明细投影预算候选值 | {"ok":true}
+PL00008026 预算对比块 | {"rd_outsource":{"attached":0,"projected":0,"difference":0},"del_travel":{"attached":29500,"projected":29500,"difference":0},"pm_cost":{"attached":28200,"projected":28200,"difference":0},"del_other":{"attached":35500,"projected":35500,"difference":0}}
+HTTP 200 PUT PL00008026 人工核对并恢复附1金额 | {"ok":true}
+HTTP 200 POST PL00008026 锁定项目预算 | {"ok":true,"status":"locked","version":1}
+HTTP 200 POST PL00008026 信息收集表导入 | {"ok":true,"id":4,"meta":{"sheet":"投标决策评审-信息收集与前置评审","pairs_total":148,"matched":33}}
+PASS PL00008026 评审草稿已创建 | {"reviewId":4,"type":"bid"}
+HTTP 200 PUT PL00008026 人工补录运维周期 | {"ok":true,"budget_id":null}
+PL00008026 运维周期审计 | {"source":"/","stored":0,"note":"原件为 /，0 为人工判断"}
+HTTP 200 PUT PL00008026 关联同商机锁定预算 | {"ok":true,"budget_id":4}
+HTTP 200 POST PL00008026 提交评审 | {"ok":true,"round":1}
+HTTP 200 GET PL00008026 读取前置任务 | {"keys":["review","tasks","events","attachments","budget"]}
+PASS PL00008026 已按指标分发真实部门任务 | {"tasks":10,"round":1}
+PASS PL00008026 任务部门有真实账号 | {"dept":"采购BP","indicator":"分包合理性"}
+HTTP 200 POST PL00008026 采购BP/分包合理性 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008026 任务部门有真实账号 | {"dept":"FDE","indicator":"技术可行性"}
+HTTP 200 POST PL00008026 FDE/技术可行性 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008026 任务部门有真实账号 | {"dept":"财务BP","indicator":"客户历史欠款"}
+HTTP 200 POST PL00008026 财务BP/客户历史欠款 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008026 任务部门有真实账号 | {"dept":"财务BP","indicator":"签约客户/最终客户信用评估"}
+HTTP 200 POST PL00008026 财务BP/签约客户/最终客户信用评估 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008026 任务部门有真实账号 | {"dept":"财务BP","indicator":"集团公司关联交易金额"}
+HTTP 200 POST PL00008026 财务BP/集团公司关联交易金额 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008026 任务部门有真实账号 | {"dept":"财务BP","indicator":"付款条件"}
+HTTP 200 POST PL00008026 财务BP/付款条件 提交yellow | {"ok":true,"autoJudged":false}
+PASS PL00008026 任务部门有真实账号 | {"dept":"法务","indicator":"上游签约路径公司情况"}
+HTTP 200 POST PL00008026 法务/上游签约路径公司情况 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008026 任务部门有真实账号 | {"dept":"法务","indicator":"转包限制风险"}
+HTTP 200 POST PL00008026 法务/转包限制风险 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008026 任务部门有真实账号 | {"dept":"合规BP","indicator":"合规风险"}
+HTTP 200 POST PL00008026 合规BP/合规风险 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008026 任务部门有真实账号 | {"dept":"数据BP","indicator":"数据合规性"}
+HTTP 200 POST PL00008026 数据BP/数据合规性 提交green | {"ok":true,"autoJudged":true}
+PASS PL00008026 仅最后一项任务触发自动研判 | {"autoJudgedCount":1}
+HTTP 200 GET PL00008026 读取研判结果 | {"keys":["review","tasks","events","attachments","budget"]}
+PL00008026 原报告与平台灯态比较 | {"source":"yellow","platform":"yellow","match":true}
+PASS PL00008026 非红灯进入已研判 | {"status":"judged"}
+HTTP 200 POST PL00008026 销售支持组录入会后结论 | {"ok":true}
+HTTP 200 POST PL00008026 销售支持组归档 | {"ok":true}
+HTTP 200 GET PL00008026 读取360终态 | {"keys":["opp","reviews","budgets","tasks","lights","delivery","chain"]}
+PASS PL00008026 360显示交付预算已确认 | {"status":"confirmed","rows":10,"total_cost":153700,"dev_dept":"行业售前部","rate":2350,"rate_source":"budget","updated_at":"2026-10-15T18:13:33.138Z","can_write":true}
+PASS PL00008026 360显示项目预算已锁定 | {"id":4,"code":"B-2026-0004","version":1,"status":"locked","project_name":"武汉市地图产品采购项目","updated_at":"2026-10-15T18:13:36.034Z"}
+PASS PL00008026 360显示评审真实终态 | {"id":4,"type":"bid","title":"武汉市地图产品采购项目","status":"archived","round":1,"light":"yellow","era":"online","decision_result":"同意","archived_at":"2026-10-15T18:13:41.399Z","updated_at":"2026-10-15T18:13:41.399Z"}
+PASS PL00008026 360显示本轮部门任务均完成
+
+=== PL00008210 【投标决策】PL00008210-长沙智慧消防一张图及辅助决策信创改造项目.xlsx ===
+PASS PL00008210 原始工作簿存在 | {"file":"【投标决策】PL00008210-长沙智慧消防一张图及辅助决策信创改造项目.xlsx"}
+PASS PL00008210 本地解析具备建档必填字段 | {"missing":[],"title":"长沙智慧消防一张图及辅助决策信创改造"}
+PL00008210 本地只读解析 | {"matched":32,"title":"长沙智慧消防一张图及辅助决策信创改造","customer":"长沙数据局"}
+HTTP 200 POST PL00008210 商机建档 | {"keys":["opp"]}
+HTTP 200 POST PL00008210 附3导入 | {"ok":true,"status":"draft","rows":[{"content":"长沙消防一张图信创改造","stage":"实施","pm_pd":20,"own_pd":37,"rd_pd":10,"prod_pd":0,"travel_cost":14400,"note":"","cost":24350},{"content":"功能回归测试","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"性能基准测试","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"操作系统迁移","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"系统集成测试","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"压力测试与调优","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据库改造","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"存储过程与触发器迁移（每百个）","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"源代码数据库操作修改（每百条）","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"自定义函数迁移（每百个）","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据类型映射与转换","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"全量数据迁移与验证（每TB）","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"增量数据同步","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据迁移验证","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据库性能测试","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据库索引优化","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"中间件改造","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"中间件配置文件迁移","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"中间件联调测试","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"中间件性能压测","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"加密算法改造","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"系统架构与业务需求分析","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据加密模块改造","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数字签名模块改造","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"哈希摘要算法改造","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"接口调整与适配","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"配置文件修改","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"功能测试","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"性能测试","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"IPv6改造","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"应用系统兼容性评估","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"应用系统IPv6改造","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据库IPv6连接配置","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"双栈技术实施","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"应用功能测试","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"性能测试与优化","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"与车辆动态管理系统融合","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"车辆实时数据接入","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"车辆信息列表展示","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"车辆数据统计看板展示","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"地图实时点位可视化标注","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"车辆状态实时预警","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"车辆数据状态溯源统计","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"标准化数据接口输出","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据权限分级管控","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据输出日志记录","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"图层融合适配","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"系统架构兼容优化","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"老旧系统下线适配","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"辅助决策","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"功能回归测试","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"性能基准测试","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"操作系统迁移","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"系统集成测试","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"压力测试与调优","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据库改造","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"存储过程与触发器迁移（每百个）","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"源代码数据库操作修改（每百条）","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"自定义函数迁移（每百个）","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据类型映射与转换","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"全量数据迁移与验证（每TB）","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"增量数据同步","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据迁移验证","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据库性能测试","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据库索引优化","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"中间件改造","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"中间件配置文件迁移","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"中间件联调测试","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"中间件性能压测","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"加密算法改造","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"系统架构与业务需求分析","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据加密模块改造","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数字签名模块改造","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"哈希摘要算法改造","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"接口调整与适配","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"配置文件修改","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"功能测试","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"性能测试","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"IPv6改造","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"应用系统兼容性评估","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"应用系统IPv6改造","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据库IPv6连接配置","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"双栈技术实施","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"应用功能测试","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"性能测试与优化","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"集成融合","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"页面融合","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"门户界面风格切换","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0}],"sum":{"pm_pd":20,"own_pd":37,"rd_pd":10,"prod_pd":0,"travel_cost":14400,"cost":24350}}
+PASS PL00008210 附3解析出内容行 | {"rows":88}
+PASS PL00008210 附3保留逐行来源坐标 | {"rowSources":88}
+HTTP 200 POST PL00008210 确认交付预算 | {"ok":true,"status":"confirmed","rows":88}
+HTTP 200 POST PL00008210 附1项目预算导入 | {"ok":true,"id":5,"meta":{"sheet":"附1-预算表","pairs_total":103,"matched":14}}
+PASS PL00008210 项目预算草稿已创建 | {"budgetId":5}
+PASS PL00008210 附1预算商机代码命中 | {"imported":"PL00008210"}
+PL00008210 原件附1交付金额 | {"rd_outsource":9950,"del_travel":14400,"pm_cost":33920,"del_other":4000}
+HTTP 200 PUT PL00008210 人工确认交付部门 | {"ok":true}
+PL00008210 dev_dept人工确认 | {"dev_dept":"交付处"}
+HTTP 200 POST PL00008210 交付明细投影预算候选值 | {"ok":true}
+PL00008210 预算对比块 | {"rd_outsource":{"attached":9950,"projected":9950,"difference":0},"del_travel":{"attached":14400,"projected":14400,"difference":0},"pm_cost":{"attached":33920,"projected":33920,"difference":0},"del_other":{"attached":4000,"projected":4000,"difference":0}}
+HTTP 200 PUT PL00008210 人工核对并恢复附1金额 | {"ok":true}
+HTTP 200 POST PL00008210 锁定项目预算 | {"ok":true,"status":"locked","version":1}
+HTTP 200 POST PL00008210 信息收集表导入 | {"ok":true,"id":5,"meta":{"sheet":"投标决策评审-信息收集与前置评审","pairs_total":139,"matched":32}}
+PASS PL00008210 评审草稿已创建 | {"reviewId":5,"type":"bid"}
+HTTP 200 PUT PL00008210 关联同商机锁定预算 | {"ok":true,"budget_id":5}
+HTTP 200 POST PL00008210 提交评审 | {"ok":true,"round":1}
+HTTP 200 GET PL00008210 读取前置任务 | {"keys":["review","tasks","events","attachments","budget"]}
+PASS PL00008210 已按指标分发真实部门任务 | {"tasks":10,"round":1}
+PASS PL00008210 任务部门有真实账号 | {"dept":"采购BP","indicator":"分包合理性"}
+HTTP 200 POST PL00008210 采购BP/分包合理性 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008210 任务部门有真实账号 | {"dept":"FDE","indicator":"技术可行性"}
+HTTP 200 POST PL00008210 FDE/技术可行性 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008210 任务部门有真实账号 | {"dept":"财务BP","indicator":"客户历史欠款"}
+HTTP 200 POST PL00008210 财务BP/客户历史欠款 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008210 任务部门有真实账号 | {"dept":"财务BP","indicator":"签约客户/最终客户信用评估"}
+HTTP 200 POST PL00008210 财务BP/签约客户/最终客户信用评估 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008210 任务部门有真实账号 | {"dept":"财务BP","indicator":"集团公司关联交易金额"}
+HTTP 200 POST PL00008210 财务BP/集团公司关联交易金额 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008210 任务部门有真实账号 | {"dept":"财务BP","indicator":"付款条件"}
+HTTP 200 POST PL00008210 财务BP/付款条件 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008210 任务部门有真实账号 | {"dept":"法务","indicator":"上游签约路径公司情况"}
+HTTP 200 POST PL00008210 法务/上游签约路径公司情况 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008210 任务部门有真实账号 | {"dept":"法务","indicator":"转包限制风险"}
+HTTP 200 POST PL00008210 法务/转包限制风险 提交yellow | {"ok":true,"autoJudged":false}
+PASS PL00008210 任务部门有真实账号 | {"dept":"合规BP","indicator":"合规风险"}
+HTTP 200 POST PL00008210 合规BP/合规风险 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008210 任务部门有真实账号 | {"dept":"数据BP","indicator":"数据合规性"}
+HTTP 200 POST PL00008210 数据BP/数据合规性 提交green | {"ok":true,"autoJudged":true}
+PASS PL00008210 仅最后一项任务触发自动研判 | {"autoJudgedCount":1}
+HTTP 200 GET PL00008210 读取研判结果 | {"keys":["review","tasks","events","attachments","budget"]}
+PL00008210 原报告与平台灯态比较 | {"source":"yellow","platform":"yellow","match":true}
+PASS PL00008210 非红灯进入已研判 | {"status":"judged"}
+HTTP 200 POST PL00008210 销售支持组录入会后结论 | {"ok":true}
+HTTP 200 POST PL00008210 销售支持组归档 | {"ok":true}
+HTTP 200 GET PL00008210 读取360终态 | {"keys":["opp","reviews","budgets","tasks","lights","delivery","chain"]}
+PASS PL00008210 360显示交付预算已确认 | {"status":"confirmed","rows":88,"total_cost":121022,"dev_dept":"交付处","rate":1696,"rate_source":"budget","updated_at":"2026-10-15T18:13:48.120Z","can_write":true}
+PASS PL00008210 360显示项目预算已锁定 | {"id":5,"code":"B-2026-0005","version":1,"status":"locked","project_name":"长沙智慧消防一张图及辅助决策信创改造","updated_at":"2026-10-15T18:13:51.506Z"}
+PASS PL00008210 360显示评审真实终态 | {"id":5,"type":"bid","title":"长沙智慧消防一张图及辅助决策信创改造","status":"archived","round":1,"light":"yellow","era":"online","decision_result":"同意","archived_at":"2026-10-15T18:13:57.154Z","updated_at":"2026-10-15T18:13:57.154Z"}
+PASS PL00008210 360显示本轮部门任务均完成
+
+=== PL00008314 【投标决策】PL00008314-上海保险交易所地理信息系统（GIS）项目.xlsx ===
+PASS PL00008314 原始工作簿存在 | {"file":"【投标决策】PL00008314-上海保险交易所地理信息系统（GIS）项目.xlsx"}
+PASS PL00008314 本地解析具备建档必填字段 | {"missing":[],"title":"上海保险交易所地理信息系统项目"}
+PL00008314 本地只读解析 | {"matched":30,"title":"上海保险交易所地理信息系统项目","customer":"上海保险交易所股份有限公司"}
+HTTP 200 POST PL00008314 商机建档 | {"keys":["opp"]}
+HTTP 200 POST PL00008314 附3导入 | {"ok":true,"status":"draft","rows":[{"content":"GIS引擎","stage":"实施","pm_pd":3,"own_pd":30,"rd_pd":0,"prod_pd":20,"travel_cost":9300,"note":"","cost":15700},{"content":"POI输入提示","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"POI关键字搜索","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"周边关键字搜索","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"坐标转换服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"地理编码服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"逆地理编码服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"行政区划查询服务(根据坐标)","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"行政区划查询服务(根据名称或者adcode)","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"空间关系判断服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"矢量瓦片服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"栅格瓦片服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"二维地图可视化渲染服务","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据底座","stage":"实施","pm_pd":2,"own_pd":10,"rd_pd":0,"prod_pd":30,"travel_cost":0,"note":"","cost":9600},{"content":"水系","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"绿地","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"道路","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"铁路","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"AOI","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"POI","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"数据整合","stage":"实施","pm_pd":0,"own_pd":3,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"管理系统","stage":"实施","pm_pd":2,"own_pd":10,"rd_pd":0,"prod_pd":0,"travel_cost":9300,"note":"","cost":9300},{"content":"运营管理（账号及许可授权管理、日志管理）","stage":"实施","pm_pd":0,"own_pd":3,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"客制化接口开发服务","stage":"实施","pm_pd":0,"own_pd":23,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"拖动控制","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"地图复位","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"城市切换","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"拖动切换","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"绘制存储","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"图层管理","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"我的图层","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"二维地图WEB JS API","stage":"实施","pm_pd":0,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"业务图层应用场景支持","stage":"实施","pm_pd":12,"own_pd":8,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"地图数据服务","stage":"实施","pm_pd":4,"own_pd":36,"rd_pd":0,"prod_pd":72,"travel_cost":27900,"note":"","cost":50940},{"content":"地址服务更新","stage":"实施","pm_pd":4,"own_pd":16,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"地图服务引擎更新","stage":"实施","pm_pd":4,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"地图渲染及二次开发更新","stage":"实施","pm_pd":4,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"信创和安全要求","stage":"实施","pm_pd":2,"own_pd":8,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"国密测评支持","stage":"实施","pm_pd":2,"own_pd":13,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"信创适配","stage":"实施","pm_pd":2,"own_pd":0,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"交付管理与验收","stage":"实施","pm_pd":6,"own_pd":3,"rd_pd":0,"prod_pd":0,"travel_cost":0,"note":"","cost":0},{"content":"客户培训","stage":"实施","pm_pd":2,"own_pd":2,"rd_pd":0,"prod_pd":0,"travel_cost":4650,"note":"","cost":4650},{"content":"验收支持","stage":"实施","pm_pd":3,"own_pd":3,"rd_pd":0,"prod_pd":0,"travel_cost":4650,"note":"","cost":4650}],"sum":{"pm_pd":52,"own_pd":168,"rd_pd":0,"prod_pd":122,"travel_cost":55800,"cost":94840}}
+PASS PL00008314 附3解析出内容行 | {"rows":43}
+PASS PL00008314 附3保留逐行来源坐标 | {"rowSources":43}
+HTTP 200 POST PL00008314 确认交付预算 | {"ok":true,"status":"confirmed","rows":43}
+HTTP 200 POST PL00008314 附1项目预算导入 | {"ok":true,"id":6,"meta":{"sheet":"附1-预算表","pairs_total":104,"matched":14}}
+PASS PL00008314 项目预算草稿已创建 | {"budgetId":6}
+PASS PL00008314 附1预算商机代码命中 | {"imported":"PL00008314"}
+PL00008314 原件附1交付金额 | {"rd_outsource":0,"del_travel":55800,"pm_cost":86528,"del_other":0}
+HTTP 200 PUT PL00008314 人工确认交付部门 | {"ok":true}
+PL00008314 dev_dept人工确认 | {"dev_dept":"公共服务业务处-交付运营"}
+HTTP 200 POST PL00008314 交付明细投影预算候选值 | {"ok":true}
+PL00008314 预算对比块 | {"rd_outsource":{"attached":0,"projected":0,"difference":0},"del_travel":{"attached":55800,"projected":55800,"difference":0},"pm_cost":{"attached":86528,"projected":86528,"difference":0},"del_other":{"attached":0,"projected":0,"difference":0}}
+HTTP 200 PUT PL00008314 人工核对并恢复附1金额 | {"ok":true}
+HTTP 200 POST PL00008314 锁定项目预算 | {"ok":true,"status":"locked","version":1}
+HTTP 200 POST PL00008314 信息收集表导入 | {"ok":true,"id":6,"meta":{"sheet":"投标决策评审-信息收集与前置评审","pairs_total":142,"matched":30}}
+PASS PL00008314 评审草稿已创建 | {"reviewId":6,"type":"bid"}
+HTTP 200 PUT PL00008314 人工补录涉密判断 | {"ok":true,"budget_id":null}
+PL00008314 涉密字段审计 | {"source":"附3 F23“涉密AOI特殊处理”","stored":"是","note":"信息收集表缺项，按交付内容保守人工判断，不冒充机器解析"}
+HTTP 200 PUT PL00008314 关联同商机锁定预算 | {"ok":true,"budget_id":6}
+HTTP 200 POST PL00008314 提交评审 | {"ok":true,"round":1}
+HTTP 200 GET PL00008314 读取前置任务 | {"keys":["review","tasks","events","attachments","budget"]}
+PASS PL00008314 已按指标分发真实部门任务 | {"tasks":10,"round":1}
+PASS PL00008314 任务部门有真实账号 | {"dept":"采购BP","indicator":"分包合理性"}
+HTTP 200 POST PL00008314 采购BP/分包合理性 提交yellow | {"ok":true,"autoJudged":false}
+PASS PL00008314 任务部门有真实账号 | {"dept":"FDE","indicator":"技术可行性"}
+HTTP 200 POST PL00008314 FDE/技术可行性 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008314 任务部门有真实账号 | {"dept":"财务BP","indicator":"客户历史欠款"}
+HTTP 200 POST PL00008314 财务BP/客户历史欠款 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008314 任务部门有真实账号 | {"dept":"财务BP","indicator":"签约客户/最终客户信用评估"}
+HTTP 200 POST PL00008314 财务BP/签约客户/最终客户信用评估 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008314 任务部门有真实账号 | {"dept":"财务BP","indicator":"集团公司关联交易金额"}
+HTTP 200 POST PL00008314 财务BP/集团公司关联交易金额 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008314 任务部门有真实账号 | {"dept":"财务BP","indicator":"付款条件"}
+HTTP 200 POST PL00008314 财务BP/付款条件 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008314 任务部门有真实账号 | {"dept":"法务","indicator":"上游签约路径公司情况"}
+HTTP 200 POST PL00008314 法务/上游签约路径公司情况 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008314 任务部门有真实账号 | {"dept":"法务","indicator":"转包限制风险"}
+HTTP 200 POST PL00008314 法务/转包限制风险 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008314 任务部门有真实账号 | {"dept":"合规BP","indicator":"合规风险"}
+HTTP 200 POST PL00008314 合规BP/合规风险 提交green | {"ok":true,"autoJudged":false}
+PASS PL00008314 任务部门有真实账号 | {"dept":"数据BP","indicator":"数据合规性"}
+HTTP 200 POST PL00008314 数据BP/数据合规性 提交green | {"ok":true,"autoJudged":true}
+PASS PL00008314 仅最后一项任务触发自动研判 | {"autoJudgedCount":1}
+HTTP 200 GET PL00008314 读取研判结果 | {"keys":["review","tasks","events","attachments","budget"]}
+PL00008314 原报告与平台灯态比较 | {"source":"yellow","platform":"yellow","match":true}
+PASS PL00008314 非红灯进入已研判 | {"status":"judged"}
+HTTP 200 POST PL00008314 销售支持组录入会后结论 | {"ok":true}
+HTTP 200 POST PL00008314 销售支持组归档 | {"ok":true}
+HTTP 200 GET PL00008314 读取360终态 | {"keys":["opp","reviews","budgets","tasks","lights","delivery","chain"]}
+PASS PL00008314 360显示交付预算已确认 | {"status":"confirmed","rows":43,"total_cost":460920,"dev_dept":"公共服务业务处-交付运营","rate":1664,"rate_source":"budget","updated_at":"2026-10-15T18:14:03.279Z","can_write":true}
+PASS PL00008314 360显示项目预算已锁定 | {"id":6,"code":"B-2026-0006","version":1,"status":"locked","project_name":"上海保险交易所地理信息系统项目","updated_at":"2026-10-15T18:14:06.977Z"}
+PASS PL00008314 360显示评审真实终态 | {"id":6,"type":"bid","title":"上海保险交易所地理信息系统项目","status":"archived","round":1,"light":"yellow","era":"online","decision_result":"同意","archived_at":"2026-10-15T18:14:12.783Z","updated_at":"2026-10-15T18:14:12.783Z"}
+PASS PL00008314 360显示本轮部门任务均完成
+
+=== 六单终态汇总 === | [{"code":"PL00007297","delivery":"confirmed","budget":"locked","review":"returned","sourceLight":"red","platformLight":"red","lightMatch":true},{"code":"PL00008330","delivery":"confirmed","budget":"locked","review":"archived","sourceLight":"yellow","platformLight":"yellow","lightMatch":true},{"code":"PL00006204","delivery":"confirmed","budget":"locked","review":"archived","sourceLight":"yellow","platformLight":"yellow","lightMatch":true},{"code":"PL00008026","delivery":"confirmed","budget":"locked","review":"archived","sourceLight":"yellow","platformLight":"yellow","lightMatch":true},{"code":"PL00008210","delivery":"confirmed","budget":"locked","review":"archived","sourceLight":"yellow","platformLight":"yellow","lightMatch":true},{"code":"PL00008314","delivery":"confirmed","budget":"locked","review":"archived","sourceLight":"yellow","platformLight":"yellow","lightMatch":true}]
+PASS 六份真实单据全部完成 HTTP 链路 | {"count":6}
+PASS 五份非红灯单据已归档
+PASS 唯一红灯单据真实退回为PL00007297
+七月第二周六单真实 HTTP 全链路完成 2026-10-15T18:14:12.975Z

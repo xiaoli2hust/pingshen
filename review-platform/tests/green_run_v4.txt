@@ -1,0 +1,264 @@
+
+==== F-01~15 财务引擎(纯函数) ====
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 252.3259
+
+==== A-05~07/13 agent 核心(纯函数) ====
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 244.1807
+
+==== API-01~20+S-01~06 预算 API(HTTP) ====
+PASS - S-06 重提 round=2
+PASS - S-06 一轮旧任务作废留痕
+PASS - S-06 二轮任务重新分发(bid 10 项指标)
+PASS - S-06 二轮复判转绿 judged
+
+29 passed, 0 failed -> ALL PASS
+
+==== A-01~04/A-08~18 对话流(HTTP+桩) ====
+PASS - A-17 预判返回灯色+路由+风险项
+PASS - A-17 reply 含灯色与风险项摘要
+PASS - A-18 小数格式自动×100 归一化
+
+40 passed, 0 failed -> ALL PASS
+config.json LLM_BASE_URL 已恢复
+
+==== R-01~34 规则矩阵 preview-light + 闭环/SEC ====
+PASS - R-32 (yellow/1 项非绿)
+PASS - R-34 (yellow/1 项非绿)
+preview-light 批量 32 条耗时 6231ms (性能冒烟门槛 <10s, 不硬卡)
+
+45 passed, 0 failed -> ALL PASS
+红绿用例(★red): 20 PASS / 0 FAIL (绿证据: 旧代码已先行 FAIL 留档则红绿成立)
+
+==== API-21~23/R-33/J/N 通知与结论(HTTP+webhook 桩) ====
+PASS - R-33 reroute_xo 事件留痕
+PASS - N-02 webhook 失败主流程仍 200(不 throw, 不久等)
+PASS - N-03 同一周一两次仅发一次(幂等)
+
+21 passed, 0 failed -> ALL PASS
+config.json 通知键已恢复
+
+==== D-01~08 附3交付明细(上传解析+递进门禁) ====
+PASS - D-06 非 owner 编辑交付明细 403
+PASS - D-07 锁定后编辑明细 400(提示新建版本)
+PASS - D-08 非 owner 上传 403
+PASS - D-08 非 xlsx 文件解析失败提示(不崩, 提示可手编)
+
+20 passed, 0 failed -> ALL PASS
+
+==== BI-01~12 归档库 BI(直查同源+对抗) ====
+PASS - BI-09 结构完整兜底(空库时同结构 0/[] 不崩)
+PASS - BI-10 恶意 query 参数被忽略(200 不注入不 500)
+PASS - BI-11 聚合只含归档单(非归档 4936 单不混入)
+PASS - BI-12 聚合性能 < 300ms | 102ms
+
+13 passed, 0 failed -> ALL PASS(数据基线: 归档 1182 单, 直查同源断言)
+
+==== T3 门禁口径 bid+presale ====
+PASS - T3-01 presale 无 budget_id 提交被拦 400 | status=400
+PASS - T3-02 presale 带 locked budget_id 提交 200 | status=200
+PASS - T3-03 change 无关联提交不受影响(200) | status=200
+
+3 passed, 0 failed -> ALL PASS
+
+==== EI-01~09 Excel 导入(六组锚定+安全+性能) ====
+PASS - EI-07 真实评审表导入: matched>=10 + opp_code 命中 | matched=15
+PASS - EI-08a 毒件拒绝(400/502) | status=502
+PASS - EI-08b 结构键注入被白名单丢弃
+PASS - EI-09 单次导入耗时<4s(python 启动+机器负载波动) | 2721ms
+
+18 passed, 0 failed -> ALL PASS
+
+==== HI-01~06 历史数据承接 ====
+PASS - HI-05b kpi.historyTotal>=1 + historyPassRate 命中 | historyTotal=95 passRate=26.3
+PASS - HI-05c kpi.greenRate 分母=在线单(不被历史污染)
+PASS - HI-05d years 年度分布含 2024 | [{"y":"2024","c":25},{"y":"2026","c":1158}]
+PASS - HI-06 真实表 history 模式导入不炸(200+archived) | status=200 matched=31
+
+16 passed, 0 failed -> ALL PASS
+
+==== OC-01~06 商机代码贯穿 ====
+PASS - OC-05a type=bid 筛选只回 bid | rows=50
+PASS - OC-05b q=商机代码模糊命中 | hit=true
+PASS - OC-05c q=% 被转义为字面量不全表 | rows=0
+PASS - OC-06 预算列表 q=PL00008572 命中 opp_code | rows=90
+
+11 passed, 0 failed -> ALL PASS
+
+==== OP-01~14 商机档案 CRUD(HTTP) ====
+PASS - OP-12 title 继承评审标题(实 "OP12-评审标题-3835993")
+PASS - OP-13 既有档案 title 未被覆盖(before="T2测试商机-3835993-01" after="T2测试商机-3835993-01")
+PASS - OP-14 重复隐式建档后 GET 仍 200 无报错(实 200)
+PASS - OP-14 档案仍为单份且保留首档标题(opp_code 为主键, 实 "OP14-第一张-3835993")
+
+24 passed, 0 failed -> ALL PASS
+
+==== DL-01~23 商机级交付预算(G1 确认门+分流+派生列守护) ====
+PASS - DL-22 对话后仍走商机级分流(GET 200 且 rate_source 有值)
+PASS - DL-23 apply 刷新交付科目 200(实 200)
+PASS - DL-23 apply 后派生列未被洗(实 "PL-T2-3837295-dl23")
+PASS - DL-23 apply 后四科目按明细刷新(dev_pd=6)
+
+70 passed, 0 failed -> ALL PASS
+
+==== CH-01~16b 三步链门禁(G2/G3/G4 六态+D-23 反事实锚) ====
+PASS - CH-16 D-23 反事实锚: 无挂靠锁定单 + 表单带 draft 商机码 → 提交 200(实 200) | error=
+PASS - CH-16b 16b 前置: confirm 后挂靠单锁定 200(实 confirm200/锁200) | error=
+PASS - CH-16b 同商机经 opp 锚定路径仍拦 400(实 400) | error=三步链未闭合:商机 PL-T3-3850396-ch16 的交付预算未确认或缺失(① 交付预算 → ② 项目预算 → ③ 评审单),请先确认再提交
+PASS - CH-16b 400 文案指到三步链
+
+45 passed, 0 failed -> ALL PASS
+
+==== RQ-01~10 必填单源注册表(meta/fields+提交门) ====
+PASS - RQ-09 开关只关必填校验(块内不含预算必带门/G3/opp_delivery) | 块内命中禁用关键词=[]
+PASS - RQ-09 POST /api/reviews 未重复加门(§C: submit:true 已被现网硬拦) | POST 块 1187 字符, 含开关=false
+PASS - RQ-10 解析仅用 fs + 正则(无第三方模块、不 require app.js) | require 集=["fs","path","../agent.js"]
+PASS - RQ-10 meta 响应为可 JSON 解析的纯数据(无函数/无 DOM) | bid 项数=38
+
+29 passed, 0 failed -> ALL PASS
+
+==== C2-01~11 360 聚合契约(delivery 八键/chain 五键/D-19 403 边界/rate 分支实执行) ====
+PASS - C2-10 非四项 fde1 can_write=false ⇔ 明细 403 | detail_error="仅商机建档人/项目经理/销售支持组可查看交付预算明细"
+PASS - C2-11 前置 ①confirmed+②locked 就绪 | lock=200 error=""
+PASS - C2-11 只有历史单: reviews 列表仍含它但 chain 计数为 0 且 next_action=submit_review | reviews.length=1 reviews_total=0 reviews_submitted=0 next_action="submit_review" delivery.status="confirmed" budget_locked=true
+PASS - C2-11 同单改回 era=online: reviews_total=1 且 next_action=judged(反证 era 过滤非死代码) | reviews_total=1 reviews_submitted=1 next_action="judged"
+
+24 passed, 0 failed -> ALL PASS
+
+==== PA-* 解析器全字段对账(原表审计) ====
+PASS - PA-PL00008572-C 商机名称为短名(可作 title) | "江西省天地图POI数据服务项目"
+PASS - PA-PL00008111-A 原表关键标签齐全(审计有效性) | 缺: 
+PASS - PA-PL00008111-B 逐字段对账 15 项一致(原表值=解析值)
+PASS - PA-PL00008111-C 商机名称为短名(可作 title) | "坪山区三维数据更新2026"
+
+9 passed, 0 failed -> ALL PASS
+
+==== PL-01~08 解析器实验室(admin 实测+调优) ====
+PASS - PL-05 GET 映射含已保存的 contract
+PASS - PL-06 非法段名 400 | status=400
+PASS - PL-07 未勾选时不应用调优(contract 仍 undefined)
+PASS - PL-08 清空调优 200
+
+12 passed, 0 failed -> ALL PASS
+
+==== LM-01~14 LLM 管理中心(profile/探针/用量/降级) ====
+PASS - LM-21 写顶层时 LLM_BASE_URL 空串 → 恰 200 且顶层值不动(仅 LLM_MODEL 变更) | status=200 top=http://127.0.0.1:9 err=
+PASS - LM-21 仅提交空串 base(无任何实际变更) → 400 且沿用「未提交任何要修改的键」文案且文件逐字节未变 | status=400 err=未提交任何要修改的键 unchanged=true
+PASS - LM-21 写 profile 时显式提交非 http(s) base → 400 且文案绑定 profile 名, 文件逐字节未变 | status=400 err={"error":"profile budget 的 base 不是 http(s):// 地址"} unchanged=true
+config.json 已按原始字节复位; 四键在场=true 字节相等=true
+
+58 passed, 0 failed -> ALL PASS
+
+==== RB-01~11 机器人管理中心(实例/矩阵/白名单/双轨不双推) ====
+PASS - RB-11 导入行默认停用(enabled=0, 不抢真源也不双推) | [{"name":"config:COMMITTEE_WEBHOOK_URL","enabled":0},{"name":"config:NOTIFY_WEBHOOK_URL","enabled":0}]
+PASS - RB-02 本轮 26 个管理端点响应体均不含任何 secret 明文
+PASS - RB-02 本轮管理端点响应体不含 webhook 的 access_token 明文
+PASS - POST config.json 按原始字节复位且四键完好
+
+61 passed, 0 failed -> ALL PASS
+
+==== OD-01~10 对话式建档 + 灯色聚合视图 ====
+PASS - OD-10 llm_calls 表存在(T9 观测面) | row={"id":551,"ts":"2026-10-15T03:13:29.138Z","profile":"opp","ok":1,"degraded":0,"ms":182,"tokens_est":12,"ref":"opp:"}
+PASS - OD-10 成功轮: profile=opp, ok=1, degraded=0 且与响应 degraded=false 一致 | row={"id":551,"ts":"2026-10-15T03:13:29.138Z","profile":"opp","ok":1,"degraded":0,"ms":182,"tokens_est":12,"ref":"opp:"}
+PASS - OD-10 断开轮: profile=opp, ok=0, degraded=1 且与响应 degraded=true 一致(新行) | row={"id":552,"ts":"2026-10-15T03:13:29.396Z","profile":"opp","ok":0,"degraded":1,"ms":186,"tokens_est":12,"ref":"opp:"}
+[OD-04 降级实录] HTTP 200 {"reply":"大模型暂不可用,本轮未改动已填字段,请在下方表单点选/填写。\n建档还缺 4 项:业务线/商机阶段/销售/项目概述","draft":{"title":"OD-04 降级","customer":"江西省自然资源测绘与监测院","contract_amount":240},"missing":["biz_line","opp_stage","sales","summary"],"actions":[],"degraded":true}
+
+30 passed, 0 failed -> ALL PASS
+
+==== HL-1~4 实验室浏览器层 ====
+            未匹配
+    | pick=impRvC_2_0
+PASS - HL-5 添加关键词生效(chips 新词+未保存标记)
+PASS - HL-6 保存调优反馈 | 已保存——勾选「应用调优映射」后点「解析并对照」验证
+
+8 passed, 0 failed -> ALL PASS
+
+==== NAV-* 商机中枢导航浏览器层 ====
+PASS - NAV-9 fde1 两项(首页/待办打灯) | 实得:首页,待办打灯
+PASS - NAV-10 sales1 三项(首页/我的商机/新建待评审商机) | 实得:首页,我的商机,新建待评审商机
+PASS - NAV-11 sales1 不见待办打灯/研判台/归档库/解析器实验室
+PASS - NAV-12 财务BP 四项(含待办打灯) | 实得:首页,我的商机,新建待评审商机,待办打灯
+
+12 passed, 0 failed -> ALL PASS
+
+==== IA-1~26 商机中枢IA浏览器层 ====
+PASS - IA-6b fde1 首页含我的待办
+PASS - IA-4 sales1 导航三项(首页/我的商机/新建待评审商机) | 实得:首页,我的商机,新建待评审商机
+PASS - IA-6c sales1 首页含我的待办
+PASS - IA-5 财务BP 导航四项(含待办打灯) | 实得:首页,我的商机,新建待评审商机,待办打灯
+
+34 passed, 0 failed -> ALL PASS
+
+==== AD-01~10 管理中心浏览器层(#/admin/llm + #/admin/robot) ====
+PASS - AD-03c 夹具已回收: DELETE 返回 200 且实例区回到基线(夹具残留 0) | DELETE=200 基线行=0 回收后行=0 夹具名仍在=false
+PASS - AD-10 两页各出一张 PNG 到 shots/(H_AD_1_llm_admin / H_AD_2_robot_admin) | shots/H_AD_1_llm_admin.png=98114B shots/H_AD_2_robot_admin.png=70451B
+PASS - AD-09 两页导航渲染期 console.error 与 pageerror 均为空 | console=0 pageerror=0
+PASS - AD-09b 全流程(含登录/非 admin/夹具/探针阶段)pageerror 为零 | pageerror 总数=0
+
+18 passed, 0 failed -> ALL PASS
+
+==== 回归 test_flow.js ====
+   黄灯指标: 贡献利润、签约转包次数
+   路径: 黄灯:部门级评审会(每周二)
+   与真实评审结论一致(黄灯-部门级,2项黄灯,无XO): PASS
+6) 正式报告 HTML 生成: PASS
+7) 归档: PASS
+ALL PASS
+
+==== 回归 test_p15_flow.js ====
+PASS - B1 退回后状态=returned
+PASS - B2 重新提交后轮次=2
+PASS - B3 二轮完成后自动研判(judged, 绿灯)
+PASS - B4 第一轮旧任务已作废留痕
+
+10 passed, 0 failed -> ALL PASS
+
+==== 数据可行性 data_feasibility_check.js ====
+======================================================================
+数据可行性实测汇总
+  C-02 PL00008068: 系统=yellow/判例=yellow → 一致
+  C-03 PL00008111: 系统=yellow/判例=yellow → 一致
+结论: 判例数据可完整驱动 建单→附件→提交→分派→打灯→研判→对比 全链路(2/2 跑通); 判灯偏差即规则修正项输入(1.6/1.7)
+ALL PASS
+
+======== 汇总 ========
+PASS  F-01~15 财务引擎(纯函数)
+PASS  A-05~07/13 agent 核心(纯函数)
+PASS  API-01~20+S-01~06 预算 API(HTTP)
+PASS  A-01~04/A-08~18 对话流(HTTP+桩)
+PASS  R-01~34 规则矩阵 preview-light + 闭环/SEC
+PASS  API-21~23/R-33/J/N 通知与结论(HTTP+webhook 桩)
+PASS  D-01~08 附3交付明细(上传解析+递进门禁)
+PASS  BI-01~12 归档库 BI(直查同源+对抗)
+PASS  T3 门禁口径 bid+presale
+PASS  EI-01~09 Excel 导入(六组锚定+安全+性能)
+PASS  HI-01~06 历史数据承接
+PASS  OC-01~06 商机代码贯穿
+PASS  OP-01~14 商机档案 CRUD(HTTP)
+PASS  DL-01~23 商机级交付预算(G1 确认门+分流+派生列守护)
+PASS  CH-01~16b 三步链门禁(G2/G3/G4 六态+D-23 反事实锚)
+PASS  RQ-01~10 必填单源注册表(meta/fields+提交门)
+PASS  C2-01~11 360 聚合契约(delivery 八键/chain 五键/D-19 403 边界/rate 分支实执行)
+PASS  PA-* 解析器全字段对账(原表审计)
+PASS  PL-01~08 解析器实验室(admin 实测+调优)
+PASS  LM-01~14 LLM 管理中心(profile/探针/用量/降级)
+PASS  RB-01~11 机器人管理中心(实例/矩阵/白名单/双轨不双推)
+PASS  OD-01~10 对话式建档 + 灯色聚合视图
+PASS  HL-1~4 实验室浏览器层
+PASS  NAV-* 商机中枢导航浏览器层
+PASS  IA-1~26 商机中枢IA浏览器层
+PASS  AD-01~10 管理中心浏览器层(#/admin/llm + #/admin/robot)
+PASS  回归 test_flow.js
+PASS  回归 test_p15_flow.js
+PASS  数据可行性 data_feasibility_check.js
+
+29/29 套通过, 耗时 469.7s -> ALL PASS

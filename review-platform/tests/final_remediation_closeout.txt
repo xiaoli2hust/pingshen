@@ -1,0 +1,155 @@
+{
+  "at": "2026-10-21 07:40:09 CST",
+  "scope": "local read-only source/config/process/credential-pattern evidence and removal of two session-owned one-shot executors; no app/network/DB writes",
+  "checks": [
+    {
+      "name": "HEAD unchanged and no git write",
+      "ok": true,
+      "evidence": {
+        "status": 0,
+        "head": "186b2513c0353e8af2419b91a7cfe2ebd631cb81",
+        "actions": "only read-only git invocations in this verification"
+      }
+    },
+    {
+      "name": "working-tree status observed without cleaning foreign work",
+      "ok": true,
+      "evidence": {
+        "status": 0,
+        "entries": 766,
+        "remainsDirty": true
+      }
+    },
+    {
+      "name": "fifty-five latest source fingerprints still frozen",
+      "ok": true,
+      "evidence": []
+    },
+    {
+      "name": "guard and preload still frozen",
+      "ok": true,
+      "evidence": {
+        "guard": "d67d6d0426ea5e3da90c2995453b3a26ad030db8ba5ae13bbd21d0bd7d80edda",
+        "preload": "669c56f487378b622b5d0c2e0894fee70adec3ffa952681d08aa7bc8602d3b1e"
+      }
+    },
+    {
+      "name": "real configuration bytes and tracking unchanged",
+      "ok": true,
+      "evidence": {
+        "bytes": 270,
+        "sha16": "f285c66ad4790370",
+        "tracked": false
+      }
+    },
+    {
+      "name": "original database byte fingerprint unchanged",
+      "ok": true,
+      "evidence": {
+        "sha256": "96cf5ea46f9a044eafd8c149bb8b9e136aec8024d561aab3f2b7febb558574d4"
+      }
+    },
+    {
+      "name": "fourteen owned scratch files deleted with no cleanup errors",
+      "ok": true,
+      "evidence": {
+        "deleted": 14,
+        "foreignPreserved": 110,
+        "finishedAt": "2026-10-21 07:30:36 CST"
+      }
+    },
+    {
+      "name": "final service port double sample empty",
+      "ok": true,
+      "evidence": {
+        "status": 0,
+        "stdout": "[2026-10-21 07:40:22 CST] pid double-sample same=true []"
+      }
+    },
+    {
+      "name": "recorded owned application and suite process IDs absent",
+      "ok": true,
+      "evidence": {
+        "ids": [
+          15144,
+          24708,
+          26200,
+          37292,
+          15192,
+          35584,
+          23968
+        ],
+        "status": 0,
+        "remaining": "",
+        "error": ""
+      }
+    },
+    {
+      "name": "scoped changed-code diff formatting clean",
+      "ok": true,
+      "evidence": {
+        "status": 0,
+        "files": [
+          "public/app.js",
+          "public/style.css",
+          "server.js",
+          "tests/h_admin_shots.js",
+          "tests/h_ia_shots.js",
+          "tests/h_nav_shots.js",
+          "tests/h_robot_workbench_shots.js",
+          "tests/run_all.js",
+          "tests/test_chain.js",
+          "tests/test_opp360.js",
+          "tests/test_opp_dialog.js",
+          "tests/test_robot_admin.js",
+          "tests/test_robot_workbench.js"
+        ],
+        "output": "",
+        "warnings": "warning: in the working copy of 'review-platform/public/app.js', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'review-platform/public/style.css', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'review-platform/tests/h_admin_shots.js', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'review-platform/tests/h_ia_shots.js', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'review-platform/tests/h_nav_shots.js', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'review-platform/tests/test_chain.js', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'review-platform/tests/test_opp360.js', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'review-platform/tests/test_opp_dialog.js', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'review-platform/tests/test_robot_admin.js', LF will be replaced by CRLF the next time Git touches it"
+      }
+    },
+    {
+      "name": "no unmasked long API-key or literal report-secret patterns in scoped sources and evidence",
+      "ok": true,
+      "evidence": {
+        "scannedFiles": 291,
+        "findings": [],
+        "boundary": "pattern scan, not proof against arbitrary secret formats; real config values were not decoded"
+      }
+    },
+    {
+      "name": "owned cleanup executor matches reviewed fingerprint",
+      "ok": true,
+      "evidence": {
+        "sha256": "93a1d618c012358a80fa6cd9e70c606d069ce619297994583d88dec88cf9fe9c"
+      }
+    },
+    {
+      "name": "both session-owned one-shot executors removed",
+      "ok": true,
+      "evidence": [
+        {
+          "file": "close-owned-scratch.js",
+          "sha256": "93a1d618c012358a80fa6cd9e70c606d069ce619297994583d88dec88cf9fe9c"
+        },
+        {
+          "file": "final-close-check.js",
+          "sha256": "c8ef1af21803c0b18bd57a2f39126c30deeff6d387769de37ebcff433a5ef93e"
+        }
+      ]
+    }
+  ],
+  "removedExecutors": [
+    {
+      "file": "close-owned-scratch.js",
+      "sha256": "93a1d618c012358a80fa6cd9e70c606d069ce619297994583d88dec88cf9fe9c"
+    },
+    {
+      "file": "final-close-check.js",
+      "sha256": "c8ef1af21803c0b18bd57a2f39126c30deeff6d387769de37ebcff433a5ef93e"
+    }
+  ],
+  "passed": 13,
+  "failed": 0,
+  "finishedAt": "2026-10-21 07:40:25 CST"
+}

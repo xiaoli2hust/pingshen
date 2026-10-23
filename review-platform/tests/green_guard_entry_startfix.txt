@@ -1,0 +1,1 @@
+PASS guard missing --offline refuses before spawning; spawnCalls=0, exit=2

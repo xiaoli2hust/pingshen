@@ -1,0 +1,1558 @@
+{
+  "started": "2026-10-20T19:18:51.053Z",
+  "ended": "2026-10-20T19:18:51.179Z",
+  "scope": "VM actual preload; child_process boundary fake; no real child/kill/app/DB/config/network",
+  "runtime": "v22.22.2",
+  "executable": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+  "status": "FAIL",
+  "checks": 47,
+  "passed": 35,
+  "failed": 12,
+  "hashes": {
+    "preload": "1f4511c39377d5506200d7694c11875d4273572c184479cec865abee3726393b",
+    "selftest": "c9c4c0884d9ff765b1814acbaf09199b0f88fde2a7f0211c776516ce095a1df4",
+    "playwright_core": "549070af3acabb3efcc4f55bfe6210f9f7c2fcf633cf7eaa59bfe60719969171"
+  },
+  "preload_source": "'use strict';\nconst fs = require('node:fs');\nconst path = require('node:path');\nconst { fileURLToPath } = require('node:url');\nconst net = require('node:net');\nconst tls = require('node:tls');\nconst http = require('node:http');\nconst https = require('node:https');\nconst dns = require('node:dns');\nconst dgram = require('node:dgram');\nconst cp = require('node:child_process');\nconst Module = require('node:module');\nconst { syncBuiltinESMExports } = Module;\nconst { AsyncLocalStorage } = require('node:async_hooks');\nconst { randomUUID } = require('node:crypto');\nconst ROOT = 'F:/workbuddy/9/review-platform';\nconst CONFIG = path.resolve(ROOT, 'config.json').toLowerCase();\nconst STORE = path.join(__dirname, 'offline-config-store.json');\nconst PRELOAD = __filename;\nconst NODE = 'C:/Users/01386380/.workbuddy/binaries/node/versions/22.22.2-6/node.exe';\nconst PORTS = new Set([9, 8600, 9801, 9802, 9803, 9804, 9831, 9832, 9849]);\nconst raw = Object.fromEntries(['readFileSync', 'writeFileSync', 'existsSync', 'statSync'].map(k => [k, fs[k].bind(fs)]));\nif (process.env.RP_OFFLINE !== '1' || !raw.existsSync(STORE)) throw new Error('OFFLINE_POLICY missing synthetic store');\nfunction configPath(p) {\n  if (typeof p === 'number') return false;\n  if (p instanceof URL) p = fileURLToPath(p);\n  if (Buffer.isBuffer(p)) p = p.toString();\n  return typeof p === 'string' && path.resolve(p).toLowerCase() === CONFIG;\n}\nfunction blocked(kind) {\n  const e = new Error('OFFLINE_BLOCKED ' + kind);\n  e.code = 'OFFLINE_BLOCKED';\n  return e;\n}\nfs.readFileSync = function(p, ...args) { return raw.readFileSync(configPath(p) ? STORE : p, ...args); };\nfs.writeFileSync = function(p, ...args) { return raw.writeFileSync(configPath(p) ? STORE : p, ...args); };\nfs.existsSync = function(p) { return raw.existsSync(configPath(p) ? STORE : p); };\nfs.statSync = function(p, ...args) { return raw.statSync(configPath(p) ? STORE : p, ...args); };\nconst DENIED_FS = ['open', 'openSync', 'readFile', 'writeFile', 'appendFile', 'appendFileSync', 'copyFile', 'copyFileSync', 'cp', 'cpSync', 'rename', 'renameSync', 'unlink', 'unlinkSync', 'rm', 'rmSync', 'truncate', 'truncateSync', 'createReadStream', 'createWriteStream', 'access', 'accessSync', 'realpath', 'realpathSync', 'lstat', 'lstatSync', 'watch', 'watchFile', 'chmod', 'chmodSync', 'chown', 'chownSync', 'utimes', 'utimesSync', 'link', 'linkSync', 'symlink', 'symlinkSync'];\nfor (const k of DENIED_FS) {\n  if (typeof fs[k] !== 'function') continue;\n  const fn = fs[k];\n  fs[k] = function(...args) { if (args.some(configPath)) throw blocked('config ' + k); return fn.apply(this, args); };\n}\nfor (const k of Object.keys(fs.promises)) {\n  if (typeof fs.promises[k] !== 'function') continue;\n  const fn = fs.promises[k];\n  fs.promises[k] = function(...args) { if (args.some(configPath)) return Promise.reject(blocked('config promises.' + k)); return fn.apply(this, args); };\n}\nfunction hostName(h) { return String(h || 'localhost').toLowerCase().replace(/^\\[|\\]$/g, ''); }\nfunction local(h) { return ['127.0.0.1', '::1', 'localhost'].includes(hostName(h)); }\nfunction destination(h, p) { if (!local(h) || !PORTS.has(Number(p))) throw blocked('network destination'); }\nfunction httpDestination(args, protocol) {\n  const first = args[0];\n  let options;\n  if (typeof first === 'string' || first instanceof URL) {\n    const u = new URL(first);\n    options = { hostname: u.hostname, port: u.port || (u.protocol === 'https:' ? 443 : 80), protocol: u.protocol };\n    if (args[1] && typeof args[1] === 'object') options = { ...options, ...args[1] };\n  } else options = { ...first };\n  if (options.socketPath) throw blocked('http socketPath');\n  if (!['http:', 'https:'].includes(options.protocol || protocol)) throw blocked('http protocol');\n  destination(options.hostname || options.host, options.port || ((options.protocol || protocol) === 'https:' ? 443 : 80));\n}\nfor (const [mod, protocol] of [[http, 'http:'], [https, 'https:']]) {\n  const request = mod.request;\n  mod.request = function(...args) { httpDestination(args, protocol); return request.apply(this, args); };\n  mod.get = function(...args) { const r = mod.request(...args); r.end(); return r; };\n}\nconst fetch = globalThis.fetch;\nglobalThis.fetch = function(input, options) {\n  try {\n    const u = new URL(typeof input === 'string' || input instanceof URL ? input : input.url);\n    if (!['http:', 'https:'].includes(u.protocol)) throw blocked('fetch protocol');\n    destination(u.hostname, u.port || (u.protocol === 'https:' ? 443 : 80));\n  } catch (e) { return Promise.reject(e); }\n  return fetch.call(this, input, options);\n};\nfunction socketDestination(args) {\n  const a = args[0];\n  if (Array.isArray(a)) return socketDestination(a);\n  if (a && typeof a === 'object') {\n    if (a.path) {\n      if (!String(a.path).startsWith('\\\\\\\\.\\\\pipe\\\\')) throw blocked('socket path');\n      return;\n    }\n    destination(a.host || a.hostname, a.port);\n  } else if (typeof a === 'number') destination(typeof args[1] === 'string' ? args[1] : 'localhost', a);\n  else throw blocked('socket arguments');\n}\nconst socketConnect = net.Socket.prototype.connect;\nnet.Socket.prototype.connect = function(...args) { socketDestination(args); return socketConnect.apply(this, args); };\nconst tlsConnect = tls.connect;\ntls.connect = function(...args) { socketDestination(args); return tlsConnect.apply(this, args); };\nconst lookup = dns.lookup;\ndns.lookup = function(host, options, callback) {\n  if (!local(host)) throw blocked('dns lookup');\n  return lookup.call(this, hostName(host) === 'localhost' ? '127.0.0.1' : hostName(host), options, callback);\n};\nfor (const k of Object.keys(dns)) {\n  if ((k.startsWith('resolve') || k === 'reverse') && typeof dns[k] === 'function') dns[k] = function() { throw blocked('dns ' + k); };\n}\nconst promiseLookup = dns.promises.lookup.bind(dns.promises);\ndns.promises.lookup = function(host, options) {\n  if (!local(host)) return Promise.reject(blocked('dns promises.lookup'));\n  return promiseLookup(hostName(host) === 'localhost' ? '127.0.0.1' : hostName(host), options);\n};\nfor (const k of Object.keys(dns.promises)) {\n  if ((k.startsWith('resolve') || k === 'reverse') && typeof dns.promises[k] === 'function') dns.promises[k] = function() { return Promise.reject(blocked('dns promises.' + k)); };\n}\nfor (const Resolver of [dns.Resolver, dns.promises.Resolver]) {\n  for (const k of Object.getOwnPropertyNames(Resolver.prototype)) {\n    if (k.startsWith('resolve') || k === 'reverse') Resolver.prototype[k] = function() { throw blocked('Resolver.' + k); };\n  }\n}\ndgram.Socket.prototype.send = function() { throw blocked('udp send'); };\nconst actionContext = new AsyncLocalStorage();\nconst BARRIER_ROUTE = '/__rp_offline/barrier';\nconst ACTION_HEADER = 'X-RP-Offline-Action';\nfunction actionIdle(a) { return a.handlerDone && a.responseDone && a.pendingSends === 0 && a.pendingChildren === 0; }\nfunction actionChanged(a) { for (const wake of [...a.waiters]) wake(); }\nfunction observeSend(a, invoke) {\n  a.sends++; a.pendingSends++;\n  let result;\n  try { result = invoke(); }\n  catch (e) { a.pendingSends--; a.failed = true; actionChanged(a); throw e; }\n  result.then(() => { a.pendingSends--; actionChanged(a); }, () => { a.pendingSends--; a.failed = true; actionChanged(a); });\n  return result;\n}\nconst load = Module._load;\nconst wrappedNotify = new WeakSet();\nModule._load = function(request, parent, isMain) {\n  const exported = load.apply(this, arguments);\n  if (typeof request === 'string' && /(?:^|[/\\\\])notify(?:\\.js)?$/.test(request) &&\n      Module._resolveFilename(request, parent).toLowerCase() === path.resolve(ROOT, 'notify.js').toLowerCase() && !wrappedNotify.has(exported)) {\n    wrappedNotify.add(exported);\n    const create = exported.createNotify;\n    exported.createNotify = function(...args) {\n      const notify = create.apply(this, args);\n      const send = notify.send;\n      notify.send = function(...values) {\n        const a = actionContext.getStore();\n        return a ? observeSend(a, () => send.apply(this, values)) : send.apply(this, values);\n      };\n      return notify;\n    };\n  }\n  return exported;\n};\nfunction barrierReply(res, code, body) {\n  res.writeHead(code, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });\n  res.end(JSON.stringify(body));\n}\nfunction waitAction(req, res, actions, url) {\n  req.resume();\n  if (req.method !== 'POST') return barrierReply(res, 405, { ok: false, error: 'OFFLINE_BARRIER_METHOD' });\n  const id = url.searchParams.get('action') || '';\n  const timeout = Number(url.searchParams.get('timeout_ms') || 15000);\n  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id) || !Number.isInteger(timeout) || timeout < 1 || timeout > 30000)\n    return barrierReply(res, 400, { ok: false, error: 'OFFLINE_BARRIER_INPUT' });\n  const a = actions.get(id);\n  if (!a) return barrierReply(res, 404, { ok: false, error: 'OFFLINE_BARRIER_UNKNOWN' });\n  let done = false;\n  const cleanup = () => { done = true; clearTimeout(timer); a.waiters.delete(wake); };\n  const reply = (code, body) => { if (done) return; cleanup(); barrierReply(res, code, body); };\n  const wake = () => {\n    if (a.failed) return reply(409, { ok: false, error: 'OFFLINE_BARRIER_ACTION_FAILED' });\n    if (actionIdle(a)) reply(200, { ok: true, action: id, handler_done: a.handlerDone, response_done: a.responseDone,\n      pending_sends: a.pendingSends, pending_children: a.pendingChildren, sends: a.sends, children: a.children });\n  };\n  const timer = setTimeout(() => reply(504, { ok: false, error: 'OFFLINE_BARRIER_TIMEOUT' }), timeout);\n  res.once('close', cleanup);\n  a.waiters.add(wake);\n  wake();\n}\nconst createServer = http.createServer;\nhttp.createServer = function(...args) {\n  const index = args.findIndex(arg => typeof arg === 'function');\n  if (index < 0) return createServer.apply(this, args);\n  const listener = args[index];\n  const actions = new Map();\n  args[index] = function(req, res) {\n    if (this.address()?.port !== 8600) return listener.call(this, req, res);\n    const url = new URL(req.url, 'http://localhost');\n    const peer = String(req.socket.remoteAddress || '').toLowerCase().replace(/^::ffff:/, '');\n    if (!local(peer)) {\n      if (url.pathname === BARRIER_ROUTE) return barrierReply(res, 403, { ok: false, error: 'OFFLINE_BARRIER_LOCAL_ONLY' });\n      return listener.call(this, req, res);\n    }\n    if (url.pathname === BARRIER_ROUTE) return waitAction(req, res, actions, url);\n    if (actions.size >= 2048) {\n      for (const [id, previous] of actions) { if (actionIdle(previous) && previous.waiters.size === 0) { actions.delete(id); break; } }\n      if (actions.size >= 2048) return barrierReply(res, 503, { ok: false, error: 'OFFLINE_BARRIER_CAPACITY' });\n    }\n    const a = { id: randomUUID(), handlerDone: false, responseDone: false, failed: false,\n      sends: 0, pendingSends: 0, children: 0, pendingChildren: 0, waiters: new Set() };\n    actions.set(a.id, a);\n    res.setHeader(ACTION_HEADER, a.id);\n    res.once('finish', () => { a.responseDone = true; actionChanged(a); });\n    res.once('close', () => { if (!a.responseDone) { a.failed = true; actionChanged(a); } });\n    return actionContext.run(a, () => {\n      let result;\n      try { result = listener.call(this, req, res); }\n      catch (e) { a.handlerDone = true; a.failed = true; actionChanged(a); throw e; }\n      if (result && typeof result.then === 'function')\n        result.then(() => { a.handlerDone = true; actionChanged(a); }, () => { a.handlerDone = true; a.failed = true; actionChanged(a); });\n      else { a.handlerDone = true; actionChanged(a); }\n      return result;\n    });\n  };\n  return createServer.apply(this, args);\n};\nfor (const k of Object.keys(process.env)) if (/^(LLM_|PUBLIC_BASE_URL$|HTTPS?_PROXY$|ALL_PROXY$|NO_PROXY$|NODE_OPTIONS$)/i.test(k)) delete process.env[k];\nprocess.env.PUBLIC_BASE_URL = 'http://127.0.0.1:8600';\nprocess.env.NODE_OPTIONS = '--require=' + PRELOAD;\nprocess.env.RP_OFFLINE_STORE = STORE;\nfunction childEnv(env) {\n  const clean = { ...(env || process.env) };\n  for (const k of Object.keys(clean)) if (/^(LLM_|PUBLIC_BASE_URL$|HTTPS?_PROXY$|ALL_PROXY$|NO_PROXY$|NODE_OPTIONS$)/i.test(k)) delete clean[k];\n  return { ...clean, RP_OFFLINE: '1', RP_OFFLINE_STORE: STORE, NODE_OPTIONS: '--require=' + PRELOAD, PUBLIC_BASE_URL: 'http://127.0.0.1:8600' };\n}\nconst CHROME_FLAGS = ['--proxy-server=http://127.0.0.1:9', '--proxy-bypass-list=127.0.0.1;localhost;[::1]', '--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost', '--disable-quic', '--force-webrtc-ip-handling-policy=disable_non_proxied_udp', '--disable-background-networking', '--disable-component-update', '--disable-domain-reliability', '--disable-sync', '--no-first-run'];\nfunction childCommand(command, args = [], options = {}) {\n  const name = path.basename(String(command)).toLowerCase();\n  if (options.shell) throw blocked('child shell');\n  if (['curl', 'curl.exe'].includes(name)) return { command: NODE, args: [path.join(__dirname, 'offline-curl.js'), ...args], options: { ...options, env: childEnv(options.env) } };\n  if (['node', 'node.exe'].includes(name)) return { command: NODE, args, options: { ...options, env: childEnv(options.env) } };\n  if (['python', 'python.exe', 'python3', 'python3.exe'].includes(name)) return { command, args, options: { ...options, env: childEnv(options.env) } };\n  if (['chrome.exe', 'msedge.exe', 'chromium.exe', 'headless_shell.exe'].includes(name)) return { command, args: [...args.filter(a => !/^--(proxy-|host-resolver|force-webrtc|enable-quic)/.test(a)), ...CHROME_FLAGS], options: { ...options, env: childEnv(options.env) } };\n  throw blocked('unknown child ' + name);\n}\nfor (const k of ['spawn', 'spawnSync', 'execFile', 'execFileSync']) {\n  const fn = cp[k];\n  cp[k] = function(command, args, options, callback) {\n    if (!Array.isArray(args)) { callback = typeof options === 'function' ? options : typeof args === 'function' ? args : callback; options = typeof args === 'object' ? args : {}; args = []; }\n    else if (typeof options === 'function') { callback = options; options = {}; }\n    const c = childCommand(command, args, options || {});\n    const child = callback ? fn.call(this, c.command, c.args, c.options, callback) : fn.call(this, c.command, c.args, c.options);\n    const a = actionContext.getStore();\n    if (a && ['spawn', 'execFile'].includes(k) && /^(curl|curl\\.exe)$/i.test(path.basename(String(command)))) {\n      a.children++; a.pendingChildren++;\n      child.once('close', () => { a.pendingChildren--; actionChanged(a); });\n    }\n    return child;\n  };\n}\nfor (const k of ['exec', 'execSync']) cp[k] = function() { throw blocked('child ' + k); };\nconst fork = cp.fork;\ncp.fork = function(modulePath, args, options) { return fork.call(this, modulePath, Array.isArray(args) ? args : [], { ...(Array.isArray(args) ? options : args), execPath: NODE, env: childEnv((Array.isArray(args) ? options : args)?.env) }); };\nsyncBuiltinESMExports();\nmodule.exports = { destination, childCommand, CHROME_FLAGS };\n",
+  "rows": [
+    {
+      "name": "owned live Chrome exact Playwright form converts without shell",
+      "status": "FAIL",
+      "error": "Error: OFFLINE_BLOCKED child shell\n    at blocked (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:31:13)\n    at childCommand (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:225:28)\n    at cp.<computed> [as spawnSync] (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:237:15)\n    at terminate (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:74:12)\n    at converted (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:77:18)\n    at F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:92:78\n    at check (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:89:9)\n    at Object.<anonymous> (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:92:1)\n    at Module._compile (node:internal/modules/cjs/loader:1705:14)\n    at Object..js (node:internal/modules/cjs/loader:1838:10)",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "owned Chrome accepts explicitly empty argv only",
+      "status": "FAIL",
+      "error": "Error: OFFLINE_BLOCKED child shell\n    at blocked (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:31:13)\n    at childCommand (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:225:28)\n    at cp.<computed> [as spawnSync] (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:237:15)\n    at terminate (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:73:30)\n    at converted (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:77:18)\n    at F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:93:63\n    at check (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:89:9)\n    at Object.<anonymous> (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:93:1)\n    at Module._compile (node:internal/modules/cjs/loader:1705:14)\n    at Object..js (node:internal/modules/cjs/loader:1838:10)",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "execFile Chrome is registered",
+      "status": "FAIL",
+      "error": "Error: OFFLINE_BLOCKED child shell\n    at blocked (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:31:13)\n    at childCommand (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:225:28)\n    at cp.<computed> [as spawnSync] (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:237:15)\n    at terminate (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:74:12)\n    at converted (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:77:18)\n    at F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:94:45\n    at check (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:89:9)\n    at Object.<anonymous> (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:94:1)\n    at Module._compile (node:internal/modules/cjs/loader:1705:14)\n    at Object..js (node:internal/modules/cjs/loader:1838:10)",
+      "calls": [
+        {
+          "method": "execFile",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "recognized browser executable msedge.exe",
+      "status": "FAIL",
+      "error": "Error: OFFLINE_BLOCKED child shell\n    at blocked (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:31:13)\n    at childCommand (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:225:28)\n    at cp.<computed> [as spawnSync] (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:237:15)\n    at terminate (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:74:12)\n    at converted (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:77:18)\n    at F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:96:61\n    at check (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:89:9)\n    at Object.<anonymous> (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:96:3)\n    at Module._compile (node:internal/modules/cjs/loader:1705:14)\n    at Object..js (node:internal/modules/cjs/loader:1838:10)",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "msedge.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "recognized browser executable chromium.exe",
+      "status": "FAIL",
+      "error": "Error: OFFLINE_BLOCKED child shell\n    at blocked (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:31:13)\n    at childCommand (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:225:28)\n    at cp.<computed> [as spawnSync] (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:237:15)\n    at terminate (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:74:12)\n    at converted (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:77:18)\n    at F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:96:61\n    at check (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:89:9)\n    at Object.<anonymous> (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:96:3)\n    at Module._compile (node:internal/modules/cjs/loader:1705:14)\n    at Object..js (node:internal/modules/cjs/loader:1838:10)",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "chromium.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "recognized browser executable headless_shell.exe",
+      "status": "FAIL",
+      "error": "Error: OFFLINE_BLOCKED child shell\n    at blocked (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:31:13)\n    at childCommand (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:225:28)\n    at cp.<computed> [as spawnSync] (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:237:15)\n    at terminate (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:74:12)\n    at converted (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:77:18)\n    at F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:96:61\n    at check (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:89:9)\n    at Object.<anonymous> (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:96:3)\n    at Module._compile (node:internal/modules/cjs/loader:1705:14)\n    at Object..js (node:internal/modules/cjs/loader:1838:10)",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "headless_shell.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "recognized browser executable CHROME.EXE",
+      "status": "FAIL",
+      "error": "Error: OFFLINE_BLOCKED child shell\n    at blocked (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:31:13)\n    at childCommand (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:225:28)\n    at cp.<computed> [as spawnSync] (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:237:15)\n    at terminate (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:74:12)\n    at converted (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:77:18)\n    at F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:96:61\n    at check (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:89:9)\n    at Object.<anonymous> (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:96:3)\n    at Module._compile (node:internal/modules/cjs/loader:1705:14)\n    at Object..js (node:internal/modules/cjs/loader:1838:10)",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "CHROME.EXE",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "unknown PID cannot reach taskkill",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "exit removes only owned browser registration",
+      "status": "FAIL",
+      "error": "Error: OFFLINE_BLOCKED child shell\n    at blocked (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:31:13)\n    at childCommand (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:225:28)\n    at cp.<computed> [as spawnSync] (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:237:15)\n    at terminate (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:74:12)\n    at converted (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:77:18)\n    at F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:99:28\n    at check (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:89:9)\n    at Object.<anonymous> (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:98:40)\n    at Module._compile (node:internal/modules/cjs/loader:1705:14)\n    at Object..js (node:internal/modules/cjs/loader:1838:10)",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "close removes only owned browser registration",
+      "status": "FAIL",
+      "error": "Error: OFFLINE_BLOCKED child shell\n    at blocked (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:31:13)\n    at childCommand (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:225:28)\n    at cp.<computed> [as spawnSync] (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:237:15)\n    at terminate (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:74:12)\n    at converted (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:77:18)\n    at F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:99:28\n    at check (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:89:9)\n    at Object.<anonymous> (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:98:40)\n    at Module._compile (node:internal/modules/cjs/loader:1705:14)\n    at Object..js (node:internal/modules/cjs/loader:1838:10)",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "old close cannot erase a reused PID owned by a new browser",
+      "status": "FAIL",
+      "error": "Error: OFFLINE_BLOCKED child shell\n    at blocked (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:31:13)\n    at childCommand (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:225:28)\n    at cp.<computed> [as spawnSync] (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:237:15)\n    at terminate (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:74:12)\n    at converted (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:77:18)\n    at F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:103:26\n    at check (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:89:9)\n    at Object.<anonymous> (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:102:1)\n    at Module._compile (node:internal/modules/cjs/loader:1705:14)\n    at Object..js (node:internal/modules/cjs/loader:1838:10)",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "command suffix rejected \" & whoami\"",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "command suffix rejected \" && whoami\"",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "command suffix rejected \" | whoami\"",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "command suffix rejected \"; whoami\"",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "command suffix rejected \"\\n\"",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "command suffix rejected \"\\r\\n\"",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "command suffix rejected \" \"",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "command suffix rejected \" /IM chrome.exe\"",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "nonexact command rejected  taskkill /pid 4101 /T /F",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "nonexact command rejected TASKKILL /pid 4101 /T /F",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "nonexact command rejected taskkill /pid 04101 /T /F",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "nonexact command rejected taskkill /pid 0 /T /F",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "nonexact command rejected taskkill /pid -4101 /T /F",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "nonexact command rejected taskkill /pid 4.101e3 /T /F",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "extra argv rejected",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "extra overloaded argument rejected",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "extra fourth argument rejected",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "only literal shell=true permitted false",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "only literal shell=true permitted cmd.exe",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "only literal shell=true permitted 1",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "ordinary shell remains denied",
+      "status": "PASS",
+      "calls": []
+    },
+    {
+      "name": "browser launch through shell remains denied",
+      "status": "PASS",
+      "calls": []
+    },
+    {
+      "name": "spawn cannot use cleanup exception",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "execFile cannot use cleanup exception",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "execFileSync cannot use cleanup exception",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "direct taskkill.exe remains denied even for an owned PID",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "Node child is not a cleanup target",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Users/01386380/.workbuddy/binaries/node/versions/22.22.2-6/node.exe",
+          "args": [
+            "--headless=new",
+            "about:blank"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "synchronous Chrome result is not a live child registration",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawnSync",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "invalid returned child PID rejected undefined",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "invalid returned child PID rejected 0",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "invalid returned child PID rejected -1",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "invalid returned child PID rejected 1.5",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "invalid returned child PID rejected 4101",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "forced Chrome network flags survive hostile caller flags",
+      "status": "PASS",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "failed taskkill status and stderr are returned unchanged",
+      "status": "FAIL",
+      "error": "Error: OFFLINE_BLOCKED child shell\n    at blocked (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:31:13)\n    at childCommand (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:225:28)\n    at cp.<computed> [as spawnSync] (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:237:15)\n    at terminate (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:74:12)\n    at converted (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:77:18)\n    at F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:141:18\n    at check (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:89:9)\n    at Object.<anonymous> (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:139:1)\n    at Module._compile (node:internal/modules/cjs/loader:1705:14)\n    at Object..js (node:internal/modules/cjs/loader:1838:10)",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    },
+    {
+      "name": "taskkill launch error is returned unchanged",
+      "status": "FAIL",
+      "error": "Error: OFFLINE_BLOCKED child shell\n    at blocked (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:31:13)\n    at childCommand (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:225:28)\n    at cp.<computed> [as spawnSync] (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js:237:15)\n    at terminate (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:74:12)\n    at converted (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:77:18)\n    at F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:145:18\n    at check (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:89:9)\n    at Object.<anonymous> (F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-chrome-cleanup-selftest.js:143:1)\n    at Module._compile (node:internal/modules/cjs/loader:1705:14)\n    at Object..js (node:internal/modules/cjs/loader:1838:10)",
+      "calls": [
+        {
+          "method": "spawn",
+          "command": "C:/Program Files/Google/Chrome/Application/chrome.exe",
+          "args": [
+            "--headless=new",
+            "about:blank",
+            "--proxy-server=http://127.0.0.1:9",
+            "--proxy-bypass-list=127.0.0.1;localhost;[::1]",
+            "--host-resolver-rules=MAP * 127.0.0.1, EXCLUDE localhost",
+            "--disable-quic",
+            "--force-webrtc-ip-handling-policy=disable_non_proxied_udp",
+            "--disable-background-networking",
+            "--disable-component-update",
+            "--disable-domain-reliability",
+            "--disable-sync",
+            "--no-first-run"
+          ],
+          "options": {
+            "windowsHide": true,
+            "env": {
+              "RP_OFFLINE": "1",
+              "RP_OFFLINE_STORE": "F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-config-store.json",
+              "NODE_OPTIONS": "--require=F:\\workbuddy\\9\\.superpowers\\sdd\\2026-10-20-business-flow-remediation\\offline-preload.js",
+              "PUBLIC_BASE_URL": "http://127.0.0.1:8600"
+            }
+          },
+          "callback": "undefined"
+        }
+      ]
+    }
+  ]
+}

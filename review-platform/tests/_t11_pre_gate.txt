@@ -1,0 +1,12 @@
+OP exit=0 1.4s fails=0 :: 24 passed, 0 failed -> ALL PASS
+RQ exit=0 4.8s fails=0 :: 29 passed, 0 failed -> ALL PASS
+C2 exit=0 3.3s fails=0 :: 23 passed, 0 failed -> ALL PASS
+AV exit=0 8.8s fails=0 :: 40 passed, 0 failed -> ALL PASS
+AV2 exit=0 33.8s fails=0 :: 27 passed, 0 failed -> ALL PASS
+LM exit=0 29.4s fails=0 :: 41 passed, 0 failed -> ALL PASS
+CH exit=0 26.3s fails=0 :: 45 passed, 0 failed -> ALL PASS
+DL exit=0 12.4s fails=0 :: 70 passed, 0 failed -> ALL PASS
+API exit=0 14.0s fails=0 :: 29 passed, 0 failed -> ALL PASS
+gate exit=0 3.2s fails=0 :: 3 passed, 0 failed -> ALL PASS
+DA exit=0 13.2s fails=0 :: ALL PASS
+R exit=0 20.7s fails=0 :: 45 passed, 0 failed -> ALL PASS | 红绿用例(★red): 20 PASS / 0 FAIL (绿证据: 旧代码已先行 FAIL 留档则红绿成立)

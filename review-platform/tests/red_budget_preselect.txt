@@ -1,0 +1,7 @@
+FAIL - BP-01 新建不预选列表外预算且不拉其详情 | selected=99, disabled=false
+FAIL - BP-02 新建列表外预算明确提示重新选择 | selected=99, disabled=false
+PASS - BP-03 新建本人已锁预算仍自动选中 | selected=11, disabled=false
+PASS - BP-04 编辑列表外当前关联仍逐字保留 | selected=99, disabled=false
+FAIL - BP-05 新建未锁预算不预选 | selected=12, disabled=false
+PASS - BP-06 编辑当前未锁预算仍保留 | selected=12, disabled=false
+3 passed, 3 failed -> SOME FAIL

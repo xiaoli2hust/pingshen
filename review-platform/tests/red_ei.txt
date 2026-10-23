@@ -1,0 +1,20 @@
+FAIL - EI-01 预算 Excel 导入 200 + draft 状态
+FAIL - EI-02 17 字段白名单清洗落库(fields 数) | fields=0
+FAIL - EI-03a income=226415.09(六组锚定①)
+FAIL - EI-03b salesLabor=41448(②)
+FAIL - EI-03c tax=2264.15(③)
+FAIL - EI-03d incentive=13298.13(④)
+FAIL - EI-03e contribution=12508.82(⑤)
+FAIL - EI-03f margin=5.52(⑥)
+FAIL - EI-03g 未自动锁定(人确认门)
+FAIL - EI-04 真实评审表导入: contract=240000 + matched>=8 | matched=undefined
+FAIL - EI-05 评审 Excel 导入 200 + draft
+FAIL - EI-06 评审核心字段命中(customer/contract_amount/gross_margin) | {}
+FAIL - EI-06b gross_margin 归一化(0.15→15)
+FAIL - EI-06c 小数格式毛利率自动×100(15) | gm=undefined
+FAIL - EI-07 真实评审表导入: matched>=10 + opp_code 命中 | matched=undefined
+FAIL - EI-08a 毒件拒绝(400/502) | status=404
+FAIL - EI-08b 结构键注入被白名单丢弃
+PASS - EI-09 单次导入耗时<3s | 5ms
+
+1 passed, 17 failed -> SOME FAIL

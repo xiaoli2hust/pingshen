@@ -1,0 +1,16 @@
+PASS - DG-01a opps 保留 7 且全为真实码 | 7
+PASS - DG-01b reviews 保留 6 | 6
+PASS - DG-01c budgets 保留 6 且全 locked | 6
+PASS - DG-01d opp_delivery 保留 7 全 confirmed | 7
+PASS - DG-01e budget_delivery 与 robot_outbox 归零 | {"budget_delivery":0,"robot_outbox":0}
+PASS - DG-01f tasks 保留 55 且无夹具宿主 | 55
+PASS - DG-01g users/settings/llm_calls 未被波及 | {"users":10,"settings":20}
+PASS - DG-03a 零夹具码残留
+PASS - DG-03b 空商机码评审单归零
+PASS - DG-03c 1 售前 + 5 投标
+PASS - DG-03d 1 returned + 5 archived
+PASS - DG-03e 1 红 + 5 黄
+PASS - DG-06 六张真实单六字段逐行一致 | "{\"actual\":[[1,\"bid\",\"PL00007297\",\"returned\",\"red\",1],[2,\"presale\",\"PL00008330\",\"archived\",\"yellow\",2],[3,\"bid\",\"PL00006204\",\"archived\",\"yellow\",3],[4,\"bid\",\"PL00008026\",\"archived\",\"yellow\",4],[5,\"bid\",\"PL00008210\",\"archived\",\"yellow\",5],[6,\"bid\",\"PL00008314\",\"archived\",\"yellow\",6]],\"match\":true}"
+PASS - SM-01b 清理后僵尸 pending 归零 | {"pending":0,"zombie":0,"orphan":0}
+PASS - DG-01h events/attachments/agent_messages 仅剩真实单 | {"events":93,"attachments":0,"agent_messages":18}
+15 passed, 0 failed -> ALL PASS

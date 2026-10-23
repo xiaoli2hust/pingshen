@@ -1,0 +1,21 @@
+{
+  "label": "rejection-i1-final-chrome",
+  "started": "2026-10-20T19:46:12.939Z",
+  "ended": "2026-10-20T19:46:13.526Z",
+  "runtime": "v22.22.2",
+  "executable": "C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe",
+  "scope": "unmodified Chrome cleanup VM selftest; no real Chrome/kill/app/DB/config/network",
+  "hashes": {
+    "preload": "669c56f487378b622b5d0c2e0894fee70adec3ffa952681d08aa7bc8602d3b1e",
+    "selftest": "c9c4c0884d9ff765b1814acbaf09199b0f88fde2a7f0211c776516ce095a1df4"
+  },
+  "status": "PASS",
+  "exit_status": 0,
+  "signal": null,
+  "error": null,
+  "checks": 47,
+  "passed": 47,
+  "failed": 0,
+  "stdout": "PASS owned live Chrome exact Playwright form converts without shell\nPASS owned Chrome accepts explicitly empty argv only\nPASS execFile Chrome is registered\nPASS recognized browser executable msedge.exe\nPASS recognized browser executable chromium.exe\nPASS recognized browser executable headless_shell.exe\nPASS recognized browser executable CHROME.EXE\nPASS unknown PID cannot reach taskkill\nPASS exit removes only owned browser registration\nPASS close removes only owned browser registration\nPASS old close cannot erase a reused PID owned by a new browser\nPASS command suffix rejected \" & whoami\"\nPASS command suffix rejected \" && whoami\"\nPASS command suffix rejected \" | whoami\"\nPASS command suffix rejected \"; whoami\"\nPASS command suffix rejected \"\\n\"\nPASS command suffix rejected \"\\r\\n\"\nPASS command suffix rejected \" \"\nPASS command suffix rejected \" /IM chrome.exe\"\nPASS nonexact command rejected  taskkill /pid 4101 /T /F\nPASS nonexact command rejected TASKKILL /pid 4101 /T /F\nPASS nonexact command rejected taskkill /pid 04101 /T /F\nPASS nonexact command rejected taskkill /pid 0 /T /F\nPASS nonexact command rejected taskkill /pid -4101 /T /F\nPASS nonexact command rejected taskkill /pid 4.101e3 /T /F\nPASS extra argv rejected\nPASS extra overloaded argument rejected\nPASS extra fourth argument rejected\nPASS only literal shell=true permitted false\nPASS only literal shell=true permitted cmd.exe\nPASS only literal shell=true permitted 1\nPASS ordinary shell remains denied\nPASS browser launch through shell remains denied\nPASS spawn cannot use cleanup exception\nPASS execFile cannot use cleanup exception\nPASS execFileSync cannot use cleanup exception\nPASS direct taskkill.exe remains denied even for an owned PID\nPASS Node child is not a cleanup target\nPASS synchronous Chrome result is not a live child registration\nPASS invalid returned child PID rejected undefined\nPASS invalid returned child PID rejected 0\nPASS invalid returned child PID rejected -1\nPASS invalid returned child PID rejected 1.5\nPASS invalid returned child PID rejected 4101\nPASS forced Chrome network flags survive hostile caller flags\nPASS failed taskkill status and stderr are returned unchanged\nPASS taskkill launch error is returned unchanged\nCHROME CLEANUP PASS checks=47 failed=0\n",
+  "stderr": ""
+}

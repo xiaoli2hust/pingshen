@@ -1,0 +1,46 @@
+PASS - IA-1 zhichizu 导航六项 | 实得:首页,全部商机,待办打灯,研判台,归档库,解析器实验室
+PASS - IA-2 扁平无分组div + 归档库文本保留
+PASS - IA-6 首页含我的待办(支持组=待研判)
+FAIL - IA-7 商机360°七标签(概览/信息收集/前置评审/结论管理/数据分析/对话/归档) | 实得:概览,预算,评审表,前置灯态,结论,对话,归档
+FAIL - IA-15 概览链路进度条 #oppChain + ①②③ + 三 dot | #oppChain=0 .chain-dot=0
+FAIL - IA-18 旧深链 t=budget 高亮「信息收集」且 hash 收敛 t=collect | 高亮=预算 hash=#/opp/PL00008572?t=budget
+FAIL - IA-19 旧深链 t=light 高亮「前置评审」且 hash 收敛 t=pre | 高亮=前置灯态 hash=#/opp/PL00008572?t=light
+FAIL - IA-8 信息收集三卡齐在+ #opdlvTable===1 + #opdlvSum 含交付成本合计 | EX:page.click: Timeout 6000ms exceeded.
+Call log:
+[2m  - waiting for locator('#oppTabs button:text-is("信息收集")')[22m
+
+FAIL - IA-9 前置评审含评判指标/部门/轮次留痕 | 点签/取文失败:page.click: Timeout 6000ms exceeded.
+Call log:
+[2m  - waiting for locator('#oppTabs button:text-is("前置评审")')[22m
+
+FAIL - IA-16 结论管理含灯色汇总 | 点签/取文失败:page.click: Timeout 6000ms exceeded.
+Call log:
+[2m  - waiting for locator('#oppTabs button:text-is("结论管理")')[22m
+
+FAIL - IA-17 数据分析为 P2 空态占位 | 点签/取文失败:page.click: Timeout 6000ms exceeded.
+Call log:
+[2m  - waiting for locator('#oppTabs button:text-is("数据分析")')[22m
+
+PASS - IA-10 对话标签含该商机目标(预算/评审表)
+PASS - IA-11 向导三编制方式(对话式/表单式/Excel)
+PASS - IA-12 #/reviews 重定向 #/opps | hash=#/opps
+PASS - IA-13 商机列表渲染(商机代码列)
+FAIL - IA-20 列表「链路进度」列在最新灯态前且每行有 .chain-mini | 表头=商机代码,项目(取首个单据名),预算单,评审单,最新灯态,操作 链路列=-1 灯态列=4 tr=543 .chain-mini=0
+FAIL - IA-8b confirmed≠只读: 三写入口可点 + 改行保存回草稿 + chain 回① + G2 重新拦 400 | EX:page.click: Timeout 6000ms exceeded.
+Call log:
+[2m  - waiting for locator('#oppPage button:text-is("+ 加行")')[22m
+
+FAIL - IA-20b D-16 挂靠建单入口可点且新建单进②表 + 预算工作台可达 | EX:page.click: Timeout 6000ms exceeded.
+Call log:
+[2m  - waiting for locator('#oppPage [data-obc]')[22m
+
+PASS - IA-14 旧深链 #/agent?b= 对话窗仍可用
+PASS - COMPAT-1 #/review/:id 详情页可用 | id=3284
+PASS - COMPAT-2 #/tasks 任务表格结构不变
+PASS - IA-3 fde1 导航两项(首页/待办打灯) | 实得:首页,待办打灯
+PASS - IA-6b fde1 首页含我的待办
+PASS - IA-4 sales1 导航三项(首页/我的商机/新商机) | 实得:首页,我的商机,新商机
+PASS - IA-6c sales1 首页含我的待办
+PASS - IA-5 财务BP 导航四项(含待办打灯) | 实得:首页,我的商机,新商机,待办打灯
+
+15 passed, 11 failed -> SOME FAIL
