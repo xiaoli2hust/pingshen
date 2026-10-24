@@ -1,0 +1,19 @@
+PASS - UI-01 登录页 color-scheme=light | light
+PASS - UI-02 工作台数值字体含 Bahnschrift | Bahnschrift, "DIN Alternate", "Roboto Condensed", "Arial Narrow", "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "HarmonyOS Sans SC", MiSans, "Hiragino Sans GB", "Segoe UI", system-ui, sans-serif
+PASS - UI-03 正文字色/卡片底色对比度 ≥ 4.5 | 15.83 rgb(26, 34, 48) on rgb(255, 254, 251)
+PASS - UI-04 次级字色 --text-2/卡片底色对比度 ≥ 4.5 | 8.09
+PASS - UI-05 主按钮背景 = --brand | rgb(42, 75, 179) vs rgb(42, 75, 179)
+PASS - UI-06 360 档案标题商机码 = 路由商机码 | 商机档案 PL00008572编辑档案
+PASS - UI-07 360 灯色汇总 红/黄/绿 = /api/opp/<code>/360 计数 | page=0/0/0 api=0/0/0
+PASS - UI-08 #oppProfileCard 有 4px 顶线 | {"border-top-width":"4px","border-top-style":"solid"}
+PASS - UI-09 原表面板标题 = /api/reviews/<id>/source 文件名 | rid=1 head=【合同签订】PL00007297-百望云区域企业白名单服务合作.xlsx
+PASS - UI-10 #instHead 有 4px 左线 | {"border-left-width":"4px","border-left-style":"solid"}
+PASS - UI-11 评审详情灯色标签文字只取 红灯/黄灯/绿灯 | n=0 
+PASS - UI-12 灯色横幅左色条 = --light-yellow | rgb(185, 119, 14) vs rgb(185, 119, 14)
+PASS - UI-07b 有灯商机 360 红/黄/绿 = /api/opp/<code>/360 计数且非零 | PL00007297 page=1/0/0 api=1/0/0
+PASS - UI-13 预算详情原表面板含「原表里」
+PASS - UI-14 归档库灯色标签非空且文字合法 | n=5 黄灯
+PASS - UI-15 系统设置页由 admin 打开且有卡片 | admin=admin
+PASS - UI-16 390px .srcv-grid 单列且无横向溢出 | {"cols":1,"sw":390,"cw":390}
+PASS - UI-17 console.error 与 pageerror 均为 0
+18 passed, 0 failed -> ALL PASS
