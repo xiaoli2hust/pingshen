@@ -3,7 +3,7 @@ PASS - SC-2 合同金额严格显示 240000
 PASS - SC-3 中文字段与来源位置可见
 PASS - SC-4 原表标签值与跳过格分层
 PASS - SC-4A 四元素原格显示格式化值而非原始值 | {"display":"2026-10-30","raw":"2026-10-30T00:00:00","text":"2026-10-30","title":"2026-10-30"}
-PASS - SC-5 左行点击仅滚动右侧证据面板 | {"active":9,"left":0,"right":560,"pageBefore":0,"pageAfter":0}
+PASS - SC-5 左行点击仅滚动右侧证据面板 | {"active":9,"left":0,"right":498,"pageBefore":0,"pageAfter":0}
 PASS - SC-6 原表点击反选系统行且原格可键盘聚焦
 PASS - SC-7 公式栏精确保留所点非空原格地址和接口完整值 | 附1-预算表!D28 专业服务 !== 附1-预算表!D28 专业服务
 PASS - SC-8 仅差异筛选精确保留全部非一致行并隐藏全部一致行 | {"total":15,"same":11,"expectedVisible":4,"visible":4,"visibleSame":0,"hiddenDiff":0}
@@ -31,7 +31,7 @@ PASS - SC-19E 同ID重挂载拒绝旧元素迟到绘制
 PASS - SC-19F 真详情同评审离开返回拒绝陈旧请求且无pageerror | calls=2 errors=[]
 PASS - SC-19G 首页旧列表请求迟到不在商机页抛pageerror | calls=2 errors=[]
 PASS - SC-24 无导入来源明确显示空状态
-PASS - SC-25 机会交付真实挂载 delivery_opp 来源与十项合计 | /api/opp/PL-SC-1792875473009-127044/delivery/source checks=10
+PASS - SC-25 机会交付真实挂载 delivery_opp 来源与十项合计 | /api/opp/PL-SC-1792878605563-66120/delivery/source checks=10
 PASS - SC-25A 真实接口来源文件名按文本转义 | {"title":"SC-<img src=x onerror=window.__srcvXss=1>.xlsx","injected":false,"expected":"SC-<img src=x onerror=window.__srcvXss=1>.xlsx"}
 PASS - SC-26 真实8068保留原件17.5/导入11.5/当前11.5差异 | 正编人天原件 17.5 · 导入 11.5 · 当前 11.5有差异
 PASS - SC-27 合并投影仅显示非空轴并保留原始行号 | {"spans":40,"preservedGap":true,"axesExact":true,"mergedInteriorCases":0,"mergedInteriorLinked":true,"expectedRows":43,"actualRows":43,"expectedCols":90,"actualCols":90}

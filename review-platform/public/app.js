@@ -486,7 +486,7 @@ async function renderForm(type, editId, oppQ, budgetQ) {
           <div class="t">上传信息收集表，导入为草稿；预算与交付明细分别导入</div>
         </div>
       </div>
-      <div id="oppDialog" style="display:none;margin-bottom:12px;padding:10px;border:1px solid var(--line, #ddd);border-radius:8px">
+      <div id="oppDialog" style="display:none;margin-bottom:12px;padding:10px;border:1px solid var(--line);border-radius:8px">
         <div id="oppDlgLog" style="max-height:220px;overflow:auto;font-size:13px;line-height:1.7;margin-bottom:8px"><div style="color:var(--text-3)">智能体: 请口述商机要素(客户/项目名称/预计合同金额万元/业务线/商机阶段/销售/概述), 识别结果会填入下方表单, 你可随时手改。</div></div>
         <div style="display:flex;gap:8px">
           <input id="oppDlgMsg" style="flex:1" placeholder="例: 江西省自然资源测绘与监测院的天地图 POI 数据服务, 预计 240 万, G1, 销售王超" onkeydown="if(event.key==='Enter')oppDialogSend()">
@@ -508,7 +508,7 @@ async function renderForm(type, editId, oppQ, budgetQ) {
       <div style="margin-top:16px;display:flex;gap:10px;align-items:center">
         <button class="btn pri" onclick="createOppProfile()">建档案并进入下一步 →</button>
         <button class="btn" onclick="location.hash='#/opps'">取消</button>
-        <span id="oppProfileErr" style="font-size:12.5px;color:#A32D2D"></span>
+        <span id="oppProfileErr" style="font-size:12.5px;color:var(--light-red-ink)"></span>
       </div>
       <div class="hint">档案建好后, 该商机的交付预算/项目预算/评审单都在「商机 360° · 信息收集」页签办理; 同一商机可多次发起不同类型评审。</div>
       <div style="font-size:12px;color:var(--text-4);margin:10px 0 4px">或直接从 Excel 建单:</div>
@@ -559,7 +559,7 @@ async function renderForm(type, editId, oppQ, budgetQ) {
         <div style="flex:1;min-width:190px"><button class="btn" style="width:100%" onclick="location.hash='#/agent'">去智能体新建预算单 →</button>
           <div style="font-size:11.5px;color:var(--text-4);margin-top:4px">技能①口述编制→锁定→回本页关联</div></div>
       </div>
-      <div id="budgetGate" style="font-size:12.5px;color:#e0a54a;margin-top:8px">${unavailableBudget ? '该预算单不在你的已锁定列表，请由所有者发起，或选择本人预算单' : budgetOpts.length ? '未选择预算单前无法进入下一步' : '暂无已锁定预算单——先去智能体新建并锁定'}</div>
+      <div id="budgetGate" style="font-size:12.5px;color:var(--light-yellow-ink);margin-top:8px">${unavailableBudget ? '该预算单不在你的已锁定列表，请由所有者发起，或选择本人预算单' : budgetOpts.length ? '未选择预算单前无法进入下一步' : '暂无已锁定预算单——先去智能体新建并锁定'}</div>
     </div>` : ''}
 
     <form onsubmit="return false"><div class="grid">
@@ -830,7 +830,7 @@ async function renderDetail(id, ctxCode, keepTab) {
   const roundSel = maxRound > 1 ? `<select id="instRoundSel" onchange="renderInstRound(this.value)" style="margin-left:8px">${Array.from({ length: maxRound }, (_, i) => `<option value="${i + 1}" ${INST.round === i + 1 ? 'selected' : ''}>第 ${i + 1} 轮</option>`).join('')}</select>` : '';
 
   const banner = r.era === 'history'
-    ? `<div class="light-banner lb-none" style="background:var(--surface-2);border:1px solid var(--border-default)"><span class="dot" style="background:#8b7fd4"></span><div>历史单据${r.opp_code ? ` · 商机代码 <b>${esc(r.opp_code)}</b>` : ''}<div class="sub">${fmtT(r.archived_at)} 评审 · 无前置评审过程(当年无此流程) · 灯态规则 2026 年启用 · 结论:${esc(r.decision_result || '未录入')}</div></div></div>`
+    ? `<div class="light-banner lb-none" style="background:var(--surface-2);border:1px solid var(--border-default)"><span class="dot" style="background:var(--light-gray)"></span><div>历史单据${r.opp_code ? ` · 商机代码 <b>${esc(r.opp_code)}</b>` : ''}<div class="sub">${fmtT(r.archived_at)} 评审 · 无前置评审过程(当年无此流程) · 灯态规则 2026 年启用 · 结论:${esc(r.decision_result || '未录入')}</div></div></div>`
     : r.status === 'judged' || r.status === 'archived'
     ? `<div class="light-banner lb-${r.light}"><span class="dot"></span><div>${LIGHT[r.light][0]}<div class="sub">${esc(r.route || '')}</div></div></div>`
     : r.status === 'returned'
@@ -865,9 +865,9 @@ function instProgressHtml() { // 始终渲染 .progress-seg(IA-36), 按选中轮
   const cnt = Object.fromEntries(['done', 'pending', 'returned', 'cancelled'].map(s => [s, ts.filter(t => t.status === s).length]));
   const total = ts.length || 1;
   return `<div class="progress-seg" style="height:10px;border-radius:5px;overflow:hidden;display:flex">
-    <span style="width:${cnt.done / total * 100}%;background:var(--ok,#4a8)"></span>
-    <span style="width:${cnt.pending / total * 100}%;background:#e0a54a"></span>
-    <span style="width:${cnt.returned / total * 100}%;background:#A32D2D"></span>
+    <span style="width:${cnt.done / total * 100}%;background:var(--light-green)"></span>
+    <span style="width:${cnt.pending / total * 100}%;background:var(--light-yellow)"></span>
+    <span style="width:${cnt.returned / total * 100}%;background:var(--light-red)"></span>
     <span style="width:${cnt.cancelled / total * 100}%;background:var(--text-4)"></span></div>
     <div style="font-size:12px;color:var(--text-4);margin-top:4px">第 ${INST.round} 轮 · 已打灯 ${cnt.done} · 待打灯 ${cnt.pending} · 已退回 ${cnt.returned} · 已作废 ${cnt.cancelled}${ts.length ? '' : '（本轮暂无任务）'}</div>`;
 }
@@ -888,12 +888,12 @@ function renderInstBody(k) { // 四页签全部取 INST 现成数据, 切页签�
       ${INST.attachments.length ? `<ul class="attach-list">${INST.attachments.map(a =>
         `<li><a href="#" data-path="${esc(a.filepath)}" data-name="${esc(a.filename)}" onclick="downloadAttachment(event,this)">${esc(a.filename)}</a> <span style="color:var(--text-4);font-size:12px">${esc(a.field)} · ${fmtT(a.uploaded_at)}</span></li>`).join('')}</ul>` : '<div class="empty">暂无附件</div>'}
       <div style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <select id="attField" style="border:1px solid #d8d9de;border-radius:8px;padding:7px 10px;font-size:13px">
+        <select id="attField" style="border:1px solid var(--border-default);border-radius:8px;padding:7px 10px;font-size:13px">
           <option>项目预算表</option><option>项目变更申请表</option><option>其他材料</option>
         </select>
         <input type="file" id="attFile" style="font-size:12.5px">
         <button class="btn sm" onclick="uploadAtt(${r.id})">上传附件</button>
-        <span style="font-size:12px;color:#ef7b84">* 《项目贡献毛利率及成本预算表》为提交必传,可上传附件或在线填写</span>
+        <span style="font-size:12px;color:var(--light-red-ink)">* 《项目贡献毛利率及成本预算表》为提交必传,可上传附件或在线填写</span>
       </div>
       ${r.budget_id ? `<div style="margin-top:6px">关联预算单: <a href="#/budget-detail/${r.budget_id}">#${r.budget_id}</a>${INST.review.budget_code ? '（' + esc(INST.review.budget_code) + '）' : ''}</div>` : ''}</div>
     ${r.status === 'draft' || !r.budget_id ? `<div class="card"><h3>项目预算表</h3><a class="btn" href="#/budget/${r.id}">在线填写项目预算表 →</a></div>` : ''}`;
@@ -913,7 +913,7 @@ function renderInstBody(k) { // 四页签全部取 INST 现成数据, 切页签�
     const trace = ts.filter(t => t.status === 'done' || t.status === 'returned');
     body.innerHTML = `
     <div class="card"><h3>待我评审</h3>
-      ${myTasks.length ? myTasks.map(t => `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0f1f4">
+      ${myTasks.length ? myTasks.map(t => `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-subtle)">
         <b style="flex:1">${esc(t.ind_name)}</b>
         <button class="btn sm pri" onclick="openTask(${t.id})">打灯评审</button>
       </div>`).join('') : '<div class="empty">本轮暂无待你评审的任务</div>'}</div>
@@ -1158,8 +1158,8 @@ function renderBudgetCalc(c) {
       <tr><td>销售考核利润</td><td>${fmt(c.assessProfit)}</td><td>净收入 − 销售成本</td></tr>
       <tr><td>销售及售前激励</td><td>${fmt(c.incentive)}</td><td>销售考核利润 × 7.7% × 系数</td></tr>
       <tr><td>交付成本</td><td>${fmt(c.delivery)}</td><td>正编人天×部门单价${B_FORM.dev_dept ? '(' + esc(B_FORM.dev_dept) + ')' : ''} + 生产外包人天×单价 + 其他</td></tr>
-      <tr style="background:#EEEDFE"><td><b>贡献毛利</b></td><td><b>${fmt(c.contribution)}</b></td><td>净收入 − 销售成本 − 交付成本 − 激励</td></tr>
-      <tr style="background:#EEEDFE"><td><b>贡献毛利率</b></td><td><b style="color:${low ? '#A32D2D' : '#27500A'}">${margin !== null ? margin.toFixed(2) + '%' : '—'}</b></td><td>${low ? '低于 10%,将判黄灯' : '达到 10% 免上会线'}</td></tr>
+      <tr style="background:var(--brand-soft)"><td><b>贡献毛利</b></td><td><b>${fmt(c.contribution)}</b></td><td>净收入 − 销售成本 − 交付成本 − 激励</td></tr>
+      <tr style="background:var(--brand-soft)"><td><b>贡献毛利率</b></td><td><b style="color:${low ? 'var(--light-red-ink)' : 'var(--light-green-ink)'}">${margin !== null ? margin.toFixed(2) + '%' : '—'}</b></td><td>${low ? '低于 10%,将判黄灯' : '达到 10% 免上会线'}</td></tr>
     </table>`;
 }
 async function renderBudgetDetail(id) {
@@ -1209,14 +1209,14 @@ async function renderBudget(id) {
     <div style="display:flex;gap:10px;align-items:flex-start">
       <textarea id="aiText" placeholder='粘贴文字,例如:"项目合同24万,无分包。交付预计交付处正编39人天、生产外包184人天,差旅3000。"' style="flex:1;min-height:70px"></textarea>
       <div style="display:flex;flex-direction:column;gap:8px">
-        <select id="aiModel" style="border:1px solid #d8d9de;border-radius:8px;padding:7px 10px;font-size:13px">
+        <select id="aiModel" style="border:1px solid var(--border-default);border-radius:8px;padding:7px 10px;font-size:13px">
           <option value="deepseek-chat">Flash 快速版</option>
           <option value="deepseek-reasoner">Pro 增强版</option>
         </select>
         <button class="btn pri" id="aiBtn" onclick="aiFillBudget()">AI 识别填充</button>
       </div>
     </div>
-    <div id="aiNote" style="font-size:12.5px;color:#854F0B;margin-top:6px"></div>
+    <div id="aiNote" style="font-size:12.5px;color:var(--light-yellow-ink);margin-top:6px"></div>
   </div>
   <div class="card"><h3>成本录入</h3>
     ${BUDGET_GROUPS.map(g => `
@@ -1507,7 +1507,7 @@ async function robotReviewGenerate() {
     const d = await api('/api/agent/chat', 'POST', target ? { skill: 'review', review_id: target.id, message: msg } : { skill: 'review', message: msg });
     await robotWbReload(); // 建单路由会新落一张草稿: 先重载列表, 再把本轮回复写进新屏的 #rwrReply
     const el = $('#rwrReply');
-    if (el) el.innerHTML = esc(d.reply || '').replace(/\n/g, '<br>') + (d.degraded ? '<br><span style="color:#ef7b84">(大模型暂不可用,已降级为点选问答)</span>' : '') + '<br><span style="color:var(--text-4)">(只更新草稿,未提交;提交与判灯由服务端裁决)</span>';
+    if (el) el.innerHTML = esc(d.reply || '').replace(/\n/g, '<br>') + (d.degraded ? '<br><span style="color:var(--light-red-ink)">(大模型暂不可用,已降级为点选问答)</span>' : '') + '<br><span style="color:var(--text-4)">(只更新草稿,未提交;提交与判灯由服务端裁决)</span>';
     toast('本轮口述已回写(未提交)');
   } catch (e) { toast(e.message, 1); } // 400/403 一律透传后端文案, 前端不预判
   finally { const b = $('#rwrGenerate'); if (b) { b.disabled = rwbCanEdit() ? false : true; b.textContent = '生成草稿'; } }
@@ -1747,9 +1747,9 @@ async function sendAgentReviewMsg() { // 技能②发送: skill='review' → 建
     AGV.missing = d.missing || [];
     AGV.preview = d.preview || null;
     AGV.reviewId = d.review_id || AGV.reviewId;
-    box.insertAdjacentHTML('beforeend', `<div class="msg assistant">${esc(d.reply || '').replace(/\n/g, '<br>')}${d.degraded ? '<br><span style="color:#ef7b84;font-size:12px">(大模型暂不可用,已降级)</span>' : ''}</div>`);
+    box.insertAdjacentHTML('beforeend', `<div class="msg assistant">${esc(d.reply || '').replace(/\n/g, '<br>')}${d.degraded ? '<br><span style="color:var(--light-red-ink);font-size:12px">(大模型暂不可用,已降级)</span>' : ''}</div>`);
     if (AGV.missing.length === 0 && AGV.status === 'draft' && !AGV.preview)
-      $('#agWidget').innerHTML = `<div style="font-size:13px;color:#3fc09c;margin-bottom:8px">必填项已齐,可提交评审或发"预判一下灯"。</div>`;
+      $('#agWidget').innerHTML = `<div style="font-size:13px;color:var(--light-green-ink);margin-bottom:8px">必填项已齐,可提交评审或发"预判一下灯"。</div>`;
     else $('#agWidget').innerHTML = '';
     renderAgentReviewPreview();
   } catch (e) { toast(e.message, 1); }
@@ -1761,7 +1761,7 @@ function renderAgentReviewPreview() { // 技能②右列: 评审草稿字段只�
   const zh = AGV.preview ? ({ red: '红灯', yellow: '黄灯', green: '绿灯' }[AGV.preview.light] || AGV.preview.light) : null;
   el.innerHTML = `
   <h3>评审草稿(只读,缺项高亮)</h3>
-  ${AGV.missing.length ? `<div style="font-size:13px;color:#ef7b84;margin-bottom:8px">必填还缺 ${AGV.missing.length} 项:${AGV.missing.map(k => fields.find(f => f.k === k)?.l || k).join('/')}</div>` : '<div style="font-size:13px;color:#3fc09c;margin-bottom:8px">必填项已齐。</div>'}
+  ${AGV.missing.length ? `<div style="font-size:13px;color:var(--light-red-ink);margin-bottom:8px">必填还缺 ${AGV.missing.length} 项:${AGV.missing.map(k => fields.find(f => f.k === k)?.l || k).join('/')}</div>` : '<div style="font-size:13px;color:var(--light-green-ink);margin-bottom:8px">必填项已齐。</div>'}
   <table>${fields.map(f => `<tr${AGV.missing.includes(f.k) ? ' style="background:var(--danger-soft)"' : ''}><th style="width:46%">${f.l}</th><td>${esc(AGV.draft[f.k] ?? '')}</td></tr>`).join('')}</table>
   ${AGV.preview ? `
   <div class="margin-card${AGV.preview.light === 'yellow' || AGV.preview.light === 'red' ? ' warn' : ''}">
@@ -1817,7 +1817,7 @@ async function agentFillSubmit() { // H-02: 逐项点选补齐, 走 PUT 白名�
     AG.missing = AG_MISSING.filter(k => AG.draft[k] === undefined || AG.draft[k] === null || AG.draft[k] === '');
     renderAgentPreview();
     $('#agWidget').innerHTML = AG.missing.length === 0
-      ? `<div style="font-size:13px;color:#3fc09c;margin-bottom:8px">必填项已齐,可锁定。</div>${AG.status === 'draft' ? `<button class="btn pri" onclick="agentLock()">确认锁定 v${AG.version}</button>` : ''}`
+      ? `<div style="font-size:13px;color:var(--light-green-ink);margin-bottom:8px">必填项已齐,可锁定。</div>${AG.status === 'draft' ? `<button class="btn pri" onclick="agentLock()">确认锁定 v${AG.version}</button>` : ''}`
       : `<div style="font-size:13px;color:var(--text-3)">还缺 ${AG.missing.length} 项(${AG.missing.map(k => AG_MISSING_LABELS[k] || k).join('/')}),可继续对话或点选补齐。</div>`;
     toast('已补齐写入预算单');
   } catch (e) { toast(e.message, 1); }
@@ -1827,7 +1827,7 @@ async function agentLock() { // H-03: 人确认门——只有按钮能锁定, �
     await api('/api/budget/' + AG.budgetId + '/lock', 'POST');
     AG.status = 'locked';
     refreshAgentTop();
-    $('#agWidget').innerHTML = `<div style="font-size:13px;color:#3fc09c;margin-bottom:8px">已锁定 v${AG.version}。如需修改,请新建新版本。</div><button class="btn" onclick="agentNewVersion()">新建新版本 v${AG.version + 1}</button>`;
+    $('#agWidget').innerHTML = `<div style="font-size:13px;color:var(--light-green-ink);margin-bottom:8px">已锁定 v${AG.version}。如需修改,请新建新版本。</div><button class="btn" onclick="agentNewVersion()">新建新版本 v${AG.version + 1}</button>`;
     toast('已锁定 v' + AG.version + ',可在新建评审单时关联');
   } catch (e) { toast(e.message, 1); }
 }
@@ -1845,7 +1845,7 @@ function renderAgentPreview() { // 右列 45%: 分组只读 + 本轮变更高亮
   const low = margin !== null && margin < 10;
   el.innerHTML = `
   <a href="#/delivery/${AG.budgetId}" class="card" style="display:block;margin-bottom:10px;padding:10px 14px;text-decoration:none">
-    <b>交付成本评估明细(附3)</b> <span style="float:right;color:#6ea6e8;font-size:13px">上传/编制 →</span>
+    <b>交付成本评估明细(附3)</b> <span style="float:right;color:var(--brand);font-size:13px">上传/编制 →</span>
     <div style="font-size:12px;color:var(--text-3);margin-top:4px">锁定预算单前须编制交付明细(递进附件)</div>
   </a>
   <h3>预算草稿(只读,本轮变更高亮)</h3>
@@ -2255,7 +2255,7 @@ function opp360Paint(code, d, legacyT) {
   const dlvSt = (d.delivery || {}).status || 'none';
   const pf = d.profile || { fields: {}, sources: {}, missing: [] };
   const srcTag = k => { const s = (pf.sources || {})[k]; if (!s) return ''; const m = { review: '评审', archive: '档案' }; return `<span style="font-size:11px;color:var(--text-4);margin-left:4px">${m[s.source] || s.source || ''}${s.scope === 'cross' ? '·跨型' : ''}</span>`; };
-  const miss = k => (pf.missing || []).includes(k) ? `<span data-missing style="font-size:11px;color:#e0a54a">待补</span>` : '';
+  const miss = k => (pf.missing || []).includes(k) ? `<span data-missing style="font-size:11px;color:var(--light-yellow-ink)">待补</span>` : '';
   const pfRows = OPP_FIELDS.map(k => `<tr><td>${OPP_FIELD_NAMES[k] || k}</td><td>${esc((pf.fields || {})[k] ?? '')}${srcTag(k)} ${miss(k)}</td></tr>`).join('');
   // D-21: 360 的 d.delivery 是**摘要**(rows 为计数), 行集明细由 opdlvMount 二次拉取; 先回填 OPDLV 再渲染
   const dl = d.delivery || null;
@@ -2606,7 +2606,7 @@ async function renderLlmAdmin() {
       <td><button class="btn" onclick="probeLlm('${r.name}')">连通性探针</button><div id="probe_${r.name}" style="font-size:12px;margin-top:4px"></div></td></tr>`).join('');
     const profForms = ['default', 'budget', 'review', 'parser'].map(n => {
       const o = pm[n] || {};
-      return `<div class="f-item full" style="border-top:1px solid var(--line, #eee);padding-top:8px"><label><b>${esc(LLM_PROF_LABEL[n])}</b>（${n}）覆盖项，留空表示沿用回退链</label>
+      return `<div class="f-item full" style="border-top:1px solid var(--line);padding-top:8px"><label><b>${esc(LLM_PROF_LABEL[n])}</b>（${n}）覆盖项，留空表示沿用回退链</label>
         <div class="f-grid">
           <div class="f-item"><label>base</label><input id="pf_${n}_base" value="${esc(o.base || '')}" placeholder="http(s)://…"></div>
           <div class="f-item"><label>model</label><input id="pf_${n}_model" value="${esc(o.model || '')}"></div>
@@ -3009,7 +3009,7 @@ async function renderParserLab() {
     <div style="margin-top:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
       <button class="btn pri sm" onclick="labSaveMap2()" ${lab.dirty ? '' : 'disabled'}>保存调优</button>
       <button class="btn sm" onclick="labRevert()">放弃未保存修改</button>
-      <button class="btn sm" onclick="labClearMap()" style="color:#e06c75">全部恢复内置</button>
+      <button class="btn sm" onclick="labClearMap()" style="color:var(--light-red-ink)">全部恢复内置</button>
       <span id="labMapMsg" style="font-size:12px;color:var(--text-3)"></span>
     </div>
   </div>`;
@@ -3103,7 +3103,7 @@ async function labRun() {
     const d = await api('/api/admin/parser-lab', 'POST', { filename: f.name, type: $('#labType').value, sheet: $('#labSheet').value.trim(), use_override: $('#labOv').checked, data: btoa(bin) });
     window._lab.last = d;
     out.innerHTML = labRenderResult(d);
-  } catch (e) { out.innerHTML = `<div class="empty" style="color:#e06c75">${esc(e.message)}</div>`; }
+  } catch (e) { out.innerHTML = `<div class="empty" style="color:var(--light-red-ink)">${esc(e.message)}</div>`; }
 }
 function labRenderResult(d) {
   const audit = d.audit || [];
@@ -3143,7 +3143,7 @@ function labRenderResult(d) {
             <td style="font-family:monospace;font-size:11px">${x.pos ? 'R' + x.pos[0] + 'C' + x.pos[1] : (valPos ? 'R' + valPos[0] + 'C' + valPos[1] : '')}</td>
             <td style="max-width:200px">${esc(x.raw || '')}</td>
             <td style="max-width:200px">${x.key ? esc(x.parsed == null ? '未采集' : String(x.parsed)) : '<span style="color:var(--text-4)">—</span>'}</td>
-            <td>${x.key ? (x.ok ? '<span style="color:#3fc09c">✓</span>' : '<span style="color:#e06c75">✗</span>') : ''}</td>
+            <td>${x.key ? (x.ok ? '<span style="color:var(--light-green-ink)">✓</span>' : '<span style="color:var(--light-red-ink)">✗</span>') : ''}</td>
             <td>${canTune ? `<select id="tune-${esc(x.label).replace(/[^\w]/g, '_')}" style="border:1px solid var(--border-default);border-radius:var(--r-m);padding:4px 6px;font-size:12px;background:var(--control-bg);color:var(--text-1)">
               <option value="">选字段…</option>
               ${labFieldOptions().map(o => `<option value="${o.sec}|${o.k}">${o.label}</option>`).join('')}
@@ -3198,7 +3198,7 @@ async function labClearMap() {
     renderParserLab();
   } catch (e) { labMapMsg(e.message, 1); }
 }
-function labMapMsg(msg, err) { const el = $('#labMapMsg'); if (el) { el.textContent = msg; el.style.color = err ? '#e06c75' : 'var(--text-3)'; } }
+function labMapMsg(msg, err) { const el = $('#labMapMsg'); if (el) { el.textContent = msg; el.style.color = err ? 'var(--light-red-ink)' : 'var(--text-3)'; } }
 
 // ---- 归档库(顶部 BI 分析区 + 明细列表, docs/归档库BI产品方案.md) ----
 async function renderArchive() {

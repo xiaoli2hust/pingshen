@@ -5,7 +5,7 @@
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 372.8133
+# duration_ms 591.9206
 
 ==== A-05~07/13 agent 核心(纯函数) ====
 # pass 7
@@ -13,7 +13,7 @@
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 328.9483
+# duration_ms 375.701
 
 ==== RO-01~04 机器人编排纯函数 ====
 # pass 9
@@ -21,7 +21,7 @@
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 300.7982
+# duration_ms 344.2793
 
 ==== API-01~20+S-01~06 预算 API(HTTP) ====
 PASS - S-06 重提 round=2
@@ -42,7 +42,7 @@ config.json LLM_BASE_URL 已恢复
 ==== RW-01~16 机器人工作台与外发箱(HTTP) ====
 PASS - RW-14 admin preview 重放同键返回同一 outbox_id 且行数不增；双推由 RB-07b 守护 | preview=200/200 ids=820/820 rows=1->1
 PASS - RW-13b webhook 不可用时入箱仍完整且不阻断提交 | 探活=200/false/请求失败:Failed to conne 真源=db:75 矩阵放行=1 submit=200/reviewing tasks=10 depts=6 outbox=6 pend合计=10
-CLEANUP - PL-RW-1792874697005 opps/budgets/reviews=0/0/0 robot_outbox 删除/残留=21/0 故障实例残留=0
+CLEANUP - PL-RW-1792877815714 opps/budgets/reviews=0/0/0 robot_outbox 删除/残留=21/0 故障实例残留=0
 PASS - RW-13c 本轮夹具自清: robot_outbox 零残留且故障注入实例已摘除 | outbox 删除=21 残留=0 注入实例残留=0
 
 19 passed, 0 failed -> ALL PASS
@@ -50,7 +50,7 @@ PASS - RW-13c 本轮夹具自清: robot_outbox 零残留且故障注入实例已
 ==== R-01~34 规则矩阵 preview-light + 闭环/SEC ====
 PASS - R-32 (yellow/1 项非绿)
 PASS - R-34 (yellow/1 项非绿)
-preview-light 批量 32 条耗时 6582ms (性能冒烟门槛 <10s, 不硬卡)
+preview-light 批量 32 条耗时 6878ms (性能冒烟门槛 <10s, 不硬卡)
 
 45 passed, 0 failed -> ALL PASS
 红绿用例(★red): 20 PASS / 0 FAIL (绿证据: 旧代码已先行 FAIL 留档则红绿成立)
@@ -88,7 +88,7 @@ PASS - T3-03 change 无关联提交不受影响(200) | status=200
 
 ==== EI-01~09 Excel 导入(六组锚定+安全+性能) ====
 PASS - EI-11b 评审 PUT 挂上同商机已锁定预算 | 216
-PASS - EI-11c 仅挂预算不清空 form_json | {"opp_code":"PL-EI11-1792874838287","opp_name":"EI-11 挂链测试","contract_amount":24,"sub_amount":0,"gross_margin":15,"cost_happened":0,"ops_years":1,"survey":"否","secret":"否","guarantee":"否","non_compete":"否","data_review":"否","opp_stage":"投标决策","region":"华北营销处","customer":"Excel导入测试客户","biz_line":"G1","sales":"测试销售","pm":"测试PM","sign_date":"2026-12-31","sign_path":"客户→丰图科技","province":"江西省","settle_method":"银行转账","payment_terms":"验收后付款","summary":"否"}
+PASS - EI-11c 仅挂预算不清空 form_json | {"opp_code":"PL-EI11-1792877965051","opp_name":"EI-11 挂链测试","contract_amount":24,"sub_amount":0,"gross_margin":15,"cost_happened":0,"ops_years":1,"survey":"否","secret":"否","guarantee":"否","non_compete":"否","data_review":"否","opp_stage":"投标决策","region":"华北营销处","customer":"Excel导入测试客户","biz_line":"G1","sales":"测试销售","pm":"测试PM","sign_date":"2026-12-31","sign_path":"客户→丰图科技","province":"江西省","settle_method":"银行转账","payment_terms":"验收后付款","summary":"否"}
 PASS - EI-11d 不存在预算被唯一裁判拒绝 | 预算单不存在
 PASS - EI-11e 挂链后真实提交到 reviewing 并创建任务 | {"submit":200,"status":"reviewing","tasks":10}
 
@@ -119,25 +119,25 @@ PASS - OC-06 预算列表 q=PL00008572 命中 opp_code | rows=3
 11 passed, 0 failed -> ALL PASS
 
 ==== OP-01~14 商机档案 CRUD(HTTP) ====
-PASS - OP-12 title 继承评审标题(实 "OP12-评审标题-4977030")
-PASS - OP-13 既有档案 title 未被覆盖(before="T2测试商机-4977030-01" after="T2测试商机-4977030-01")
+PASS - OP-12 title 继承评审标题(实 "OP12-评审标题-8106203")
+PASS - OP-13 既有档案 title 未被覆盖(before="T2测试商机-8106203-01" after="T2测试商机-8106203-01")
 PASS - OP-14 重复隐式建档后 GET 仍 200 无报错(实 200)
-PASS - OP-14 档案仍为单份且保留首档标题(opp_code 为主键, 实 "OP14-第一张-4977030")
+PASS - OP-14 档案仍为单份且保留首档标题(opp_code 为主键, 实 "OP14-第一张-8106203")
 
 24 passed, 0 failed -> ALL PASS
 
 ==== DL-01~23 商机级交付预算(G1 确认门+分流+派生列守护) ====
 PASS - DL-22 对话后仍走商机级分流(GET 200 且 rate_source 有值)
 PASS - DL-23 apply 刷新交付科目 200(实 200)
-PASS - DL-23 apply 后派生列未被洗(实 "PL-T2-4978896-dl23")
+PASS - DL-23 apply 后派生列未被洗(实 "PL-T2-8107828-dl23")
 PASS - DL-23 apply 后四科目按明细刷新(dev_pd=6)
 
 71 passed, 0 failed -> ALL PASS
 
 ==== CH-01~16b 三步链门禁(G2/G3/G4 六态+D-23 反事实锚) ====
-PASS - CH-16b 同商机经 opp 锚定路径仍拦 400(实 400) | error=三步链未闭合:商机 PL-T3-mvh8iw7bd4-ch16 的交付预算未确认或缺失(① 交付预算 → ② 项目预算 → ③ 评审单),请先确认再提交
+PASS - CH-16b 同商机经 opp 锚定路径仍拦 400(实 400) | error=三步链未闭合:商机 PL-T3-mxca9x0a13-ch16 的交付预算未确认或缺失(① 交付预算 → ② 项目预算 → ③ 评审单),请先确认再提交
 PASS - CH-16b 400 文案指到三步链
-OWNED run=mvh8iw7bd4 prefix=PL-T3-mvh8iw7bd4- codes=["PL-T3-mvh8iw7bd4-ch11a"] reviews=[283,284] budgets=[247] (cleanup: parent guard restore, 本套无 SQL 清理)
+OWNED run=mxca9x0a13 prefix=PL-T3-mxca9x0a13- codes=["PL-T3-mxca9x0a13-ch11a"] reviews=[283,284] budgets=[247] (cleanup: parent guard restore, 本套无 SQL 清理)
 NOT EXECUTABLE CH-11b legacy-state G4 mutation coverage gap(不可计为PASS)
 
 45 passed, 0 failed, 1 NOT EXECUTABLE -> EXECUTED PASS + 1 COVERAGE GAP(不可计为全绿) [CH-11b legacy-state G4 mutation coverage gap(不可计为PASS)]
@@ -155,7 +155,7 @@ PASS - RQ-10 meta 响应为可 JSON 解析的纯数据(无函数/无 DOM) | bid 
 ==== C2-01~11 360 聚合契约(delivery 八键/chain 五键/D-19 403 边界/rate 分支实执行) ====
 PASS - C3-11 重提后仍 1 条 + round=2 + 两轮 tasks 并存 | round=2 rounds=[2,1]
 PASS - C3-12 delivery 8 键 + chain 5 键 + opp 18 列(+code) + lights 四档(旧码即绿) | delivery=can_write,dev_dept,rate,rate_source,rows,status,total_cost,updated_at chain=budget_locked,delivery_confirmed,next_action,reviews_submitted,reviews_total
-OWNED(新 HTTP 夹具) run=mvhzl80239 codes=["PL-T5-mvhzl80239-c04b","PL-T5-mvhzl80239-c11h","PL-T5-mvhzl80239-c11o"] reviews=[292,293,294,295] budgets=[258,261,262] | 本轮自建码前缀 PL-T5-mvhzl80239-* / PL-C3-mvhzl80239* | 清理: 仅靠父级守护恢复演示库与 uploads, 本套无 SQL 清理
+OWNED(新 HTTP 夹具) run=mxd3q43894 codes=["PL-T5-mxd3q43894-c04b","PL-T5-mxd3q43894-c11h","PL-T5-mxd3q43894-c11o"] reviews=[292,293,294,295] budgets=[258,261,262] | 本轮自建码前缀 PL-T5-mxd3q43894-* / PL-C3-mxd3q43894* | 清理: 仅靠父级守护恢复演示库与 uploads, 本套无 SQL 清理
 NOT EXECUTABLE C2-11-identity same-row era flip identity coverage gap(不可计为PASS)
 
 49 passed, 0 failed, 1 NOT EXECUTABLE -> EXECUTED PASS + 1 COVERAGE GAP(不可计为全绿) [C2-11-identity same-row era flip identity coverage gap(不可计为PASS)] [DISCLOSURE: C2-11 unsupported identity coverage replaced by paired-code business comparison]
@@ -196,7 +196,7 @@ PASS - POST config.json 按原始字节复位且四键完好
 
 ==== OD-01~10 对话式建档 + 灯色聚合视图 ====
 [OD-04 降级实录] HTTP 200 {"reply":"大模型暂不可用,本轮未改动已填字段,请在下方表单点选/填写。\n建档还缺 4 项:业务线/商机阶段/销售/项目概述","draft":{"title":"OD-04 降级","customer":"江西省自然资源测绘与监测院","contract_amount":240},"missing":["biz_line","opp_stage","sales","summary"],"actions":[],"degraded":true}
-OWNED(新 HTTP 夹具) run=mvnr48f40c codes=["PL-T11-mvnr48f40c-07","PL-T11-mvnr48f40c-09h","PL-T11-mvnr48f40c-09o"] reviews=[339,340,341,342,343,344] budgets=[] | 本轮自建码前缀 PL-T11-mvnr48f40c-* | 清理: 仅靠父级守护恢复演示库与 uploads, 本套无 SQL 清理
+OWNED(新 HTTP 夹具) run=mxin9c2b8f codes=["PL-T11-mxin9c2b8f-07","PL-T11-mxin9c2b8f-09h","PL-T11-mxin9c2b8f-09o"] reviews=[339,340,341,342,343,344] budgets=[] | 本轮自建码前缀 PL-T11-mxin9c2b8f-* | 清理: 仅靠父级守护恢复演示库与 uploads, 本套无 SQL 清理
 NOT EXECUTABLE OD-08-inflight history-draft inflight mutation witness gap(不可计为PASS)
 NOT EXECUTABLE OD-09-flip literal same-record era flip coverage gap(不可计为PASS)
 
@@ -241,8 +241,8 @@ PASS - SC-23 console.error 与 pageerror 均为零
 ==== AW-01~07 机器人统一工作台浏览器层 ====
 PASS - AW-05 页面显示交付/预算/评审真实状态及下一步深链 | delivery=true budget=true review=true
 PASS - AW-07 三个页签(逐个自证确实切过去)内商机标题/交付 content·note/评审标题的注入 HTML 一律转义呈现，img 元素为零且 onerror 未执行 | active=delivery/budget/review pane标记命中=1/1/1 literal=true/true/true escaped=true/true/true imgs=0/0/0 ran=false 自证可数到注入元素=1
-PASS - AW-06 工作台 console.error/pageerror 为零并捕获截图，非 RED 必须落盘 | console=0 pageerror=0 shot=79608B(文件)
-CLEANUP - PL-AW-1792875484036 + PL-AW-1792875484036-XSS opps/budgets/reviews=0/0/0 | 0/0/0
+PASS - AW-06 工作台 console.error/pageerror 为零并捕获截图，非 RED 必须落盘 | console=0 pageerror=0 shot=96903B(文件)
+CLEANUP - PL-AW-1792878618423 + PL-AW-1792878618423-XSS opps/budgets/reviews=0/0/0 | 0/0/0
 
 8 passed, 0 failed -> ALL PASS
 
@@ -250,7 +250,7 @@ CLEANUP - PL-AW-1792875484036 + PL-AW-1792875484036-XSS opps/budgets/reviews=0/0
 PASS - AD-09 两页导航渲染期 console.error 与 pageerror 均为空 | console=0 pageerror=0
 PASS - AD-15 两页新增交互阶段 console.error/pageerror 为零 | console=0 pageerror=0
 PASS - AD-09b 全流程(含登录/非 admin/夹具/探针阶段)pageerror 为零 | pageerror 总数=0
-CLEANUP - PL-AD-RB-1792875520906 opps/budgets/reviews=0/0/0
+CLEANUP - PL-AD-RB-1792878651413 opps/budgets/reviews=0/0/0
 
 24 passed, 0 failed -> ALL PASS
 
@@ -360,4 +360,4 @@ PASS  回归 test_p15_flow.js
 PASS  数据可行性 data_feasibility_check.js
 声明缺口(见证未运行, 不得读作已覆盖): CH-11b, C2-11-identity, OD-08-inflight, OD-09-flip
 
-39/39 套通过, 失败 0, 未登记覆盖缺口 0, 声明缺口 4/4, 缺口消失 0, 耗时 1025.1s -> ALL PASS
+39/39 套通过, 失败 0, 未登记覆盖缺口 0, 声明缺口 4/4, 缺口消失 0, 耗时 1014.6s -> ALL PASS
