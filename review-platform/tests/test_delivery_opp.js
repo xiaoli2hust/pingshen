@@ -93,7 +93,7 @@ const TEST_OPP = (n) => ({
     check('DL-02', 'rate_source=none 且 rate 不兜底(实 rate=' + JSON.stringify(g.rate) + ')', g.rate_source === 'none' && (g.rate === null || g.rate === undefined));
   }
 
-  // DL-03: 行清洗——全零无内容行被剔除
+  // DL-03: 行清洗——内容/备注不能保留无预算数字行，仅差旅行仍保留
   {
     const rows = [
       { content: 'POI 数据更新', stage: '实施', own_pd: 5, prod_pd: 20, travel_cost: 300 },
@@ -104,9 +104,9 @@ const TEST_OPP = (n) => ({
     ];
     const p = await raw(sales, `/api/opp/${codeA}/delivery`, 'PUT', { rows });
     const rowsOut = (p.data || {}).rows || [];
-    check('DL-03', '完全空行剔除，内容全零行与仅差旅行保留', rowsOut.length === 4,
+    check('DL-03', '空行与内容全零行剔除，保留 3 行预算明细', rowsOut.length === 3,
       JSON.stringify(rowsOut.map(r => ({ content: r.content, travel_cost: r.travel_cost }))));
-    check('DL-03', '内容全零行保留为实施底稿', rowsOut.some(r => r.content === '仅保留建设内容' && r.stage === '实施'));
+    check('DL-03', '无预算数字的「仅保留建设内容」不落明细', !rowsOut.some(r => r.content === '仅保留建设内容'));
     check('DL-03', '仅差旅行保留且 sum.travel_cost=1300',
       rowsOut.some(r => !r.content && r.travel_cost === 800) && (p.data.sum || {}).travel_cost === 1300);
   }

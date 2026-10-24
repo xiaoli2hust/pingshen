@@ -343,7 +343,10 @@ wb.save(sys.argv[2])
     const put1 = await call('/api/opp/' + FX + '/delivery');
     // ② 确认(新 L1 就地更新 pill, 不整页重绘; 等待原样保留)
     await page.click('#oppPage button:text-is("确认交付预算")');
-    await page.waitForTimeout(1600);
+    await page.waitForFunction(() =>
+      document.querySelector('#opdlvPill')?.textContent.includes('已确认') &&
+      document.querySelector('#opdlvConfirmBtn')?.disabled,
+    null, { timeout: 20000 });
     const confirmedPill = ((await page.locator('#opdlvPill').count()) === 1) ? (await page.textContent('#opdlvPill')).includes('已确认')
       : (((await page.locator(cardH3).count()) ? await page.locator(cardH3).first().textContent() : '').includes('已确认'));
     const disConfirmed = { imp: await btnDis('上传附3 解析'), add: await btnDis('+ 加行'), save: await btnDis('保存明细'), confirm: await btnDis('确认交付预算') };
@@ -386,7 +389,7 @@ wb.save(sys.argv[2])
     check('IA-8b confirmed≠只读: 三写入口可点 + 改行保存回草稿 + #opdlvPill 就地回草稿 + chain 回① + G2 重新拦 400',
       confirmedPill && disConfirmed.imp === false && disConfirmed.add === false && disConfirmed.save === false && disConfirmed.confirm === true &&
       draftPill && confirmBackEnabled && addBackEnabled && chFx.delivery_confirmed === false && chFx.next_action === 'confirm_delivery' && g2Hit,
-      ' 夹具=' + fxCreate.status + '/' + fxBgR.status + '/bg=' + fxBg + ' confirmed态禁用=' + JSON.stringify(disConfirmed) + ' 就地草稿pill=' + draftPill + ' 重确认后=(' + confirmBackEnabled + '/' + addBackEnabled + ')' +
+      ' 夹具=' + fxCreate.status + '/' + fxBgR.status + '/bg=' + fxBg + ' confirmedPill=' + confirmedPill + ' confirmed态禁用=' + JSON.stringify(disConfirmed) + ' 就地草稿pill=' + draftPill + ' 重确认后=(' + confirmBackEnabled + '/' + addBackEnabled + ')' +
       ' chain=' + JSON.stringify({ delivery_confirmed: chFx.delivery_confirmed, next_action: chFx.next_action }) +
       ' lock=' + lockR.status + '/' + JSON.stringify((lockR.data || {}).error || '') + ' PUT1=' + put1.status + '/' + (((put1.data || {}).delivery || {}).rows || []).length + '行');
   } catch (e) { check('IA-8b confirmed≠只读: 三写入口可点 + 改行保存回草稿 + #opdlvPill 就地回草稿 + chain 回① + G2 重新拦 400', false, 'EX:' + String(e.message).slice(0, 160)); }

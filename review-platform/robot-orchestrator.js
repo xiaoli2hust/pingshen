@@ -1,5 +1,6 @@
 // 机器人编排边界(纯函数): 交付文字净化 + 标准消息生成 + provider 边界
 // 铁律: 本模块不判灯、不算账、不写状态、不访问网络; 计价只走 server.js 的 deliverySumFor()
+const { hasBudgetNumbers } = require('./delivery-rows.js');
 const DELIVERY_FIELDS = ['content', 'stage', 'pm_pd', 'own_pd', 'rd_pd', 'prod_pd', 'travel_cost', 'note'];
 const DELIVERY_SYSTEM_PROMPT = `你是交付预算明细抽取器。只输出 {"fields":{"rows":[...]}}。
 只允许字段：content, stage, pm_pd, own_pd, rd_pd, prod_pd, travel_cost, note。
@@ -17,7 +18,7 @@ function cleanDeliveryDraft(rows) {
     rd_pd: number0((r || {}).rd_pd), prod_pd: number0((r || {}).prod_pd),
     travel_cost: number0((r || {}).travel_cost),
     note: String((r || {}).note || '').trim().slice(0, 500)
-  })).filter(r => r.content || r.pm_pd || r.own_pd || r.rd_pd || r.prod_pd || r.travel_cost);
+  })).filter(hasBudgetNumbers); // IS-CLEANUP-NUMBERS/RO-08: 回退时恢复原文字存活判据。
 }
 
 function buildReviewInvite({ opp, targetUser, baseUrl }) {

@@ -121,11 +121,15 @@ const FIELDS = {
 };
 
 // ---- API ----
+window._apiGeneration = window._apiGeneration || 0;
+window._apiSessionGeneration = window._apiSessionGeneration || 0;
+window._apiRequestSequence = window._apiRequestSequence || {};
 function invalidateApiCache() {
-  if (!window._pgCache) return;
-  Object.keys(window._pgCache).forEach(k => {
+  window._apiGeneration++;
+  if (window._pgCache) Object.keys(window._pgCache).forEach(k => {
     if (/^\/api\/(opp\/|reviews(?:\/|\?|$)|budget(?:\/|\?|$)|tasks(?:\/|\?|$)|robot\/outbox)/.test(k)) delete window._pgCache[k];
   });
+  if (window.SRCV) window.SRCV.invalidate();
 }
 async function api(path, method, body) {
   const r = await fetch(path, {
@@ -250,7 +254,7 @@ function navHighlight() {
       || (n === 'opps' && (h.startsWith('#/opps') || h.startsWith('#/opp/') || h.startsWith('#/review/') || h.startsWith('#/budget/') || h.startsWith('#/budget-detail/') || h.startsWith('#/delivery/')))) a.classList.add('on');
   });
 }
-function logout() { localStorage.clear(); ME = META = FIXTURE_RE = null; window._pgCache = {}; window._navStack = []; window._taskRows = []; window._taskS = null; window._oppF = null; window._budF = null; window._arcF = null; window._queueExpand = null; RBA = null; location.hash = '#/'; render(); }
+function logout() { localStorage.clear(); ME = META = FIXTURE_RE = null; window._apiSessionGeneration++; window._apiGeneration++; window._pgCache = {}; window._apiRequestSequence = {}; if (window.SRCV) window.SRCV.invalidate(); window._navStack = []; window._taskRows = []; window._taskS = null; window._oppF = null; window._budF = null; window._arcF = null; window._queueExpand = null; RBA = null; location.hash = '#/'; render(); }
 
 // ---- O4: 列表筛选条(类型 tab + 商机代码/项目搜索, 客户端过滤; 归档含时代 tab) ----
 function arcFilterBar(key, rows, withEra) {
@@ -307,9 +311,10 @@ async function doLogin() {
   try {
     const d = await api('/api/login', 'POST', { username: $('#lu').value.trim(), password: $('#lp').value });
     localStorage.token = d.token;
-    window._pgCache = {}; window._navStack = [];
+    window._apiSessionGeneration++; window._apiGeneration++; window._pgCache = {}; window._apiRequestSequence = {}; if (window.SRCV) window.SRCV.invalidate(); window._navStack = [];
     await loadMeta();
-    ME = d.user; location.hash = '#/'; render();
+    ME = d.user;
+    if (location.hash === '#/') render(); else location.hash = '#/';
   } catch (e) { $('#lerr').textContent = e.message; }
 }
 
@@ -356,15 +361,25 @@ function lightDistBar(reviews) { // 红黄绿/未研判分布条 + 图例
 // 30s 只读缓存(GET): 筛选原地重渲染用——命中时同步返回, 无网络无加载中闪
 function peekCached(path) {
   const c = (window._pgCache || {})[path];
-  if (c && Date.now() - c.t < 30000) return JSON.parse(JSON.stringify(c.d));
+  if (c && c.generation === window._apiGeneration && c.session === window._apiSessionGeneration
+    && Date.now() - c.t < 30000) return JSON.parse(JSON.stringify(c.d));
   return null;
 }
-async function apiCached(path) {
+async function apiCached(path, strict) {
   window._pgCache = window._pgCache || {};
+  window._apiRequestSequence = window._apiRequestSequence || {};
+  const generation = window._apiGeneration || 0;
+  const session = window._apiSessionGeneration || 0;
   const c = window._pgCache[path];
-  if (c && Date.now() - c.t < 30000) return JSON.parse(JSON.stringify(c.d));
+  if (c && c.generation === generation && c.session === session && Date.now() - c.t < 30000) return JSON.parse(JSON.stringify(c.d));
+  const sequence = (window._apiRequestSequence[path] || 0) + 1;
+  window._apiRequestSequence[path] = sequence;
   const d = await api(path);
-  window._pgCache[path] = { t: Date.now(), d: JSON.parse(JSON.stringify(d)) };
+  if (generation !== window._apiGeneration || session !== window._apiSessionGeneration || sequence !== window._apiRequestSequence[path]) {
+    if (!strict) return d; // 过期结果不入缓存; 页面级渲染由各自哈希守卫弃写
+    const error = new Error('请求结果已过期'); error.code = 'STALE_RESPONSE'; throw error;
+  }
+  window._pgCache[path] = { t: Date.now(), d: JSON.parse(JSON.stringify(d)), generation, session };
   return d;
 }
 // 加载中只写空页(重渲染保留旧内容直到新 innerHTML 一次性替换——消除中间态闪)
@@ -777,19 +792,31 @@ async function submitReview(type, isSubmit) {
 }
 
 // ---- 单据详情 L2(spec 2026-10-19 §7): 评审实例视图, 商机下钻一实例一视图 ----
-let INST = { ctxCode: null, review: null, siblings: [], tasks: [], events: [], attachments: [], budget: null, tab: 'form', round: 1 };
+let INST = { ctxCode: null, review: null, siblings: [], tasks: [], events: [], attachments: [], budget: null, sourceUrl: '', tab: 'form', round: 1 };
 const INST_TABS = [['form', '本次信息收集'], ['pre', '本次前置评审'], ['result', '本次结论与归档'], ['chat', '本次对话']];
 const instDefaultTab = r => (r.era === 'history' || ['judged', 'archived'].includes(r.status)) ? 'result' : r.status === 'reviewing' ? 'pre' : 'form';
 async function renderDetail(id, ctxCode, keepTab) {
   const page = $('#page');
+  const entry = window._instEntry = (window._instEntry || 0) + 1;
+  const requestedHash = location.hash;
   const path = '/api/reviews/' + id;
-  const d0 = peekCached(path);
-  const d = d0 || await apiCached(path);
+  let d = peekCached(path);
+  for (let attempt = 0; !d; attempt++) {
+    try { d = await apiCached(path, attempt < 2); }
+    catch (error) { if (error?.code !== 'STALE_RESPONSE') throw error; }
+    if (entry !== window._instEntry || location.hash !== requestedHash) return;
+  }
+  if (entry !== window._instEntry || location.hash !== requestedHash) return;
   const r = d.review;
   if (ctxCode && ctxCode !== r.opp_code) { // 规范化只针对深链入口(spec §8.7)
     history.replaceState(null, '', r.opp_code ? '#/opp/' + encodeURIComponent(r.opp_code) + '/r/' + id : '#/review/' + id);
   }
-  Object.assign(INST, { ctxCode, review: r, siblings: d.siblings || [], tasks: d.tasks || [], events: d.events || [], attachments: d.attachments || [], budget: d.budget || null, coverage: d.coverage });
+  const entryHash = location.hash;
+  const sourceUrl = '/api/reviews/' + r.id + '/source';
+  page.innerHTML = '<div class="empty">正在装载单据与原表证据…</div><div id="instSourceEntry" hidden></div>';
+  await window.SRCV.load('instSourceEntry', sourceUrl);
+  if (entry !== window._instEntry || location.hash !== entryHash) return;
+  Object.assign(INST, { ctxCode, review: r, siblings: d.siblings || [], tasks: d.tasks || [], events: d.events || [], attachments: d.attachments || [], budget: d.budget || null, coverage: d.coverage, sourceUrl });
   if (!keepTab) INST.tab = instDefaultTab(r);
   INST.round = Math.max(r.round || 1, ...INST.tasks.map(t => t.round || 1));
   window._round = r.round;
@@ -851,13 +878,15 @@ function renderInstBody(k) { // 四页签全部取 INST 现成数据, 切页签�
   const form = JSON.parse(r.form_json || '{}');
   const ts = INST.tasks.filter(t => t.round === INST.round);
   const isSupport = ME.role === '销售支持组' || ME.role === 'admin';
-  if (k === 'form') body.innerHTML = `
+  if (k === 'form') {
+    body.innerHTML = `
+    <div id="instSrc"></div>
     <div class="card"><h3>表单字段</h3>
       <table>${FIELDS[r.type].filter(f => form[f.k] !== undefined && form[f.k] !== '').map(f =>
         `<tr><th style="width:210px;background:var(--surface-2)">${f.l}</th><td>${esc(form[f.k])}</td></tr>`).join('')}</table></div>
     <div class="card"><h3>附件</h3>
       ${INST.attachments.length ? `<ul class="attach-list">${INST.attachments.map(a =>
-        `<li><a href="/uploads/${String(a.filepath).split('/').map(encodeURIComponent).join('/')}">${esc(a.filename)}</a> <span style="color:var(--text-4);font-size:12px">${esc(a.field)} · ${fmtT(a.uploaded_at)}</span></li>`).join('')}</ul>` : '<div class="empty">暂无附件</div>'}
+        `<li><a href="#" data-path="${esc(a.filepath)}" data-name="${esc(a.filename)}" onclick="downloadAttachment(event,this)">${esc(a.filename)}</a> <span style="color:var(--text-4);font-size:12px">${esc(a.field)} · ${fmtT(a.uploaded_at)}</span></li>`).join('')}</ul>` : '<div class="empty">暂无附件</div>'}
       <div style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
         <select id="attField" style="border:1px solid #d8d9de;border-radius:8px;padding:7px 10px;font-size:13px">
           <option>项目预算表</option><option>项目变更申请表</option><option>其他材料</option>
@@ -868,6 +897,9 @@ function renderInstBody(k) { // 四页签全部取 INST 现成数据, 切页签�
       </div>
       ${r.budget_id ? `<div style="margin-top:6px">关联预算单: <a href="#/budget-detail/${r.budget_id}">#${r.budget_id}</a>${INST.review.budget_code ? '（' + esc(INST.review.budget_code) + '）' : ''}</div>` : ''}</div>
     ${r.status === 'draft' || !r.budget_id ? `<div class="card"><h3>项目预算表</h3><a class="btn" href="#/budget/${r.id}">在线填写项目预算表 →</a></div>` : ''}`;
+    const source = window.SRCV.settled(INST.sourceUrl);
+    if (source) window.SRCV.paint('instSrc', source);
+  }
   if (k === 'pre') {
     const myTasks = r.status === 'reviewing' ? ts.filter(t => t.dept === ME.role && t.status === 'pending') : [];
     const seg = ts.length ? (() => { // 可视化: 本轮任务完成度分布条(纯 CSS)
@@ -975,6 +1007,18 @@ async function rejudge(id) {
 async function archive(id) {
   try { await api(`/api/reviews/${id}/archive`, 'POST'); toast('已归档'); renderDetail(id, INST.ctxCode); }
   catch (e) { toast(e.message, 1); }
+}
+async function downloadAttachment(event, link) {
+  event.preventDefault();
+  try {
+    const url = '/uploads/' + String(link.dataset.path || '').split('/').map(encodeURIComponent).join('/');
+    const response = await fetch(url, { headers: { Authorization: 'Bearer ' + (localStorage.token || '') } });
+    if (!response.ok) throw new Error('附件下载失败');
+    const href = URL.createObjectURL(await response.blob());
+    const anchor = document.createElement('a');
+    anchor.href = href; anchor.download = link.dataset.name || 'attachment'; anchor.click();
+    setTimeout(() => URL.revokeObjectURL(href), 0);
+  } catch (e) { toast(e.message, 1); }
 }
 async function uploadAtt(id) {
   const f = $('#attFile').files[0];
@@ -1138,8 +1182,10 @@ async function renderBudgetDetail(id) {
       ${BUDGET_GROUPS.map(g => `<div style="font-size:13px;font-weight:600;color:var(--brand-hover);margin:12px 0 6px">${g.g}</div>
         <div class="card-table-wrap"><table>${g.items.map(f => `<tr><th style="width:240px">${esc(f.l)}</th><td>${esc(fields[f.k] ?? '—')}</td></tr>`).join('')}</table></div>`).join('')}
     </div>
-    <div class="card"><h3>自动测算</h3><div id="bComputed"></div></div>`;
+    <div class="card"><h3>自动测算</h3><div id="bComputed"></div></div>
+    <div id="budgetSrc"></div>`;
     renderBudgetCalc(b.calc || {});
+    window.SRCV.load('budgetSrc', '/api/budget/' + b.id + '/source');
   } catch (e) { toast(e.message, 1); location.hash = '#/budgets'; }
 }
 async function renderBudget(id) {
@@ -1352,7 +1398,7 @@ function rwbDeliveryPanel() {
   ${!fromDraft && sum ? `<div class="dlv-sum-row" style="margin-top:10px"><span>PM人天 <b>${sum.pm_pd}</b></span><span>正编人天 <b>${sum.own_pd}</b></span>
     <span>产研外包 <b>${sum.rd_pd}</b></span><span>生产外包 <b>${sum.prod_pd}</b></span><span>差旅招待 <b>${Number(sum.travel_cost || 0).toLocaleString('zh-CN')}</b> 元</span>
     <span>交付成本合计 <b>${Number(sum.cost || 0).toLocaleString('zh-CN')}</b> 元</span><span>正编单价 <b>${dl.rate ?? '—'}</b> 元/天</span></div>` : ''}
-  ${dl.source_file ? `<div style="font-size:12px;color:var(--text-4);margin-top:6px">源文件 ${esc(dl.source_file)}</div>` : ''}`;
+  ${dl.source_file ? `<div style="font-size:12px;color:var(--text-4);margin-top:6px">源文件 ${esc(dl.source_file)} · <a href="#/opp/${encodeURIComponent(RWB.code)}?t=collect">查看原表对照 →</a></div>` : ''}`;
 }
 async function robotDeliveryGenerate() {
   if (!RWB) return;
@@ -1554,7 +1600,7 @@ async function importBudgetExcel(input) {
     for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode.apply(null, buf.subarray(i, i + 0x8000));
     const d = await api('/api/budget/import', 'POST', { filename: f.name, data: btoa(bin) });
     toast(`Excel 导入成功(${Object.keys(d.fields || {}).length} 字段)——请核对下方字段与原表来源`);
-    renderImportReview(d, { title: '预算单导入核对', fields: d.fields || {}, nextLabel: '进入预算单核对/锁定', onNext: () => { location.hash = '#/agent?b=' + d.id; } });
+    renderImportReview(d, { title: '预算单导入核对', fields: d.fields || {}, sourceUrl: '/api/budget/' + d.id + '/source', nextLabel: '进入预算单核对/锁定', onNext: () => { location.hash = '#/agent?b=' + d.id; } });
   } catch (e) { toast(e.message, 1); }
   input.value = '';
 }
@@ -1571,7 +1617,7 @@ async function importReviewExcel() {
     for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode.apply(null, buf.subarray(i, i + 0x8000));
     const d = await api('/api/reviews/import', 'POST', { filename: f.name, type, data: btoa(bin) });
     toast(`Excel 导入成功(${Object.keys(d.form || {}).length} 字段)——请核对下方字段与原表来源`);
-    renderImportReview(d, { title: '评审单导入核对', fields: d.form || {}, nextLabel: '进入草稿编辑(补齐后提交)', onNext: () => { location.hash = '#/new/' + type; setTimeout(() => renderForm(type, d.id), 60); } });
+    renderImportReview(d, { title: '评审单导入核对', fields: d.form || {}, sourceUrl: '/api/reviews/' + d.id + '/source', nextLabel: '进入草稿编辑(补齐后提交)', onNext: () => { location.hash = '#/new/' + type; setTimeout(() => renderForm(type, d.id), 60); } });
   } catch (e) { toast(e.message, 1); }
 }
 // 导入核对视图: 左字段表(含来源坐标) + 右 Excel 原表网格(命中单元格高亮)
@@ -1605,61 +1651,16 @@ function renderImportReview(d, opts) {
   const page = $('#page');
   window._impRv = { d, opts };
   const fields = opts.fields || {};
-  const sources = (d.audit || {}).sources || {};
-  const grid = (d.audit || {}).grid || [];
-  // 高亮坐标集: 标签=蓝框, 值=绿底
-  const labSet = {}, valSet = {};
-  for (const [k, s] of Object.entries(sources)) {
-    if (fields[k] === undefined) continue;
-    if (s.lab_pos) labSet[s.lab_pos[0] + ',' + s.lab_pos[1]] = k;
-    if (s.val_pos) valSet[s.val_pos[0] + ',' + s.val_pos[1]] = k;
-    (s.val_positions || []).forEach(p => { if (Array.isArray(p)) valSet[p[0] + ',' + p[1]] = k; });
-  }
-  const keys = Object.keys(fields);
-  window._impRv.keys = keys;
   page.innerHTML = `
-  <div class="card"><h3>${esc(opts.title)} <span class="pill p-green">已导入 #${d.id}</span>
-    <span style="font-size:12px;color:var(--text-4);font-weight:400">左:解析字段(点击行→右侧聚焦来源) · 右:Excel 原表(蓝色=标签格 · 绿色=取值格)</span></h3>
-    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:stretch">
-      <div class="imp-rv-panel imp-rv-left" style="flex:1;min-width:340px">
-        <div class="imp-rv-ph">解析结果 · 正式字段(${keys.length}) <span style="font-weight:400;font-size:11px;color:var(--text-4)">点击任一行, 右侧原表对应单元格将高亮定位</span></div>
-        <div class="imp-rv-pb">
-          <div class="card-table-wrap"><table id="impRvL">
-            <tr><th>字段</th><th>解析值</th><th>来源(原表)</th><th>位置</th></tr>
-            ${keys.map((k, i) => {
-              const s = sources[k];
-              return `<tr${s ? ` onclick="impRvFocus(${i})"` : ''}>
-                <td style="font-family:monospace;font-size:12px">${esc(k)}</td>
-                <td>${esc(String(fields[k] ?? '').slice(0, 40))}</td>
-                <td>${s ? esc(s.label) : '<span style="color:var(--text-4)">—</span>'}</td>
-                <td style="font-size:11px;font-family:monospace">${s && s.val_pos ? 'R' + s.val_pos[0] + 'C' + s.val_pos[1] : (s && s.lab_pos ? 'R' + s.lab_pos[0] + 'C' + s.lab_pos[1] : '')}</td>
-              </tr>`;
-            }).join('')}
-          </table></div>
-          ${(d.warnings || []).length ? `<div style="font-size:12px;color:var(--text-4);margin-top:6px">未匹配标签: ${(d.warnings || []).slice(0, 6).map(esc).join(' | ')}</div>` : ''}
-        </div>
-      </div>
-      <div class="imp-rv-panel imp-rv-right" style="flex:1.2;min-width:380px">
-        <div class="imp-rv-ph">源头证据 · Excel 原表 <span style="font-weight:400;font-size:11px;color:var(--text-4)">sheet: ${esc((d.meta || {}).sheet || '')} · 前 ${grid.length} 行 · 蓝框=标签格 · 绿底=取值格</span></div>
-        <div class="imp-rv-pb" style="max-height:520px;overflow:auto">${impRvGridHtml(grid, labSet, valSet)}</div>
-      </div>
-    </div>
-    <div style="margin-top:14px;display:flex;gap:10px;align-items:center">
-      <button class="btn pri" onclick="impRvNext()">${esc(opts.nextLabel)} →</button>
-      <button class="btn" onclick="goBack('#/opps')">返回</button>
-      <span style="font-size:12px;color:var(--text-4)">${fields.contract != null && d.calc ? '实算毛利率 ' + (d.calc.margin ?? d.calc.margin_percent ?? '') + '%' : ''}</span>
-    </div>
+  <div class="card"><h3>${esc(opts.title)} <span class="pill p-green">已导入 #${d.id}</span></h3>
+    <div class="hint">逐项核对系统保存值、导入快照与 Excel 原格；差异不会被自动改写。</div></div>
+  <div id="impSrcv"></div>
+  <div class="card" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+    <button class="btn pri" onclick="impRvNext()">${esc(opts.nextLabel)} →</button>
+    <button class="btn" onclick="goBack('#/opps')">返回</button>
+    <span style="font-size:12px;color:var(--text-4)">${fields.contract != null && d.calc ? '实算毛利率 ' + (d.calc.margin ?? d.calc.margin_percent ?? '') + '%' : ''}</span>
   </div>`;
-}
-function impRvFocus(i) {
-  const s = window._impRv; if (!s) return;
-  const k = s.keys[i];
-  const tr = document.querySelectorAll('#impRvL tr')[i + 1];
-  document.querySelectorAll('#impRvL tr.imp-rv-sel').forEach(t => t.classList.remove('imp-rv-sel'));
-  if (tr) tr.classList.add('imp-rv-sel');
-  const sp = ((s.d.audit || {}).sources || {})[k];
-  const n = impRvPickCells(sp ? [sp.lab_pos, sp.val_pos].concat(sp.val_positions || []) : []);
-  if (!n) toast('该字段无原表来源(来自默认值或回退链)', 1);
+  window.SRCV.load('impSrcv', opts.sourceUrl);
 }
 function impRvNext() { const s = window._impRv; if (s && s.opts.onNext) s.opts.onNext(); }
 
@@ -1898,10 +1899,13 @@ async function renderDeliveryPage(bid) {
       <button class="btn sm" style="float:right;margin-right:10px" onclick="deliveryApply(${b.id})" ${b.status !== 'draft' ? 'disabled' : ''}>按明细刷新预算交付科目</button></h3>
       <div id="dlvTable"></div>
     </div>
-    <div class="card" id="dlvSum"></div>`;
+    <div class="card" id="dlvSum"></div>
+    <div id="dlvSrcv"></div>`;
     deliveryRender();
+    window.SRCV.load('dlvSrcv', '/api/budget/' + b.id + '/delivery/source');
   } catch (e) { toast(e.message, 1); location.hash = '#/agent'; }
 }
+const deliveryHasBudget = r => ['pm_pd', 'own_pd', 'rd_pd', 'prod_pd', 'travel_cost'].some(k => (+r[k] || 0) > 0);
 function deliveryRender() {
   if (!DLV) return;
   const locked = DLV.status !== 'draft';
@@ -1911,13 +1915,13 @@ function deliveryRender() {
   t.innerHTML = DLV.rows.length ? `<div class="card-table-wrap"><table>
     <tr><th style="width:30%">建设内容</th><th>阶段</th><th>PM人天</th><th>正编人天</th><th>外包人天</th><th>生产人天</th><th>差旅招待</th><th class="num">行成本(元)</th><th>备注</th><th></th></tr>
     ${DLV.rows.map((r, i) => `<tr>
-      <td><input data-di="${i}" data-dk="content" value="${esc(r.content)}" style="width:96%" ${locked ? 'disabled' : ''}></td>
+      <td><input data-di="${i}" data-dk="content" value="${esc(r.content)}" style="width:96%" ${locked ? 'disabled' : ''}><small class="dlv-zero-hint" id="dlvZero${i}" ${deliveryHasBudget(r) ? 'hidden' : ''}>无预算数字，保存时不保留</small></td>
       <td><select data-di="${i}" data-dk="stage" ${locked ? 'disabled' : ''}><option${r.stage === '实施' ? ' selected' : ''}>实施</option><option${r.stage === '运维' ? ' selected' : ''}>运维</option></select></td>
       ${['pm_pd', 'own_pd', 'rd_pd', 'prod_pd', 'travel_cost'].map(k => `<td><input data-di="${i}" data-dk="${k}" type="number" min="0" step="any" value="${r[k]}" style="width:72px" oninput="deliveryRowCost(${i})" ${locked ? 'disabled' : ''}></td>`).join('')}
       <td class="num" id="dlvCost${i}">${(r.cost != null ? r.cost : deliveryCalcRow(i)).toLocaleString('zh-CN')}<span class="ratio-bar" title="占合计 ${(deliveryCalcRow(i) / totCost * 100).toFixed(1)}%"><i style="width:${Math.min(deliveryCalcRow(i) / totCost * 100, 100).toFixed(0)}%"></i></span></td>
       <td><input data-di="${i}" data-dk="note" value="${esc(r.note || '')}" style="width:90px" ${locked ? 'disabled' : ''}></td>
       <td>${locked ? '' : `<button class="btn sm" onclick="deliveryDelRow(${i})">删</button>`}</td>
-    </tr>`).join('')}</table></div>` : '<div class="empty">无明细行。上传附3 Excel 或点"加行"手动编制。</div>';
+    </tr>`).join('')}</table></div>` : '<div class="empty">无明细行。上传附3 Excel 或点"加行"手动编制。无预算数字的行保存时不保留。</div>';
   const s = deliveryCalcSum();
   const el = $('#dlvSum');
   if (el) el.innerHTML = `<h3>汇总</h3>
@@ -1940,6 +1944,8 @@ function deliveryRowCost(i) { // 行内输入实时算
   inp.forEach(el => { const k = el.dataset.dk; if (k) r[k] = el.type === 'number' ? (parseFloat(el.value) || 0) : el.value; });
   const c = $('#dlvCost' + i);
   if (c) c.textContent = deliveryCalcRow(i).toLocaleString('zh-CN');
+  const hint = $('#dlvZero' + i);
+  if (hint) hint.hidden = deliveryHasBudget(r);
   const s = deliveryCalcSum();
   const el = $('#dlvSum');
 }
@@ -1972,75 +1978,18 @@ function renderDeliveryReview(bid, d) {
   const page = $('#page');
   window._dlvRv = { bid, d };
   const rows = d.rows || [];
-  const rs = ((d.audit || {}).row_sources) || [];
-  const grid = (d.audit || {}).grid || [];
-  window._dlvRv.rs = rs;
-  const labSet = {}, valSet = {};
-  rs.forEach((s, i) => {
-    if (s.content_pos) labSet[s.content_pos[0] + ',' + s.content_pos[1]] = i;
-    Object.values(s.cols || {}).forEach(p => { if (Array.isArray(p)) valSet[p[0] + ',' + p[1]] = i; });
-    (s.travel_parts || []).forEach(p => { if (Array.isArray(p)) valSet[p[0] + ',' + p[1]] = i; });
-  });
-  const sum = d.sum || {}, tr = d.total_row || {};
-  const aggBy = st => { const o = { pm_pd: 0, own_pd: 0, rd_pd: 0, prod_pd: 0, travel_cost: 0 }; rows.filter(r => r.stage === st).forEach(r => ['pm_pd', 'own_pd', 'rd_pd', 'prod_pd', 'travel_cost'].forEach(k => o[k] += +r[k] || 0)); return o; };
-  const sumI = aggBy('实施'), sumO = aggBy('运维');
-  const cmp = (a, b) => (a != null && b != null && Math.abs(a - b) < 0.01);
-  const trow = (name, got, want) => `<tr><td>${esc(name)}</td><td class="num"><b>${got ?? '—'}</b></td><td class="num" style="color:${cmp(got, want) ? 'var(--ok,#3fc09c)' : 'var(--text-2)'}">${want != null ? want : '—'}</td><td>${cmp(got, want) ? '一致' : (want != null ? '<span class="pill p-yellow">有差异</span>' : '原表无此列')}</td></tr>`;
+  const sum = d.sum || {};
   page.innerHTML = `
-  <div class="card"><h3>附3 交付明细导入核对 <span class="pill p-green">解析 ${rows.length} 行</span>
-    <span style="font-size:12px;color:var(--text-4);font-weight:400">源文件:${esc(d.source_file || '')} · 左:明细行(点击行→右侧聚焦) · 右:附3 原表</span></h3>
-    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:stretch">
-      <div class="imp-rv-panel imp-rv-left" style="flex:1.2;min-width:420px">
-        <div class="imp-rv-ph">解析结果 · 明细行(${rows.length}) <span style="font-weight:400;font-size:11px;color:var(--text-4)">点击任一行, 右侧原表对应内容格与人天/差旅格将高亮定位</span></div>
-        <div class="imp-rv-pb" style="max-height:420px;overflow:auto">
-          <table id="impRvL">
-            <tr><th>#</th><th>阶段</th><th style="width:34%">建设内容</th><th class="num">PM人天</th><th class="num">正编</th><th class="num">外包</th><th class="num">生产</th><th class="num">差旅招待</th><th class="num">行成本(元)</th></tr>
-            ${rows.map((r, i) => `<tr onclick="dlvRvFocus(${i})">
-              <td style="font-family:monospace;font-size:12px">${i + 1}</td>
-              <td><span class="pill ${r.stage === '实施' ? 'p-blue' : 'p-gray'}">${esc(r.stage)}</span></td>
-              <td>${esc(String(r.content || '').slice(0, 30))}</td>
-              <td class="num">${r.pm_pd || 0}</td><td class="num">${r.own_pd || 0}</td><td class="num">${r.rd_pd || 0}</td><td class="num">${r.prod_pd || 0}</td><td class="num">${r.travel_cost || 0}</td>
-              <td class="num"><b>${(r.cost ?? 0).toLocaleString('zh-CN')}</b></td>
-            </tr>`).join('')}
-            <tr style="font-weight:700"><td colspan="3">合计</td><td class="num">${sum.pm_pd ?? ''}</td><td class="num">${sum.own_pd ?? ''}</td><td class="num">${sum.rd_pd ?? ''}</td><td class="num">${sum.prod_pd ?? ''}</td><td class="num">${sum.travel_cost ?? ''}</td><td class="num">${(sum.cost ?? 0).toLocaleString('zh-CN')}</td></tr>
-          </table>
-        </div>
-      </div>
-      <div class="imp-rv-panel imp-rv-right" style="flex:1;min-width:360px">
-        <div class="imp-rv-ph">源头证据 · 附3 原表 <span style="font-weight:400;font-size:11px;color:var(--text-4)">sheet: ${esc(((d.audit || {}).meta || {}).sheet || '')} · 前 ${grid.length} 行 · 蓝框=内容格 · 绿底=人天/差旅格</span></div>
-        <div class="imp-rv-pb" style="max-height:420px;overflow:auto">${impRvGridHtml(grid, labSet, valSet)}</div>
-      </div>
-    </div>
-    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;align-items:flex-start">
-      <div style="flex:1;min-width:300px">
-        <div style="font-size:13px;font-weight:700;margin-bottom:4px">与附3 原件合计行对照</div>
-        <div class="card-table-wrap"><table style="font-size:12px">
-          <tr><th>口径</th><th>解析合计</th><th>原件合计行</th><th>核对</th></tr>
-          ${trow('实施 PM 人天', sumI.pm_pd, tr.impl_pm)}
-          ${trow('实施 正编人天', sumI.own_pd, tr.impl_own)}
-          ${trow('实施 外包人天', sumI.rd_pd, tr.impl_rd)}
-          ${trow('实施 生产人天', sumI.prod_pd, tr.impl_prod)}
-          ${trow('实施 差旅招待', sumI.travel_cost, tr.impl_travel)}
-          ${trow('运维 PM 人天', sumO.pm_pd, tr.ops_pm)}
-          ${trow('运维 正编人天', sumO.own_pd, tr.ops_own)}
-          ${trow('运维 差旅招待', sumO.travel_cost, tr.ops_travel)}
-        </table></div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:8px;justify-content:center">
-        <button class="btn pri" onclick="dlvRvConfirm()">确认无误, 进入明细编辑 →</button>
-        <button class="btn" onclick="renderDeliveryPage(${bid})">重新上传 / 返回编辑页</button>
-      </div>
-    </div>
+  <div class="card"><h3>附3 交付明细导入核对 <span class="pill p-green">解析 ${rows.length} 行</span></h3>
+    <div class="hint">源文件 ${esc(d.source_file || '')}；无预算数字的原表行会保留在证据区，但不会进入明细底稿。</div>
+    <div class="dlv-sum-row"><span>PM人天 <b>${sum.pm_pd ?? 0}</b></span><span>正编人天 <b>${sum.own_pd ?? 0}</b></span><span>产研外包 <b>${sum.rd_pd ?? 0}</b></span><span>生产外包 <b>${sum.prod_pd ?? 0}</b></span><span>差旅招待 <b>${Number(sum.travel_cost || 0).toLocaleString('zh-CN')}</b> 元</span><span>交付成本 <b>${Number(sum.cost || 0).toLocaleString('zh-CN')}</b> 元</span></div>
+  </div>
+  <div id="dlvSrcv"></div>
+  <div class="card" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <button class="btn pri" onclick="dlvRvConfirm()">确认无误, 进入明细编辑 →</button>
+    <button class="btn" onclick="renderDeliveryPage(${bid})">重新上传 / 返回编辑页</button>
   </div>`;
-}
-function dlvRvFocus(i) {
-  const s = window._dlvRv; if (!s) return;
-  document.querySelectorAll('#impRvL tr.imp-rv-sel').forEach(t => t.classList.remove('imp-rv-sel'));
-  const tr = document.querySelectorAll('#impRvL tr')[i + 1];
-  if (tr) tr.classList.add('imp-rv-sel');
-  const sp = (s.rs || [])[i] || {};
-  const n = impRvPickCells([sp.content_pos].concat(Object.values(sp.cols || {}), sp.travel_parts || []));
-  if (!n) toast('该行无原表坐标(可能为手编行)', 1);
+  window.SRCV.load('dlvSrcv', '/api/budget/' + bid + '/delivery/source');
 }
 function dlvRvConfirm() {
   const s = window._dlvRv; if (!s) return;
@@ -2056,8 +2005,9 @@ async function deliverySave(bid) {
   try {
     const d = await api(`/api/budget/${bid}/delivery`, 'PUT', { rows: DLV.rows });
     DLV.rows = d.rows; DLV.rate = d.rate;
-    toast('交付明细已保存(' + d.rows.length + ' 行)');
+    toast('交付明细已保存(' + d.rows.length + ' 行)' + (d.dropped ? '，已剔除 ' + d.dropped + ' 行' : ''));
     deliveryRender();
+    await window.SRCV.load('dlvSrcv', '/api/budget/' + bid + '/delivery/source');
   } catch (e) { toast(e.message, 1); }
 }
 async function deliveryApply(bid) {
@@ -2343,7 +2293,7 @@ function opp360Paint(code, d, legacyT) {
         ${OPDLV.locked ? '<span class="pill p-green">已确认</span><span style="font-size:12.5px;color:var(--text-4)">改行并保存即自动回草稿, 须重新确认(G1 从严)</span>' : ''}
         <span style="font-size:12.5px;color:var(--text-4)">正编单价 ${OPDLV.rate ?? '—'} 元/天${OPDLV.rate == null ? ' · ' + (OPDLV.rate_source === 'none' ? '无部门口径, 正编不计价' : '单价载入中') : ''}<span id="opdlvSrc"></span></span>
       </div>
-      <div id="opdlvTable"><div class="empty">交付预算明细载入中…</div></div><div class="card" id="opdlvSum" style="box-shadow:none;border:1px solid var(--border-default)"></div>`
+      <div id="opdlvTable"><div class="empty">交付预算明细载入中…</div></div><div class="card" id="opdlvSum" style="box-shadow:none;border:1px solid var(--border-default)"></div><div id="opdlvSrcv"></div>`
         : `<div class="dlv-sum-row"><span>交付成本合计 <b>${(dl && dl.total_cost) || 0}</b> 元</span><span>正编单价 <b>${OPDLV.rate ?? '—'}</b> 元/天</span><span>${(dl && dl.rows) || 0} 行明细已隐去</span></div>
       <div class="hint">行集明细与行单价仅对商机建档人 / 项目经理 / 销售支持组开放(服务端裁决)。如需编制或修订，请由上述角色操作。</div>`}</div>
       <div class="card" id="oppBudgets"><h3>② 项目预算(${bs.length}) <a href="#/budgets" style="float:right;font-size:13px">预算工作台 →</a></h3><button class="btn sm pri" data-obc="${esc(code)}" onclick="oppBudgetCreate(this.dataset.obc)">＋ 新建项目预算(挂靠本商机)</button>${bs.length === 0 ? '<div class="empty">该商机暂无预算单</div>' : `<div class="card-table-wrap"><table>
@@ -2388,8 +2338,10 @@ const OPDLV = { code: '', rows: [], status: 'none', rate: null, rd_price: null, 
 // D-21: 360 只回摘要, 行集明细二次拉取; 只读态(非 canWriteOpp 四项)不发明细请求, 免得自吃 403 toast
 async function opdlvMount() {
   if (!OPDLV.can_write) return;                       // 只读卡由 §3d 的模板直接渲染, 无需填充 #opdlvTable
+  const code = OPDLV.code, hash = location.hash;
   try {
-    const f = await api(`/api/opp/${encodeURIComponent(OPDLV.code)}/delivery`);
+    const f = await api(`/api/opp/${encodeURIComponent(code)}/delivery`);
+    if (location.hash !== hash || OPDLV.code !== code || !$('#opdlvTable')) return;
     const dd = f.delivery || null;
     OPDLV.rows = ((dd && dd.rows) || []).map(r => ({ ...r }));
     OPDLV.sum = (dd && dd.sum) || null;
@@ -2400,6 +2352,7 @@ async function opdlvMount() {
     if (f.rate_source) OPDLV.rate_source = f.rate_source;
     opdlvRender();
     const fs = $('#opdlvSrc'); if (fs) fs.textContent = OPDLV.source_file ? ' · 源文件 ' + OPDLV.source_file : '';
+    await window.SRCV.load('opdlvSrcv', `/api/opp/${encodeURIComponent(code)}/delivery/source`);
   } catch (e) { toast(e.message || '交付预算明细读取失败', 1); }
 }
 function opdlvCalcRow(i) {
@@ -2426,7 +2379,7 @@ function opdlvRender() {
   el.innerHTML = OPDLV.rows.length ? `<div class="card-table-wrap"><table>
     <tr><th style="width:30%">建设内容</th><th>阶段</th><th>PM人天</th><th>正编人天</th><th>外包人天</th><th>生产人天</th><th>差旅招待</th><th class="num">行成本(元)</th><th>备注</th><th></th></tr>
     ${OPDLV.rows.map((r, i) => `<tr>
-      <td><input data-oi="${i}" data-ok="content" value="${esc(r.content)}" style="width:96%" oninput="opdlvRowCost(${i})"></td>
+      <td><input data-oi="${i}" data-ok="content" value="${esc(r.content)}" style="width:96%" oninput="opdlvRowCost(${i})"><small class="dlv-zero-hint" id="opdlvZero${i}" ${deliveryHasBudget(r) ? 'hidden' : ''}>无预算数字，保存时不保留</small></td>
       <td><select data-oi="${i}" data-ok="stage" onchange="opdlvRowCost(${i})"><option${r.stage === '实施' ? ' selected' : ''}>实施</option><option${r.stage === '运维' ? ' selected' : ''}>运维</option></select></td>
       ${['pm_pd', 'own_pd', 'rd_pd', 'prod_pd', 'travel_cost'].map(k => `<td><input data-oi="${i}" data-ok="${k}" type="number" min="0" step="any" value="${r[k]}" style="width:72px" oninput="opdlvRowCost(${i})"></td>`).join('')}
       <td class="num" id="opdlvCost${i}">${(r.cost != null ? r.cost : opdlvCalcRow(i)).toLocaleString('zh-CN')}<span class="ratio-bar" title="占合计 ${(opdlvCalcRow(i) / tot * 100).toFixed(1)}%"><i style="width:${Math.min(opdlvCalcRow(i) / tot * 100, 100).toFixed(0)}%"></i></span></td>
@@ -2447,6 +2400,7 @@ function opdlvRowCost(i) {
     r[k] = el.type === 'number' ? (parseFloat(el.value) || 0) : el.value;
   });
   const c = $('#opdlvCost' + i); if (c) c.textContent = opdlvCalcRow(i).toLocaleString('zh-CN');
+  const hint = $('#opdlvZero' + i); if (hint) hint.hidden = deliveryHasBudget(r);
 }
 function opdlvAddRow() { OPDLV.rows.push({ content: '', stage: '实施', pm_pd: 0, own_pd: 0, rd_pd: 0, prod_pd: 0, travel_cost: 0, note: '' }); OPDLV.locked = false; opdlvRender(); }
 function opdlvDelRow(i) { OPDLV.rows.splice(i, 1); opdlvRender(); }
@@ -2465,10 +2419,11 @@ async function opdlvSave() {
     if (location.hash !== hash || OPDLV.code !== code || !editor?.isConnected) return;
     OPDLV.rows = d.rows || []; OPDLV.status = 'draft'; OPDLV.locked = false;
     if (d.rate != null) OPDLV.rate = d.rate;
-    toast(`已保存 ${OPDLV.rows.length} 行, 合计 ${d.sum.cost.toLocaleString('zh-CN')} 元(草稿态, 需确认后方②可锁定)`);
+    toast(`已保存 ${OPDLV.rows.length} 行, 合计 ${d.sum.cost.toLocaleString('zh-CN')} 元(草稿态, 需确认后方②可锁定)${d.dropped ? `，已剔除 ${d.dropped} 行` : ''}`);
     opdlvRender();
     const p = $('#opdlvPill'); if (p) p.outerHTML = pill('草稿', 'p-yellow').replace('<span ', '<span id="opdlvPill" ');
     const cb = $('#opdlvConfirmBtn'); if (cb) cb.disabled = false;
+    try { await window.SRCV.load('opdlvSrcv', `/api/opp/${encodeURIComponent(code)}/delivery/source`); } catch (e) { /* 已保存；原表面板自绘其错误，不得冒充保存失败 */ }
     await refreshOppChain(code, hash).catch(e => { if (location.hash === hash && editor.isConnected) toast('已保存，链路状态刷新失败，请刷新页面：' + e.message, 1); });
   } catch (e) { toast(e.message || '保存失败', 1); }
 }

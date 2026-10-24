@@ -5,6 +5,10 @@
 # 设计定调: Excel 是导入通道——只提取白名单字段原样值, 换算/校验/结构键全归服务端
 import sys, json, glob, math, re
 from datetime import datetime
+from pathlib import Path
+# 本机 Python isolated/safe_path 不自动加入脚本目录；仅为此进程加载同目录模块。
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from sheet_audit import audit_sheet, display_value, raw_value
 
 # ---------- 标签 → 系统键 模糊映射表 ----------
 # 规则: 标签含关键字(去空格/换行/括号内容后 includes)即命中; 数字字段另标注
@@ -133,55 +137,57 @@ def is_label_like(v):
   s = norm(v)
   return len(s) <= 20 and any('\u4e00' <= ch <= '\u9fff' for ch in s)
 
-def pick(key, cands):
-  """按字段类型从候选选值: NUM 找首个可转数字; 枚举找含枚举词的; str 紧邻优先(cands[0]);
-  opp_code/decision/review_date 按值特征优先(纵排隔列布局下紧邻可能是下一标签)"""
+def pick_with_index(key, cands):
+  """原 pick 优先序不变；附带实际采用的候选序号，避免规范化值冒充原值。"""
   if key == 'presale_period':
-    for c in cands:
+    for i, c in enumerate(cands):
       n = try_num(c)
-      if n is not None: return n
+      if n is not None: return n, i
       n = try_month_span(c)
-      if n is not None: return n
-    return None
+      if n is not None: return n, i
+    return None, None
   if key in NUM_FIELDS:
-    for c in cands:
+    for i, c in enumerate(cands):
       n = try_num(c)
-      if n is not None: return n
-    return None
+      if n is not None: return n, i
+    return None, None
   if key == 'dev_dept':
-    for c in cands:
+    for i, c in enumerate(cands):
       for d in DEV_DEPTS:
-        if d in norm(c): return d
-    return None
+        if d in norm(c): return d, i
+    return None, None
   if key == 'promo_target':
-    for c in cands:
+    for i, c in enumerate(cands):
       for t in PROMO_TARGETS:
-        if t in norm(c): return t
-    return None
+        if t in norm(c): return t, i
+    return None, None
   # 是否类优先枚举
-  for c in cands:
+  for i, c in enumerate(cands):
     s = str(c).strip()
-    if norm(s) in YES_NO: return norm(s)
+    if norm(s) in YES_NO: return norm(s), i
   # 值特征优先(业务键): opp_code 含字母+数字且短; decision 含结论词; review_date 日期样式
   if key == 'opp_code':
-    for c in cands:
+    for i, c in enumerate(cands):
       s = norm(c)
       if 4 <= len(s) <= 20 and any(ch.isdigit() for ch in s) and any(ch.isalpha() for ch in s) and not any('\u4e00' <= ch <= '\u9fff' for ch in s):
-        return str(c).strip()
+        return str(c).strip(), i
   if key == 'decision':
-    for c in cands:
+    for i, c in enumerate(cands):
       s = str(c)
-      if any(w in s for w in ['通过', '同意', '否决', '放弃', '不通过']): return s.strip()
+      if any(w in s for w in ['通过', '同意', '否决', '放弃', '不通过']): return s.strip(), i
   if key == 'review_date':
-    import re
-    for c in cands:
-      if re.search(r'20\d{2}[-/年]', str(c)): return str(c).strip()
+    for i, c in enumerate(cands):
+      if re.search(r'20\d{2}[-/年]', str(c)): return str(c).strip(), i
   # str: 紧邻优先——键值对布局值总紧邻标签, cands[0] 即真值
   if cands:
     first = cands[0]
-    if isinstance(first, (int, float)): return first
-    return str(first).strip()
-  return None
+    if isinstance(first, (int, float)): return first, 0
+    return str(first).strip(), 0
+  return None, None
+
+
+def pick(key, cands):
+  return pick_with_index(key, cands)[0]
 
 def match_field(label, fmap):
   """标签模糊匹配: 返回系统键或 None"""
@@ -211,19 +217,22 @@ def extract_budget_context(ws):
   }
   fields, sources = {}, {}
   for key, rows in specs.items():
-    vals, positions, labels = [], [], []
+    vals, positions, labels, lab_positions = [], [], [], []
     for row_no in rows:
       cell = ws.cell(row=row_no, column=7)
       n = try_num(cell.value)
       vals.append(n if n is not None else 0)
       positions.append((row_no - 1, 6))
       labels.append(' / '.join(str(ws.cell(row=row_no, column=c).value or '').strip() for c in range(1, 7) if ws.cell(row=row_no, column=c).value))
+      lab_positions.extend((row_no - 1, c - 1) for c in range(1, 7)
+                           if ws.cell(row=row_no, column=c).value and str(ws.cell(row=row_no, column=c).value).strip())
     fields[key] = round(sum(vals), 2)
     sources[key] = {
       'label': ' + '.join(labels),
       'lab_pos': (rows[0] - 1, 0),
       'val_pos': positions[0],
       'val_positions': positions,
+      'lab_positions': lab_positions,
     }
   return fields, sources
 
@@ -274,32 +283,39 @@ def main(path, typ):
         if '附1' in t or '预算表' in t:
           ws = s; fmap = BUDGET_REVIEW_FALLBACK; break
       if ws is None: ws = wb.worksheets[0]; fmap = BUDGET_REVIEW_FALLBACK
+  # 在旧 grid_rows(50)/上下文探查可能扩展内存维度之前保存真实原表。
+  sheet = audit_sheet(ws) if is_audit else None
   pairs = parse_kv(ws)
   fields, warnings, seen = {}, [], set()
-  for label, cands in pairs:
+  adopted = {}  # key -> [(pair index, actual picked candidate index), ...]
+  for idx, (label, cands) in enumerate(pairs):
     key = match_field(label, fmap)
     if key is None:
       warnings.append(label)
       continue
-    val = pick(key, cands)
+    val, picked_index = pick_with_index(key, cands)
     if key in seen and fields.get(key) not in (None, ''):
       if key == 'del_other':  # 多项合计(验收/办公/服务)
         n = try_num(val)
         pn = fields.get(key) if isinstance(fields.get(key), (int, float)) else 0
-        if n is not None: fields[key] = (pn or 0) + n
+        if n is not None:
+          fields[key] = (pn or 0) + n
+          adopted.setdefault(key, []).append((idx, picked_index))
       elif key == 'data_review' and '数据评审' in norm(label) and val not in (None, ''):
         fields[key] = val
+        adopted[key] = [(idx, picked_index)]
       continue
     seen.add(key)
     if val is None or val == '':
       continue
     fields[key] = val
+    adopted[key] = [(idx, picked_index)]
   context_sources = {}
   if typ == 'budget':
     context_fields, context_sources = extract_budget_context(ws)
     fields.update(context_fields)
   # 溯源: fields → 原表坐标(标签格+选中的值格)——导入核对视图高亮用
-  sources = {}
+  sources, unpicked = {}, []
   if is_audit:
     for idx, (label, cands) in enumerate(pairs):
       key = match_field(label, fmap)
@@ -319,9 +335,52 @@ def main(path, typ):
       else:
         sources.setdefault(key, source)
     sources.update(context_sources)
+    adopted_positions = {}
+    for key, source in sources.items():
+      if key in context_sources:
+        positions = source['val_positions']
+      else:
+        positions = [pair_pos[idx][1][ci] for idx, ci in adopted.get(key, []) if ci is not None]
+        # IS-ADOPTED-LATER/DOWNWARD-TRACE: 审计标签关联仅取实际采用的 pair，legacy 坐标不变。
+        source['lab_positions'] = list(dict.fromkeys(pair_pos[idx][0] for idx, ci in adopted.get(key, [])
+                                                   if ci is not None and idx < len(pair_pos) and 0 <= ci < len(pair_pos[idx][1])))
+      adopted_positions[key] = set(positions)
+      cells = [ws.cell(row=r + 1, column=c + 1) for r, c in positions]
+      source['raw'] = raw_value(cells[0].value) if cells else None
+      source['raw_d'] = display_value(cells[0])[:2000] if cells else ''
+      source['selected'] = bool(cells)
+      # 旧 val_pos 仍沿用“字段值相等，否则首候选”的选择契约。
+      # raw_pos 显式标注实际采用格，规范化后两者可能不同。
+      source['raw_pos'] = positions[0] if positions else None
+      if len(positions) > 1 or 'val_positions' in source:
+        source['val_positions'] = positions
+        source['raws'] = [raw_value(cell.value) for cell in cells]
+    for idx, (label, cands) in enumerate(pairs):
+      key = match_field(label, fmap)
+      if key is None:
+        continue
+      lab_pos, cand_positions = pair_pos[idx]
+      _, picked_index = pick_with_index(key, cands)
+      for ci, pos in enumerate(cand_positions):
+        if pos in adopted_positions.get(key, set()):
+          continue
+        cell = ws.cell(row=pos[0] + 1, column=pos[1] + 1)
+        if ci != picked_index:
+          reason = '候选未被pick采用'
+        elif key in context_sources:
+          reason = '被上下文合计覆盖'
+        elif key == 'data_review' and '数据评审' not in norm(label):
+          reason = '被明确数据评审覆盖'
+        else:
+          reason = '重复字段未采用'
+        unpicked.append({'key': key, 'label': str(label), 'lab_pos': lab_pos, 'val_pos': pos,
+                         'raw': raw_value(cell.value), 'raw_d': display_value(cell)[:2000],
+                         'selected': False, 'reason': reason})
   result = {'fields': fields, 'warnings': sorted(set(warnings))[:20],
             'meta': {'sheet': ws.title, 'pairs_total': len(pairs), 'matched': len(fields)}}
   if is_audit:
+    result['sheet'] = sheet
+    result['unpicked'] = unpicked
     # 审计模式: 原表键值对(标签+首候选值+坐标) + 命中溯源 + 网格(前 50 行)供导入核对视图
     result['pairs'] = [[lab, (str(cands[0]) if not isinstance(cands[0], (int, float)) else cands[0]) if cands else None,
                         (pair_pos[i][0] if i < len(pair_pos) else None)] for i, (lab, cands) in enumerate(pairs)]

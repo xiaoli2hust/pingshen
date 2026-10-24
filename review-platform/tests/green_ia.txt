@@ -1,19 +1,24 @@
-PASS - IA-1 zhichizu 导航六项 | 实得:首页,全部商机,待办打灯,研判台,归档库,解析器实验室
+PASS - IA-1 zhichizu 导航七项含全部预算单 | 实得:首页,全部商机,全部预算单,待办打灯,研判台,归档库,解析器实验室
 PASS - IA-2 扁平无分组div + 归档库文本保留
-PASS - IA-6 首页含我的待办(支持组=待研判)
+PASS - IA-6 首页含我的待办与前置收集/待录结论分项
 PASS - IA-7 商机概览 L1 七分区且 #oppTabs 移除 | #oppTabs=0 {"oppProfileCard":1,"oppChain":1,"oppShared":1,"oppInstances":1,"oppLightAgg":1,"oppAnalysis":1,"oppAgent":1}
 PASS - IA-15 三步链 #oppChain + ①②③ + 三 dot | #oppChain=1 .chain-dot=3
 PASS - IA-18 旧深链 t=budget 收敛: hash 无 query 且 #oppShared[data-focus=collect] | hash=#/opp/PL00008572
 PASS - IA-19 旧深链 t=light 收敛: hash 无 query 且 #oppInstances[data-focus=pre] | hash=#/opp/PL00008572
-PASS - IA-8 L1 共享区三卡齐在+ #opdlvTable===1 + #opdlvSum 含交付成本合计 | tbody=19 三卡=true/true/true #opdlvTable=1 汇总含交付成本合计=true
+PASS - IA-8 L1 共享区三卡/三类型真入口+交付行集与汇总 | {"cards":[{"id":"oppDlv","count":1,"title":"① 交付预算(商机级) 已确认\n        商机级交付预算 · 建档人/项目经理/支持组可编辑 · 三种编制方式: 在线建行 / 附3 Excel 导入 / 由项目预算递进带入 · 确认后才能锁定项目预算(G1)"},{"id":"oppBudgets","count":1,"title":"② 项目预算(3) 预算工作台 →"},{"id":"oppLaunch","count":1,"title":"发起评审"}],"cardCount":3,"types":[{"type":"presale","count":1,"title":"售前立项评审","links":1,"href":"#/new/presale?opp=PL00008572"},{"type":"bid","count":1,"title":"投标决策评审","links":1,"href":"#/new/bid?opp=PL00008572"},{"type":"change","count":1,"title":"项目关键事项决策","links":1,"href":"#/new/change?opp=PL00008572"}],"typeCount":3,"rows":2,"tables":1,"summaryCount":1,"summary":"汇总\n    PM人天 7正编人天 39产研外包 0生产外包 184差旅招待 0 元\n    交付成本合计 58,880 元正编单价 — 元/天\n  注: 行成本 = (PM+正编)×交付部门单价 + 产研外包×研发外包单价 + 生产外包×生产外包单价 + 差旅招待; 单价与合计由服务端实算下发, 保存/确认后以服务端为准。已确认后如需修订: 改行再保存即自动回到草稿态, 须重新确认。"}
+PASS - IA-8m missing 变异被同一实际DOM断言拒绝
+PASS - IA-8m misplaced 变异被同一实际DOM断言拒绝
+PASS - IA-8m heading 变异被同一实际DOM断言拒绝
+PASS - IA-8m target 变异被同一实际DOM断言拒绝
+PASS - IA-8m 变异后原三卡与入口完整还原
 PASS - IA-16 L1 灯色汇总含红/黄/绿计数与在途/历史两列 | 灯色汇总=true 两列=2
-PASS - IA-17 L1 数据分析为 P2 空态占位
+PASS - IA-17 L1 展示已有灯色时间线与结论对比
 PASS - IA-10 L1 对话分区含该商机目标(预算/评审表)
 PASS - IA-11 新建待评审商机首屏(建档优先 · 三编制方式改「建档」) | 建档=true 商机代码=true ①=true ③=true ②=true
 PASS - IA-21 #/new 空表提交被 FE 必填拦截且不发请求 | #newOppCode=1→1 报错="必填未填: 商机代码、项目名称、客户名称、预计合同金额(万元)、商机阶段、销售经理、项目概述"
-PASS - IA-22 建档成功落 L1: hash=#/opp/<码> 且 #oppLaunch 三类型卡 | code=PL-WZ-5613968 hash=#/opp/PL-WZ-5613968 #oppLaunch=1
-PASS - IA-23 从 #oppLaunch 选投标卡: hash=#/new/bid?opp= 且 三值 prefill 带入 + #pfHint 评审N项 | hash=#/new/bid?opp=PL-WZ-5613968 继承实得={"title":"T7 向导用例商机","opp_code":"PL-WZ-5613968","customer":"江西省自然资源测绘与监测院"} hint="商机上下文: PL-WZ-5613968 · 已带入 7 项：评审 0 项 / 档案 7 项 / 待补 30 项"
-PASS - IA-24 同码重复建档显示服务端 409「商机代码已存在」 | 报错="商机代码已存在:PL-WZ-5613968"
+PASS - IA-22 建档成功落 L1: hash=#/opp/<码> 且 #oppLaunch 三类型卡 | code=PL-WZ-5387502 hash=#/opp/PL-WZ-5387502 #oppLaunch=1
+PASS - IA-23 从 #oppLaunch 选投标卡: hash=#/new/bid?opp= 且 三值 prefill 带入 + #pfHint 评审N项 | hash=#/new/bid?opp=PL-WZ-5387502 继承实得={"title":"T7 向导用例商机","opp_code":"PL-WZ-5387502","customer":"江西省自然资源测绘与监测院"} hint="商机上下文: PL-WZ-5387502 · 已带入 7 项：评审 0 项 / 档案 7 项 / 待补 30 项"
+PASS - IA-24 同码重复建档显示服务端 409「商机代码已存在」 | 报错="商机代码已存在:PL-WZ-5387502"
 PASS - IA-25 #/new?opp=存量已建档商机 → 不出现建档表单, 直接出「选择首个评审类型」 | #newOppCode=0 报错=""
 PASS - IA-26 商机列表页入口为「+ 新建待评审商机」 | 入口文本=["+ 新建待评审商机"]
 PASS - IA-12 #/reviews 重定向 #/opps | hash=#/opps
@@ -22,21 +27,21 @@ PASS - IA-20 列表「链路进度」列在最新灯态前且每行有 .chain-mi
 PASS - IA-9 L2 前置评审页签含评判指标/部门/轮次留痕
 PASS - IA-8c D-47① confirmed 态行内输入格与删行按钮不被 locked 锁死 | disabled={"content":false,"own_pd":false,"note":false} 删按钮=1
 PASS - IA-8d D-47② 只改文本/阶段(不碰数字)保存后服务端即为新值 | 实得={"content":"D47只改文本","note":"D47备注","stage":"运维","pm_pd":0,"own_pd":39}
-PASS - IA-8b confirmed≠只读: 三写入口可点 + 改行保存回草稿 + #opdlvPill 就地回草稿 + chain 回① + G2 重新拦 400 |  夹具=200/200/bg=281 confirmed态禁用={"imp":false,"add":false,"save":false,"confirm":true} 就地草稿pill=true 重确认后=(true/true) chain={"delivery_confirmed":false,"next_action":"confirm_delivery"} lock=400/"锁定前请先确认交付预算:商机 PL-T6-5623264 的交付预算仍为草稿,请在信息收集页签点「确认交付预算」" PUT1=200/1行
-PASS - IA-20b D-16 挂靠建单入口可点且新建单进②表 + 预算工作台可达 | [data-obc]=1 点击后hash=#/agent?b=282 ②行 2→3 工作台链接=1 hash=#/budgets
+PASS - IA-8b confirmed≠只读: 三写入口可点 + 改行保存回草稿 + #opdlvPill 就地回草稿 + chain 回① + G2 重新拦 400 |  夹具=200/200/bg=293 confirmedPill=true confirmed态禁用={"imp":false,"add":false,"save":false,"confirm":true} 就地草稿pill=true 重确认后=(true/true) chain={"delivery_confirmed":false,"next_action":"confirm_delivery"} lock=400/"锁定前请先确认交付预算:商机 PL-T6-5395823 的交付预算仍为草稿,请在信息收集页签点「确认交付预算」" PUT1=200/1行
+PASS - IA-20b D-16 挂靠建单入口可点且新建单进②表 + 预算工作台可达 | [data-obc]=1 点击后hash=#/agent?b=294 ②行 2→3 工作台链接=1 hash=#/budgets
 PASS - IA-27 商机 360 返回全部商机 | href=#/opps text=
     ← 全部商机
     全部商机 › T6用例商机
   
-PASS - IA-28 预算详情返回所属商机 | href=#/opp/PL-T6-5623264 text=
+PASS - IA-28 预算详情返回所属商机 | href=#/opp/PL-T6-5395823 text=
     ← 所属商机
     所属商机 › T6 用例预算
   
-PASS - IA-29 交付详情返回商机概览 | href=#/opp/PL-T6-5623264 text=
+PASS - IA-29 交付详情返回商机概览 | href=#/opp/PL-T6-5395823 text=
     ← 所属商机 · 信息收集
     所属商机 · 信息收集 › T6 用例预算
   
-PASS - IA-30 评审详情返回所属商机 | href=#/opp/PL-T6-5623264 text=
+PASS - IA-30 评审详情返回所属商机 | href=#/opp/PL-T6-5395823 text=
     ← 商机概览
     商机概览 › T6 用例评审
   
@@ -50,10 +55,10 @@ PASS - IA-34 成功写请求后重新进入 L1 恰刷新一次 | hits=1
 PASS - IA-34 写评审后重进 L2 恰 1 次详情请求 | hits=1
 PASS - IA 浏览器控制台与页面异常为零
 PASS - IA-14 旧深链 #/agent?b= 对话窗仍可用
-PASS - COMPAT-1 #/review/:id 详情页可用 | id=340
+PASS - COMPAT-1 #/review/:id 详情页可用 | id=346
 PASS - COMPAT-2 #/tasks 任务表格结构不变
 PASS - IA-35 L1 档案卡12行 + 实例恰两组(空组也渲染) + 无#oppTabs + 待补分支[数据缺失] | rows=12 groups=2 tabs=0 missingDom=2 apiMissing=["sales"]
-PASS - IA-36 L1→L2: hash=/r/:id + #reviewInstancePage + 四页签 + 面包屑商机概览› + 灯横幅/进度条 | hash=#/opp/PL-T6-5623264/r/340 tabs=4 crumb=#/opp/PL-T6-5623264/
+PASS - IA-36 L1→L2: hash=/r/:id + #reviewInstancePage + 四页签 + 面包屑商机概览› + 灯横幅/进度条 | hash=#/opp/PL-T6-5395823/r/346 tabs=4 crumb=#/opp/PL-T6-5395823/
     ← 商机概览
     商机概览 › T6 缓存用例评审
    banner=1 seg=1
@@ -62,23 +67,25 @@ PASS - IA-38 两轮实例: 默认第2轮 → 切第1轮进度变化且零请求 
     
     
     
-    第 2 轮 · 已打灯 0 · 待打灯  p1=
+    
+    第 2 轮 · 已打灯 0 · p1=
     
     
     
-    第 1 轮 · 已打灯 9 · 待打灯  hits=0
+    
+    第 1 轮 · 已打灯 0 · hits=0
 PASS - IA-38 时间线跨轮次: result 页签显全部轮次事件且零请求 | tl=时间线（全部轮次）
-      第 2 轮提交 · 销售支持组 — 前置评审任务已重新分发2026/10/20 19:2 hits=0
-PASS - IA-39 直开#/review/:id: 实例视图+切换器在场+hash 不重定向 | hash=#/review/339 switcher=1
-PASS - IA-39 切页签后 hash 仍不变 | hash=#/review/339
-PASS - IA-40 prefill 五级级联: pfHint评审N项(N≥1) + 标题/客户取历史新值 + 代码强制落位 + 档案旧值不出现 | hintN=2 vals={"title":"IA40历史新值","opp_code":"PL-IA40-5651521","customer":"新客户"} hint="商机上下文: PL-IA40-5651521 · 已带入 9 项：评审 2 项 / 档案 7 项 / 待补 28 项"
+      第 2 轮提交 · 销售支持组 — 前置评审任务已重新分发2026/10/25 04:5 hits=0
+PASS - IA-39 直开#/review/:id: 实例视图+切换器在场+hash 不重定向 | hash=#/review/345 switcher=1
+PASS - IA-39 切页签后 hash 仍不变 | hash=#/review/345
+PASS - IA-40 prefill 五级级联: pfHint评审N项(N≥1) + 标题/客户取历史新值 + 代码强制落位 + 档案旧值不出现 | hintN=2 vals={"title":"IA40历史新值","opp_code":"PL-IA40-5426475","customer":"新客户"} hint="商机上下文: PL-IA40-5426475 · 已带入 9 项：评审 2 项 / 档案 7 项 / 待补 28 项"
 PASS - IA-41 深链来路返回: #/tasks→#/review/:id 点← 应回 #/tasks(旧码回固定父级) | hash=#/tasks
-PASS - IA-42 下钻链逐级返回: L2→在线填写预算表 点← 应回 L2(旧码跳回 L1) | 期望=#/opp/PL-T6-5623264/r/339 实得=#/opp/PL-T6-5623264/r/339
-PASS - IA-43 直达深链无来路(刷新清栈): ← 落固定父级 #/opp/FX(防回归钉, 新旧码均绿) | hash=#/opp/PL-T6-5623264
-PASS - IA-3 fde1 导航两项(首页/待办打灯) | 实得:首页,待办打灯
+PASS - IA-42 下钻链逐级返回: L2→在线填写预算表 点← 应回 L2(旧码跳回 L1) | 期望=#/opp/PL-T6-5395823/r/345 实得=#/opp/PL-T6-5395823/r/345
+PASS - IA-43 直达深链无来路(刷新清栈): ← 落固定父级 #/opp/FX(防回归钉, 新旧码均绿) | hash=#/opp/PL-T6-5395823
+PASS - IA-3 fde1 导航三项含相关商机 | 实得:首页,相关商机,待办打灯
 PASS - IA-6b fde1 首页含我的待办
-PASS - IA-4 sales1 导航三项(首页/我的商机/新建待评审商机) | 实得:首页,我的商机,新建待评审商机
+PASS - IA-4 sales1 导航四项含我的预算单 | 实得:首页,我的商机,我的预算单,新建待评审商机
 PASS - IA-6c sales1 首页含我的待办
 PASS - IA-5 财务BP 导航四项(含待办打灯) | 实得:首页,我的商机,新建待评审商机,待办打灯
 
-58 passed, 0 failed -> ALL PASS
+63 passed, 0 failed -> ALL PASS

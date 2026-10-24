@@ -1,0 +1,47 @@
+PASS - SC-1 预算导入展示系统里/原表里双面板
+PASS - SC-2 合同金额严格显示 240000
+PASS - SC-3 中文字段与来源位置可见
+PASS - SC-4 原表标签值与跳过格分层
+PASS - SC-4A 四元素原格显示格式化值而非原始值 | {"display":"2026-10-30","raw":"2026-10-30T00:00:00","text":"2026-10-30","title":"2026-10-30"}
+PASS - SC-5 左行点击仅滚动右侧证据面板 | {"active":9,"left":0,"right":560,"pageBefore":0,"pageAfter":0}
+PASS - SC-6 原表点击反选系统行且原格可键盘聚焦
+PASS - SC-7 公式栏精确保留所点非空原格地址和接口完整值 | 附1-预算表!D28 专业服务 !== 附1-预算表!D28 专业服务
+PASS - SC-8 仅差异筛选精确保留全部非一致行并隐藏全部一致行 | {"total":15,"same":11,"expectedVisible":4,"visible":4,"visibleSame":0,"hiddenDiff":0}
+PASS - SC-9 Bearer 下载保持原件字节与中文文件名 | 【投标决策】PL00008572-260918-江西省天地图POI数据服务项目（20260917).xlsx
+PASS - SC-10 预算下一步文案仅含一个箭头 | 进入预算单核对/锁定 →
+PASS - SC-10A 预算下一步落对话页
+PASS - SC-11 评审导入展示短名与对照组件
+PASS - SC-11A 评审下一步文案仅含一个箭头 | 进入草稿编辑(补齐后提交) →
+PASS - SC-12 评审下一步进入可编辑草稿
+PASS - SC-13 附3语义行精确为2保存行/10剔除 | {"saved":2,"skipped":10}
+PASS - SC-14 十项原件合计全部呈现 | 10
+PASS - SC-14A 附3确认与返回控件箭头严格匹配 | 确认无误, 进入明细编辑 → | 重新上传 / 返回编辑页
+PASS - SC-16 导入确认只进入明细编辑而非流程确认
+PASS - SC-17 来源刷新不覆盖未保存编辑
+PASS - SC-17A 预算编辑器零数字行就地提示且填数后消失 | {"budgetZeroIndex":2,"budgetHintShown":true,"budgetHintCleared":true}
+PASS - SC-15 缺失原件合计不伪装为0或一致 | 10
+PASS - SC-18 预算详情重进仍展示持久来源
+PASS - SC-19 评审来源完成不重绘表单控件
+PASS - SC-19A 详情请求途中失效则丢弃旧代际结果并重取当前代际 | {"calls":2,"cached":true,"current":true}
+PASS - SC-19B paint-only重进不复活失效来源
+PASS - SC-19C 来源请求途中失效则迟到响应不落状态不绘制 | {"result":true,"settled":true,"painted":false,"cached":false}
+PASS - SC-19C2 来源状态缓存有界且保留最近结果 | {"oldestRetained":false,"latestRetained":true}
+PASS - SC-19D 同键旧请求不得覆盖较新来源 | calls=2
+PASS - SC-19E 同ID重挂载拒绝旧元素迟到绘制
+PASS - SC-19F 真详情同评审离开返回拒绝陈旧请求且无pageerror | calls=2 errors=[]
+PASS - SC-19G 首页旧列表请求迟到不在商机页抛pageerror | calls=2 errors=[]
+PASS - SC-24 无导入来源明确显示空状态
+PASS - SC-25 机会交付真实挂载 delivery_opp 来源与十项合计 | /api/opp/PL-SC-1792875473009-127044/delivery/source checks=10
+PASS - SC-25A 真实接口来源文件名按文本转义 | {"title":"SC-<img src=x onerror=window.__srcvXss=1>.xlsx","injected":false,"expected":"SC-<img src=x onerror=window.__srcvXss=1>.xlsx"}
+PASS - SC-26 真实8068保留原件17.5/导入11.5/当前11.5差异 | 正编人天原件 17.5 · 导入 11.5 · 当前 11.5有差异
+PASS - SC-27 合并投影仅显示非空轴并保留原始行号 | {"spans":40,"preservedGap":true,"axesExact":true,"mergedInteriorCases":0,"mergedInteriorLinked":true,"expectedRows":43,"actualRows":43,"expectedCols":90,"actualCols":90}
+PASS - SC-27A 真实端点合并内部来源坐标链接到可见锚点 | [{"cases":2,"linked":true},{"cases":0,"linked":true},{"cases":0,"linked":true},{"cases":0,"linked":true}]
+PASS - SC-28 在线修改显示已修改且导入值与原表值不变 | imported 3->3; 当前 4
+PASS - SC-28A 交付变化字段只显示中文业务标签 | 正编人天：3 → 4 · 导入值 → 当前值
+PASS - SC-28B 商机编辑器零数字行就地提示且填数后消失 | {"oppZeroIndex":30,"oppHintShown":true,"oppHintCleared":true}
+PASS - SC-29 无挂靠预算真实落 delivery_budget 来源 | /api/budget/297/delivery/source
+PASS - SC-20 malformed JSON 收敛为编辑器内错误且保留未保存文本
+PASS - SC-21 错误后的真实重载恢复且仍保留未保存文本
+PASS - SC-22 390px 单列无全局横溢出且双表内部滚动 | {"stacked":true,"pageFits":true,"leftInternalOverflow":true,"rightInternalOverflow":true}
+PASS - SC-23 console.error 与 pageerror 均为零
+46 passed, 0 failed -> ALL PASS

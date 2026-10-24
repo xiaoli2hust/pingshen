@@ -1,0 +1,86 @@
+BF 套件: 真实 tools/backfill_import_sources.js + 真实 Python 解析器 + tests/realdata 真实 XLSX(只读复制到 os.tmpdir 临时目录)
+INFO - 临时目录(父级已核为 os.tmpdir()): C:\Users\01386380\AppData\Local\Temp\bf-import-src-R8aUx4
+PASS - BF-00 受控夹具库与临时上传目录就位(真实解析器预期值独立复算; 非共享库)
+TOOL --db=…/fixture_a.db --uploads=…/uploads --dry-run -> exit=0
+  | SKIP-EXISTING budget:5 已有来源, 不追加
+  | INHERIT budget:2 沿版本链继承 budget:1 的原件, 不重复建源
+  | N/A review:3 无 Excel 导入证据(事件/历史附件), 非导入建单
+  | SKIP-EXISTING review:4 已有来源, 不追加
+  | N/A delivery_opp:PL00008068 source_file 为空(在线编制, 非导入)
+  | ADOPT budget:1 file=import/1791000000000_【投标决策】PL00008572-260918-江西省天地图POI数据服务项目（20260917).xlsx fields=14 sheet=附1-预算表 importer=2 created_at=2026-10-03T04:00:00.009Z
+  | ADOPT budget:3 file=import/1791000002000_【投标决策】PL00008111-坪山区三维数据更新2026项目评审（20260810).xlsx fields=14 sheet=附1-预算表 importer=3 created_at=2026-10-03T04:00:02.005Z
+  | ADOPT review:1 file=import/1791000001000_【投标决策】PL00008572-260918-江西省天地图POI数据服务项目（20260917).xlsx fields=33 opp_code=PL00008572 sheet=投标决策评审-信息收集与前置评审 importer=2 created_at=2026-10-03T04:00:01.007Z
+  | ADOPT review:2 file=import/1791000005000_【投标决策】PL00008111-坪山区三维数据更新2026项目评审（20260810).xlsx fields=32 opp_code=PL00008111 sheet=投标决策评审-信息收集与前置评审 importer=1 created_at=2026-10-03T04:00:05.003Z
+  | ADOPT delivery_opp:PL00008572 file=delivery/1791000003000_PL00008572-附3.xlsx rows=2 skipped=10 sheet=附3-交付成本评估 importer=3 created_at=2026-10-03T04:00:03.000Z
+  | ADOPT delivery_budget:3 file=delivery/1791000004000_PL00008111-附3.xlsx rows=2 skipped=1 sheet=附3-交付成本评估 importer=3 created_at=2026-10-03T04:00:04.000Z
+PASS - BF-01 --dry-run 计划 6 条且零写入(库字节不变), 退出码 0
+TOOL --db=…/fixture_a.db --uploads=…/uploads --log=…/bf_a.log -> exit=0
+  | SKIP-EXISTING budget:5 已有来源, 不追加
+  | INHERIT budget:2 沿版本链继承 budget:1 的原件, 不重复建源
+  | N/A review:3 无 Excel 导入证据(事件/历史附件), 非导入建单
+  | SKIP-EXISTING review:4 已有来源, 不追加
+  | N/A delivery_opp:PL00008068 source_file 为空(在线编制, 非导入)
+  | ADOPT budget:1 file=import/1791000000000_【投标决策】PL00008572-260918-江西省天地图POI数据服务项目（20260917).xlsx fields=14 sheet=附1-预算表 importer=2 created_at=2026-10-03T04:00:00.009Z
+  | ADOPT budget:3 file=import/1791000002000_【投标决策】PL00008111-坪山区三维数据更新2026项目评审（20260810).xlsx fields=14 sheet=附1-预算表 importer=3 created_at=2026-10-03T04:00:02.005Z
+  | ADOPT review:1 file=import/1791000001000_【投标决策】PL00008572-260918-江西省天地图POI数据服务项目（20260917).xlsx fields=33 opp_code=PL00008572 sheet=投标决策评审-信息收集与前置评审 importer=2 created_at=2026-10-03T04:00:01.007Z
+  | ADOPT review:2 file=import/1791000005000_【投标决策】PL00008111-坪山区三维数据更新2026项目评审（20260810).xlsx fields=32 opp_code=PL00008111 sheet=投标决策评审-信息收集与前置评审 importer=1 created_at=2026-10-03T04:00:05.003Z
+  | ADOPT delivery_opp:PL00008572 file=delivery/1791000003000_PL00008572-附3.xlsx rows=2 skipped=10 sheet=附3-交付成本评估 importer=3 created_at=2026-10-03T04:00:03.000Z
+  | ADOPT delivery_budget:3 file=delivery/1791000004000_PL00008111-附3.xlsx rows=2 skipped=1 sheet=附3-交付成本评估 importer=3 created_at=2026-10-03T04:00:04.000Z
+  | INSERTED import_sources#3 budget:1
+  | INSERTED import_sources#4 budget:3
+  | INSERTED import_sources#5 review:1
+  | INSERTED import_sources#6 review:2
+  | INSERTED import_sources#7 delivery_opp:PL00008572
+  | INSERTED import_sources#8 delivery_budget:3
+PASS - BF-02 首跑补录 6 条(2 budget+2 review+1 delivery_opp+1 delivery_budget), 零缺口, 退出码 0, 停机前提在 stdout 明示
+PASS - BF-03 预算#1: 取 assistant [Excel导入] 指名原件(不取 user 伪造消息), 原名去系统时间戳前缀, 导入值=当前解析器 mergeDraft, 不复制已改字段
+PASS - BF-04 预算#3(8111) 补录; 派生预算#2 不重复建源而沿 parent 继承 #1; 对话预算#4 不适用无源
+PASS - BF-05 评审#1: 同码且上传时间≤创建时间的最新 import 原件(排除更早/更晚同码文件与预算原件), 重解析核码, BID 白名单+毛利率归一, 不复制已改字段
+PASS - BF-06 评审#2(history 证据): 选同码最新≤创建时间文件; 无 Excel 证据的表单评审#3 不适用无源
+PASS - BF-07 商机交付 PL00008572: 取 source_file 原件 delivery/<safe>, 导入行=服务八字段口径 2 行(实施 5/39/0/184/6000, 运维 2/0/0/0/0), 剔除 10 行披露, 不复制当前已改行
+PASS - BF-08 预算交付 budget_delivery#3 → delivery_budget 键 "3", 导入者取预算 owner
+PASS - BF-09 既有来源实体跳过(预算#5/评审#4 仍各 1 条且 backfilled=0), 只 INSERT 不改既有行
+PASS - BF-10 实体表(预算/评审/任务/事件/附件/商机/交付/消息/用户/设置)逐行逐列不变
+PASS - BF-11 --log 以 UTF-8 落盘逐实体采用路径与行数, 不含原件内容
+TOOL --db=…/fixture_a.db --uploads=…/uploads -> exit=0
+  | SKIP-EXISTING budget:1 已有来源, 不追加
+  | SKIP-EXISTING budget:3 已有来源, 不追加
+  | SKIP-EXISTING budget:5 已有来源, 不追加
+  | INHERIT budget:2 沿版本链继承 budget:1 的原件, 不重复建源
+  | SKIP-EXISTING review:1 已有来源, 不追加
+  | SKIP-EXISTING review:2 已有来源, 不追加
+  | N/A review:3 无 Excel 导入证据(事件/历史附件), 非导入建单
+  | SKIP-EXISTING review:4 已有来源, 不追加
+  | N/A delivery_opp:PL00008068 source_file 为空(在线编制, 非导入)
+  | SKIP-EXISTING delivery_opp:PL00008572 已有来源, 不追加
+  | SKIP-EXISTING delivery_budget:3 已有来源, 不追加
+PASS - BF-12 二跑幂等: 新增 0, 来源总数仍 8, 退出码 0
+TOOL --db=…/fixture_b.db --uploads=…/uploads_b -> exit=1
+  | GAP budget:1 原件不存在: import/1791999999999_PL00008572-gone.xlsx
+  | GAP budget:2 原件路径非法/越界: ../../evil.xlsx
+  | GAP review:1 商机代码不匹配: 原件 import/1792000002000_PL00008111-mislabeled.xlsx 解析为 PL00008572, 单据为 PL00008111
+  | GAP review:2 无上传时间≤创建时间且文件名含 PL00008068 的 import 原件
+  | GAP delivery_opp:PL00008111 原件不存在: delivery/1792000003000_missing-附3.xlsx
+  | GAP delivery_opp:PL00008572 原件路径非法/越界: ..\..\evil.xlsx
+  | ADOPT budget:3 file=import/1792000000000_【投标决策】PL00008572-260918-江西省天地图POI数据服务项目（20260917).xlsx fields=14 sheet=附1-预算表 importer=1 created_at=2026-10-14T17:46:40.009Z
+  | HOLD 存在 6 个缺口, 默认零写入(核实后可用 --allow-gaps 仅写可解析的 1 条)
+PASS - BF-13 缺口默认全有或全无: 6 个缺口逐实体给原因, 退出码非 0, 零写入
+PASS - BF-14 缺原件: 预算消息指名文件不存在 / 交付 source_file 不存在 → 缺口(不猜同码其他文件)
+PASS - BF-15 路径越界: 预算消息 ../../evil.xlsx 与交付 ..\..\evil.xlsx 即便目录外文件真实存在也拒绝
+PASS - BF-16 评审商机代码不符: 最新同名文件内容为 8572 → 缺口且不回退采用更早的 8111 原件
+PASS - BF-17 评审无≤创建时间的同码原件(仅有更晚文件) → 缺口
+TOOL --db=…/fixture_b.db --uploads=…/uploads_b --allow-gaps -> exit=1
+  | GAP budget:1 原件不存在: import/1791999999999_PL00008572-gone.xlsx
+  | GAP budget:2 原件路径非法/越界: ../../evil.xlsx
+  | GAP review:1 商机代码不匹配: 原件 import/1792000002000_PL00008111-mislabeled.xlsx 解析为 PL00008572, 单据为 PL00008111
+  | GAP review:2 无上传时间≤创建时间且文件名含 PL00008068 的 import 原件
+  | GAP delivery_opp:PL00008111 原件不存在: delivery/1792000003000_missing-附3.xlsx
+  | GAP delivery_opp:PL00008572 原件路径非法/越界: ..\..\evil.xlsx
+  | ADOPT budget:3 file=import/1792000000000_【投标决策】PL00008572-260918-江西省天地图POI数据服务项目（20260917).xlsx fields=14 sheet=附1-预算表 importer=1 created_at=2026-10-14T17:46:40.009Z
+  | INSERTED import_sources#1 budget:3
+PASS - BF-18 --allow-gaps 只写可解析的 1 条(预算#3), 缺口仍列出且退出码仍非 0; 实体表不变
+TOOL --db=…/no_such.db --uploads=…/uploads -> exit=2
+  | FATAL 库文件不存在(不会新建): C:\Users\01386380\AppData\Local\Temp\bf-import-src-R8aUx4\no_such.db
+PASS - BF-19 库文件不存在: 退出码 2 且不创建新库
+
+20 passed, 0 failed -> ALL PASS

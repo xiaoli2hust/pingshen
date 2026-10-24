@@ -7,10 +7,14 @@ const crypto = require('crypto');
 const { spawn } = require('child_process'); // T9 探针走 curl 通道(防火墙重置 Node 原生 TLS 指纹, 同 agent.js extractFields)
 const { DatabaseSync } = require('node:sqlite');
 const { computeBudget, DEFAULT_SETTINGS, missingOf, rateFor, MISSING_BUDGET } = require('./finance.js'); // 阶段2 财务引擎(任务2.1)+单价档(附3行成本)+V4.0§5 预算缺项只读投影
-const { mergeDraft, checkMessage, extractFields, buildReply,
+const { mergeDraft, checkMessage, extractFields, buildReply, BUDGET_WHITELIST,
   BID_SYSTEM_PROMPT, BID_WHITELIST, BID_REQUIRED, buildBidReply,
   OPP_SYSTEM_PROMPT, OPP_WHITELIST, buildOppReply } = require('./agent.js'); // 技能①(2.5) + 技能②③(3.3) + 技能④对话式建档(V4.0 P1)
 const { createNotify } = require('./notify.js'); // 阶段3 通知适配器(任务 3.6)
+const { hasBudgetNumbers, pruneStoredDelivery } = require('./delivery-rows.js');
+const { IMPORT_SOURCES_DDL, BUDGET_FIELD_LABELS, saveImportSource, latestImportSource,
+  budgetImportSource, sourceMeta, resolveImportSourcePath, writeUniqueUpload, encodeRFC5987Value,
+  formComparison, deliveryComparison } = require('./import-source.js');
 const {
   DELIVERY_SYSTEM_PROMPT, cleanDeliveryDraft,
   createRobotOrchestrator, buildReviewInvite, buildTaskDispatches,
@@ -291,6 +295,7 @@ CREATE TABLE IF NOT EXISTS robot_outbox(
   attempts INTEGER NOT NULL DEFAULT 0, last_error TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_robot_outbox_status ON robot_outbox(status, id);`);
+db.exec(IMPORT_SOURCES_DDL);
 // 工作台深链基址与 reviewLink 同口径(PUBLIC_BASE_URL 优先, 默认本机); 签名报告 token 一律不进机器人消息
 function publicBaseUrl() {
   return String(readCfg().PUBLIC_BASE_URL || '').replace(/\/+$/, '') || ('http://localhost:' + PORT);
@@ -422,7 +427,7 @@ const cleanDeliveryRows = rows => (Array.isArray(rows) ? rows : []).map(r => ({
   rd_pd: Math.max(0, num(r.rd_pd) || 0), prod_pd: Math.max(0, num(r.prod_pd) || 0),
   travel_cost: Math.max(0, num(r.travel_cost) || 0),
   note: String(r.note || '').slice(0, 500)
-})).filter(r => r.content.trim() || r.pm_pd || r.own_pd || r.rd_pd || r.prod_pd || r.travel_cost);
+})).filter(hasBudgetNumbers);
 // 存行文本 -> 行数组的容错解析: 与 robotPayload / llmDegrade 同型(坏 JSON 或非数组一律回兜底值, 不抛)
 // 名字避开 putDelivery(rowsJson, …) 的同形参数, 防读侧helper 被局部参数遮蔽
 const parseRowsJson = s => { try { const v = JSON.parse(s || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; } };
@@ -1170,7 +1175,7 @@ function saveJudged(review, result) {
 
 // ---------- 研判报告 HTML(对齐真实产出版式) ----------
 const FIELD_LABELS = {
-  opp_code: '商机代码', customer: '最终客户名称', opp_stage: '商机阶段', region: '营销区域',
+  opp_code: '商机代码', opp_name: '商机名称', customer: '最终客户名称', opp_stage: '商机阶段', region: '营销区域',
   biz_line: '业务线', contract_amount: '预计合同金额(万元)', sales: '销售经理', pm: '项目经理',
   sign_date: '预计签单时间', gross_margin: '预计贡献毛利率(%)', cost_happened: '项目已发生成本(万元)',
   ops_years: '项目运维周期', sign_path: '签约路径', sub_amount: '分包总金额(万元)',
@@ -1317,7 +1322,7 @@ const server = http.createServer(async (req, res) => {
   const p = url.pathname;
   try {
     // 静态资源
-    if (req.method === 'GET' && (p === '/' || p.startsWith('/app.') || p.startsWith('/style'))) {
+    if (req.method === 'GET' && (p === '/' || p === '/source-view.js' || p.startsWith('/app.') || p.startsWith('/style'))) {
       const file = p === '/' ? 'index.html' : p.slice(1);
       const fp = path.join(PUBLIC_DIR, file);
       if (fs.existsSync(fp)) {
@@ -1372,6 +1377,40 @@ const server = http.createServer(async (req, res) => {
 
     if (p === '/api/me') return send(res, 200, { user });
 
+    const mImportFile = p.match(/^\/api\/import-sources\/(\d+)\/file$/);
+    if (mImportFile && req.method === 'GET') {
+      const source = db.prepare('SELECT * FROM import_sources WHERE id=?').get(mImportFile[1]);
+      if (!source) return send(res, 404, { error: '原件来源不存在' });
+      let entity = null, allowed = false;
+      if (source.entity_type === 'review') {
+        entity = db.prepare('SELECT id FROM reviews WHERE id=?').get(source.entity_key);
+        allowed = !!entity;
+      } else if (source.entity_type === 'budget' || source.entity_type === 'delivery_budget') {
+        entity = db.prepare('SELECT id,owner_id FROM budgets WHERE id=?').get(source.entity_key);
+        allowed = !!entity && (entity.owner_id === user.id || user.role === '销售支持组' || user.role === 'admin');
+      } else if (source.entity_type === 'delivery_opp') {
+        entity = db.prepare('SELECT opp_code,created_by FROM opps WHERE opp_code=?').get(source.entity_key);
+        allowed = !!entity && (entity.created_by === user.id || user.role === '项目经理' || user.role === '销售支持组' || user.role === 'admin');
+      }
+      if (!entity) return send(res, 404, { error: '来源关联实体不存在' });
+      if (!allowed) return send(res, 403, { error: '无权下载该原件' });
+      const fp = resolveImportSourcePath(UPLOAD_DIR, source.file_path);
+      if (!fp) return send(res, 403, { error: '原件路径不安全' });
+      let stat;
+      try { stat = fs.statSync(fp); } catch (e) { return send(res, 404, { error: '原件文件不存在' }); }
+      if (!stat.isFile()) return send(res, 404, { error: '原件文件不存在' });
+      const originalName = source.file_name
+        ? String(source.file_name)
+        : path.basename(source.file_path || '').replace(/^(?:\d+|[0-9a-f-]{36})_/, '');
+      const encodedName = originalName.replace(/[\r\n\0]/g, '') || 'source.xlsx';
+      const fallback = encodedName.replace(/[^\x20-\x7e]/g, '_').replace(/["\\\x00-\x1f\x7f]/g, '_');
+      res.writeHead(200, {
+        'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'Content-Disposition': `attachment; filename="${fallback}"; filename*=UTF-8''${encodeRFC5987Value(encodedName)}`
+      });
+      return res.end(fs.readFileSync(fp));
+    }
+
     // V4.0-T10 机器人入口: 白名单只决定能否进门(GET 需 query|create, 写操作需 create), 进门后与网页同走全部业务门禁, 不开任何免检旁路
     if (req.headers['x-via-robot']) {
       const scopes = req.method === 'GET' ? ['query', 'create'] : ['create'];
@@ -1424,9 +1463,7 @@ const server = http.createServer(async (req, res) => {
       if (buf.length > 10 * 1024 * 1024) return send(res, 400, { error: '文件不能超过 10MB' });
       const dir = path.join(UPLOAD_DIR, 'lab');
       fs.mkdirSync(dir, { recursive: true });
-      const safe = Date.now() + '_' + path.basename(String(filename)).replace(/[\\/:*?"<>|]/g, '_');
-      const fp = path.join(dir, safe);
-      fs.writeFileSync(fp, buf);
+      const { safe, fp } = writeUniqueUpload(dir, filename, buf);
       // 映射覆盖(调优): settings.parser_map_overrides + use_override 开关
       let mapArgs = [];
       if (use_override) {
@@ -1501,9 +1538,7 @@ const server = http.createServer(async (req, res) => {
       if (buf.length > 10 * 1024 * 1024) return send(res, 400, { error: '文件不能超过 10MB' });
       const dir = path.join(UPLOAD_DIR, 'import');
       fs.mkdirSync(dir, { recursive: true });
-      const safe = Date.now() + '_' + path.basename(String(filename)).replace(/[\\/:*?"<>|]/g, '_');
-      const fp = path.join(dir, safe);
-      fs.writeFileSync(fp, buf);
+      const { safe, fp } = writeUniqueUpload(dir, filename, buf);
       const pr = await runPython(['-X', 'utf8', path.join(ROOT, 'tools', 'parse_form_xlsx.py'), fp, '--type', 'budget', '--audit']);
       if (pr.status !== 0) return send(res, 502, { error: 'Excel 解析失败(python/openpyxl 不可用或文件非附1模板):' + String(pr.stderr || '').slice(0, 150) + '。可在智能体对话口述或手填。' });
       let parsed;
@@ -1517,7 +1552,10 @@ const server = http.createServer(async (req, res) => {
         .run(newBudgetCode(), 1, 'draft', user.id, merged.project_name || safe, JSON.stringify(merged), JSON.stringify(calc), merged.opp_code || null, t, t);
       upsertOpp(String(merged.opp_code || '').trim(), 'excel', merged, merged.project_name || safe, user.id); // D-9 更正: 本锚点是 Excel 通道, source 用 excel(原简报误标 form)
       addAgentMsg(r.lastInsertRowid, 'assistant', `[Excel导入] ${safe} -> ${Object.keys(merged).length} 字段(命中 ${parsed.meta.matched}/${parsed.meta.pairs_total} 对, 未匹配 ${((parsed.warnings || []).length)} 项)——请核对后编交付明细并人工锁定`);
-      return send(res, 200, { ok: true, id: r.lastInsertRowid, fields: merged, calc, warnings: parsed.warnings || [], meta: parsed.meta, audit: { pairs: parsed.pairs, sources: parsed.sources, grid: parsed.grid } });
+      const source = saveImportSource(db, { entity_type: 'budget', entity_key: String(r.lastInsertRowid),
+        file_name: String(filename), file_path: 'import/' + safe, parsed, imported: merged, user, created_at: t });
+      return send(res, 200, { ok: true, id: r.lastInsertRowid, fields: merged, calc, warnings: parsed.warnings || [], meta: parsed.meta,
+        audit: { pairs: parsed.pairs, sources: parsed.sources, grid: parsed.grid, sheet: parsed.sheet, unpicked: parsed.unpicked || [] }, source: sourceMeta(source) });
     }
 
     // POST /api/reviews/import: 上传含信息收集表的 xlsx → 解析 → BID 白名单 → 建评审草稿(bid/presale 仍需关联锁定预算提交)
@@ -1532,9 +1570,7 @@ const server = http.createServer(async (req, res) => {
       if (buf.length > 10 * 1024 * 1024) return send(res, 400, { error: '文件不能超过 10MB' });
       const dir = path.join(UPLOAD_DIR, 'import');
       fs.mkdirSync(dir, { recursive: true });
-      const safe = Date.now() + '_' + path.basename(String(filename)).replace(/[\\/:*?"<>|]/g, '_');
-      const fp = path.join(dir, safe);
-      fs.writeFileSync(fp, buf);
+      const { safe, fp } = writeUniqueUpload(dir, filename, buf);
       const pr = await runPython(['-X', 'utf8', path.join(ROOT, 'tools', 'parse_form_xlsx.py'), fp, '--type', 'review', '--sheet', type === 'bid' ? '投标决策' : (type === 'presale' ? '售前立项' : ''), '--audit']);
       if (pr.status !== 0) return send(res, 502, { error: 'Excel 解析失败:' + String(pr.stderr || '').slice(0, 150) + '。可改用表单手填。' });
       let parsed;
@@ -1560,15 +1596,22 @@ const server = http.createServer(async (req, res) => {
           .run(type, title, user.id, user.name, 'archived', 1, JSON.stringify(form), 'none', decision, JSON.stringify(jd), archAt, 'history', form.opp_code || parsed.fields.opp_code || null, t, t);
         upsertOpp(String(form.opp_code || parsed.fields.opp_code || '').trim(), 'history', form, title, user.id);
         // 原件存证
-        db.prepare('INSERT INTO attachments(review_id,field,filename,filepath,uploaded_at) VALUES(?,?,?,?,?)').run(r.lastInsertRowid, '历史评审表原件', fname, fp, t);
+        db.prepare('INSERT INTO attachments(review_id,field,filename,filepath,uploaded_at) VALUES(?,?,?,?,?)').run(r.lastInsertRowid, '历史评审表原件', fname, 'import/' + safe, t);
         addEvent(r.lastInsertRowid, '历史数据导入', user.name, `来源:${fname} · 评审日期:${archAt} · 结论:${decision} · 导入:${t}(历史单据只在归档库展现)`);
-        return send(res, 200, { ok: true, id: r.lastInsertRowid, era: 'history', status: 'archived', light: 'none', decision, archived_at: archAt, form, warnings: parsed.warnings || [], meta: parsed.meta });
+        const source = saveImportSource(db, { entity_type: 'review', entity_key: String(r.lastInsertRowid),
+          file_name: fname, file_path: 'import/' + safe, parsed, imported: form, user, created_at: t });
+        return send(res, 200, { ok: true, id: r.lastInsertRowid, era: 'history', status: 'archived', light: 'none', decision, archived_at: archAt, form,
+          warnings: parsed.warnings || [], meta: parsed.meta,
+          audit: { pairs: parsed.pairs, sources: parsed.sources, grid: parsed.grid, sheet: parsed.sheet, unpicked: parsed.unpicked || [] }, source: sourceMeta(source) });
       }
       const r = db.prepare('INSERT INTO reviews(type,title,applicant_id,applicant_name,status,round,form_json,budget_id,opp_code,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?,?)')
         .run(type, title, user.id, user.name, 'draft', 1, JSON.stringify(form), null, form.opp_code || null, t, t);
       upsertOpp(String(form.opp_code || '').trim(), 'excel', form, title, user.id);
       addEvent(r.lastInsertRowid, '保存草稿', user.name, `Excel 导入(${Object.keys(form).length} 字段, 命中 ${parsed.meta.matched}/${parsed.meta.pairs_total} 对)——请核对补充后提交`);
-      return send(res, 200, { ok: true, id: r.lastInsertRowid, form, warnings: parsed.warnings || [], meta: parsed.meta, audit: { pairs: parsed.pairs, sources: parsed.sources, grid: parsed.grid } });
+      const source = saveImportSource(db, { entity_type: 'review', entity_key: String(r.lastInsertRowid),
+        file_name: String(filename), file_path: 'import/' + safe, parsed, imported: form, user, created_at: t });
+      return send(res, 200, { ok: true, id: r.lastInsertRowid, form, warnings: parsed.warnings || [], meta: parsed.meta,
+        audit: { pairs: parsed.pairs, sources: parsed.sources, grid: parsed.grid, sheet: parsed.sheet, unpicked: parsed.unpicked || [] }, source: sourceMeta(source) });
     }
 
     if (p === '/api/budget' && req.method === 'GET') { // 列表(H-05/H-06, 契约外补充同 messages 先例): 我的(支持组全部; O4: q 商机代码/项目名搜索)
@@ -1602,7 +1645,7 @@ const server = http.createServer(async (req, res) => {
       const calc = computeBudget(mergeDraft(fields || {}, {}), getSettings());
       return send(res, 200, { calc });
     }
-    const mBudget = p.match(/^\/api\/budget\/(\d+)(\/[\w-]+(?:\/[\w-]+)?)?$/); // 支持两段子路径(/delivery/import, /delivery/apply)
+    const mBudget = p.match(/^\/api\/budget\/(\d+)(\/[\w-]+(?:\/[\w-]+){0,2})?$/); // 支持三段子路径(/delivery/import, /delivery/source)
     if (mBudget) {
       const bd = getBudget(mBudget[1]);
       if (!bd) return send(res, 404, { error: '预算单不存在' });
@@ -1636,9 +1679,19 @@ const server = http.createServer(async (req, res) => {
         }
       };
       const canRead = bd.owner_id === user.id || user.role === '销售支持组' || user.role === 'admin'; // 审查整改#7: GET 收紧(对齐 PUT, 放宽 admin)
+      if (sub === '/source' && req.method === 'GET') {
+        if (!canRead) return send(res, 403, { error: '仅预算单所有者可查看来源' });
+        const source = budgetImportSource(db, bd.id);
+        if (!source) return send(res, 200, { source: null, sheet: null, comparison: null });
+        let audit = {}, imported = {};
+        try { audit = JSON.parse(source.audit_json || '{}'); } catch (e) {}
+        try { imported = JSON.parse(source.imported_json || '{}'); } catch (e) {}
+        return send(res, 200, { source: sourceMeta(source), sheet: audit.sheet || null,
+          comparison: formComparison(audit, imported, bd.fields, BUDGET_FIELD_LABELS, BUDGET_WHITELIST) });
+      }
       if (!sub && req.method === 'GET') { // 详情含版本链(API-15)
         if (!canRead) return send(res, 403, { error: '仅预算单所有者可查看详情' });
-        return send(res, 200, { budget: bd, versions: budgetChain(bd) });
+        return send(res, 200, { budget: { ...bd, import_source: sourceMeta(budgetImportSource(db, bd.id)) }, versions: budgetChain(bd) });
       }
       if (!sub && req.method === 'PUT') { // 编辑(API-03/04/05): owner/支持组, 白名单字段合并
         if (!canWrite) return send(res, 403, { error: '仅预算单所有者可编辑' });
@@ -1700,22 +1753,38 @@ const server = http.createServer(async (req, res) => {
         return send(res, 200, { messages: db.prepare('SELECT role,content,created_at FROM agent_messages WHERE budget_id=? ORDER BY id').all(bd.id) });
       }
 
+      if (sub === '/delivery/source' && req.method === 'GET') {
+        if (!canRead) return send(res, 403, { error: '仅预算单所有者可查看交付明细来源' });
+        const oppDelivery = useOppStore ? db.prepare('SELECT * FROM opp_delivery WHERE opp_code=?').get(oppCodeB) : null;
+        const d = oppDelivery || db.prepare('SELECT * FROM budget_delivery WHERE budget_id=?').get(bd.id);
+        const source = latestImportSource(db, oppDelivery ? 'delivery_opp' : 'delivery_budget', oppDelivery ? oppCodeB : bd.id);
+        if (!source) return send(res, 200, { source: null, sheet: null, comparison: null });
+        let audit = {}, imported = [];
+        try { audit = JSON.parse(source.audit_json || '{}'); } catch (e) {}
+        try { imported = JSON.parse(source.imported_json || '[]'); } catch (e) {}
+        const current = d ? deliverySum(JSON.parse(d.rows_json || '[]')).rows : [];
+        return send(res, 200, { source: sourceMeta(source), sheet: audit.sheet || null,
+          comparison: deliveryComparison(audit, Array.isArray(imported) ? imported : [], current) });
+      }
       if (sub === '/delivery' && req.method === 'GET') { // 明细回显(含行成本实算)
         if (!canRead) return send(res, 403, { error: '仅预算单所有者可查看交付明细' }); // 第二轮对抗 #R1: 上轮 #7 收紧漏了此端点
         const S = getSettings();
-        const d = getDelivery();
-        if (!d) return send(res, 200, { rows: [], sum: null, source_file: null, rate: rateFor(bd.fields.dev_dept, S), rd_price: num(S.price_rd_outsource) || 995, prod_price: num(S.price_prod_outsource) || 320 });
+        const oppDelivery = useOppStore ? db.prepare('SELECT * FROM opp_delivery WHERE opp_code=?').get(oppCodeB) : null;
+        const d = oppDelivery || db.prepare('SELECT * FROM budget_delivery WHERE budget_id=?').get(bd.id);
+        const importSource = latestImportSource(db, oppDelivery ? 'delivery_opp' : 'delivery_budget', oppDelivery ? oppCodeB : bd.id);
+        if (!d) return send(res, 200, { rows: [], sum: null, source_file: null, rate: rateFor(bd.fields.dev_dept, S), rd_price: num(S.price_rd_outsource) || 995, prod_price: num(S.price_prod_outsource) || 320, import_source: sourceMeta(importSource) });
         const calc = deliverySum(JSON.parse(d.rows_json || '[]'));
-        return send(res, 200, { ...calc, source_file: d.source_file });
+        return send(res, 200, { ...calc, source_file: d.source_file, import_source: sourceMeta(importSource) });
       }
       if (sub === '/delivery' && req.method === 'PUT') { // 在线编辑保存(建设内容基础上修改)
         if (!canWrite) return send(res, 403, { error: '仅预算单所有者可编辑交付明细' });
         if (bd.status !== 'draft') return send(res, 400, { error: '预算单已锁定,请新建版本后编辑明细' });
         const { rows } = await parseBody(req);
         const calc = deliverySum(rows);
+        const dropped = (Array.isArray(rows) ? rows.length : 0) - calc.rows.length;
         putDelivery(JSON.stringify(calc.rows));
         addAgentMsg(bd.id, 'assistant', '[交付明细保存] ' + calc.rows.length + ' 行(正编' + calc.sum.own_pd + '+PM' + calc.sum.pm_pd + '+生产' + calc.sum.prod_pd + '人天,差旅' + calc.sum.travel_cost + '元)');
-        return send(res, 200, { ok: true, ...calc });
+        return send(res, 200, { ok: true, ...calc, dropped });
       }
       if (sub === '/delivery/import' && req.method === 'POST') { // 上传附3 Excel 解析(不入预算字段, 只建可编辑底稿)
         if (!canWrite) return send(res, 403, { error: '仅预算单所有者可上传交付明细' });
@@ -1726,20 +1795,25 @@ const server = http.createServer(async (req, res) => {
         if (buf.length > 10 * 1024 * 1024) return send(res, 400, { error: '文件不能超过 10MB' });
         const dir = path.join(UPLOAD_DIR, 'delivery');
         fs.mkdirSync(dir, { recursive: true });
-        const safe = Date.now() + '_' + path.basename(String(filename)).replace(/[\\/:*?"<>|]/g, '_');
-        const fp = path.join(dir, safe);
-        fs.writeFileSync(fp, buf);
+        const { safe, fp } = writeUniqueUpload(dir, filename, buf);
         // 异步跑 python(openpyxl): 与 form 导入同因(spawnSync 阻塞事件循环→keep-alive 断连)
         const pr = await runPython(['-X', 'utf8', path.join(ROOT, 'tools', 'parse_delivery_xlsx.py'), fp, '--audit']);
         if (pr.status !== 0) return send(res, 502, { error: 'Excel 解析失败(python/openpyxl 不可用或文件非附3模板):' + String(pr.stderr || '').slice(0, 150) + '。可改用在线编辑手动建行。' });
         let parsed;
         try { parsed = JSON.parse(pr.stdout); } catch (e) { return send(res, 502, { error: '解析输出异常:' + String(pr.stdout).slice(0, 100) }); }
         if (parsed.error) return send(res, 400, { error: parsed.error });
+        if (!(parsed.rows || []).length && (parsed.skipped_rows || []).length)
+          return send(res, 400, { error: `原表 ${(parsed.skipped_rows || []).length} 行建设内容均无预算数字，未生成明细行。可改用在线编辑手动建行。` });
         if (!(parsed.rows || []).length) return send(res, 400, { error: '未解析到明细行(需为含"建设内容"列的附3 模板)。可改用在线编辑手动建行。' });
         const calc = deliverySum(parsed.rows);
         putDelivery(JSON.stringify(calc.rows), safe);
+        const source = saveImportSource(db, { entity_type: useOppStore ? 'delivery_opp' : 'delivery_budget',
+          entity_key: useOppStore ? oppCodeB : String(bd.id), file_name: String(filename), file_path: 'delivery/' + safe,
+          parsed, imported: calc.rows, user, created_at: now() });
         addAgentMsg(bd.id, 'assistant', `[上传交付明细表] ${safe} -> ${calc.rows.length} 行(正编${calc.sum.own_pd}+PM${calc.sum.pm_pd}+生产${calc.sum.prod_pd}人天,差旅${calc.sum.travel_cost}元)`);
-        return send(res, 200, { ok: true, ...calc, source_file: safe, total_row: parsed.total_row, audit: { row_sources: parsed.row_sources || [], grid: parsed.grid || [], meta: parsed.meta } });
+        return send(res, 200, { ok: true, ...calc, source_file: safe, total_row: parsed.total_row,
+          audit: { row_sources: parsed.row_sources || [], skipped_rows: parsed.skipped_rows || [], grid: parsed.grid || [], meta: parsed.meta, sheet: parsed.sheet },
+          source: sourceMeta(source) });
       }
       if (sub === '/delivery/apply' && req.method === 'POST') { // 递进: 按明细汇总刷新预算交付四科目(人确认门, 不自动覆盖)
         if (!canWrite) return send(res, 403, { error: '仅预算单所有者可刷新交付科目' });
@@ -2224,22 +2298,36 @@ const server = http.createServer(async (req, res) => {
       const sum = rows => { const c = deliverySumFor(rows, rp.dev_dept); return { ...c, rate_source: rp.source }; };
       const canWriteOpp = opp.created_by === user.id || user.role === '项目经理' || user.role === '销售支持组' || user.role === 'admin';
       const getDl = () => db.prepare('SELECT * FROM opp_delivery WHERE opp_code=?').get(code);
+      if (sub === '/source' && req.method === 'GET') {
+        if (!canWriteOpp) return send(res, 403, { error: '仅商机建档人/项目经理/销售支持组可查看交付预算来源' });
+        const source = latestImportSource(db, 'delivery_opp', code);
+        if (!source) return send(res, 200, { source: null, sheet: null, comparison: null });
+        let audit = {}, imported = [];
+        try { audit = JSON.parse(source.audit_json || '{}'); } catch (e) {}
+        try { imported = JSON.parse(source.imported_json || '[]'); } catch (e) {}
+        const d = getDl();
+        const current = d ? sum(JSON.parse(d.rows_json || '[]')).rows : [];
+        return send(res, 200, { source: sourceMeta(source), sheet: audit.sheet || null,
+          comparison: deliveryComparison(audit, Array.isArray(imported) ? imported : [], current) });
+      }
       if (!sub && req.method === 'GET') { // V4.0 D-19: 明细含行成本与单价, 读取收紧到 canWriteOpp 四项(对齐预算级 canRead 的审查整改#7 口径)
         if (!canWriteOpp) return send(res, 403, { error: '仅商机建档人/项目经理/销售支持组可查看交付预算明细' });
         const d = getDl();
+        const importSource = latestImportSource(db, 'delivery_opp', code);
         if (!d) return send(res, 200, { delivery: null, rate: rateFor(rp.dev_dept, getSettings()), rd_price: num(getSettings().price_rd_outsource) || 995, prod_price: num(getSettings().price_prod_outsource) || 320, rate_source: rp.source });
         const c = sum(JSON.parse(d.rows_json || '[]'));
-        return send(res, 200, { delivery: { status: d.status, rows: c.rows, sum: c.sum, source_file: d.source_file, created_at: d.created_at, updated_at: d.updated_at }, rate: c.rate, rd_price: c.rd_price, prod_price: c.prod_price, rate_source: rp.source });
+        return send(res, 200, { delivery: { status: d.status, rows: c.rows, sum: c.sum, source_file: d.source_file, created_at: d.created_at, updated_at: d.updated_at, import_source: sourceMeta(importSource) }, rate: c.rate, rd_price: c.rd_price, prod_price: c.prod_price, rate_source: rp.source });
       }
       if (!sub && req.method === 'PUT') { // 在线编制: 修订即回 draft(G1 重确认纪律)
         if (!canWriteOpp) return send(res, 403, { error: '仅建档人/项目经理/支持组可编制交付预算' });
         const { rows } = await parseBody(req);
         const c = sum(rows);
+        const dropped = (Array.isArray(rows) ? rows.length : 0) - c.rows.length;
         const t = now();
         const ex = getDl();
         db.prepare('INSERT OR REPLACE INTO opp_delivery(opp_code,status,rows_json,source_file,owner_id,created_at,updated_at) VALUES(?,?,?,?,?,?,?)')
           .run(code, 'draft', JSON.stringify(c.rows), ex ? ex.source_file : null, user.id, ex ? ex.created_at : t, t);
-        return send(res, 200, { ok: true, status: 'draft', ...c });
+        return send(res, 200, { ok: true, status: 'draft', ...c, dropped });
       }
       if (sub === '/import' && req.method === 'POST') { // 附3 Excel(复用现 python 解析器与 row_sources, 异步跑避免 keep-alive 断连)
         if (!canWriteOpp) return send(res, 403, { error: '仅建档人/项目经理/支持组可上传交付预算' });
@@ -2249,21 +2337,25 @@ const server = http.createServer(async (req, res) => {
         if (buf.length > 10 * 1024 * 1024) return send(res, 400, { error: '文件不能超过 10MB' });
         const dir = path.join(UPLOAD_DIR, 'delivery');
         fs.mkdirSync(dir, { recursive: true });
-        const safe = Date.now() + '_' + path.basename(String(filename)).replace(/[\\/:*?"<>|]/g, '_');
-        const fp = path.join(dir, safe);
-        fs.writeFileSync(fp, buf);
+        const { safe, fp } = writeUniqueUpload(dir, filename, buf);
         const pr = await runPython(['-X', 'utf8', path.join(ROOT, 'tools', 'parse_delivery_xlsx.py'), fp, '--audit']);
         if (pr.status !== 0) return send(res, 502, { error: 'Excel 解析失败(python/openpyxl 不可用或文件非附3模板):' + String(pr.stderr || '').slice(0, 150) + '。可改用在线编辑手动建行。' });
         let parsed;
         try { parsed = JSON.parse(pr.stdout); } catch (e) { return send(res, 502, { error: '解析输出异常:' + String(pr.stdout).slice(0, 100) }); }
         if (parsed.error) return send(res, 400, { error: parsed.error });
+        if (!(parsed.rows || []).length && (parsed.skipped_rows || []).length)
+          return send(res, 400, { error: `原表 ${(parsed.skipped_rows || []).length} 行建设内容均无预算数字，未生成明细行。可改用在线编辑手动建行。` });
         if (!(parsed.rows || []).length) return send(res, 400, { error: '未解析到明细行(需为含"建设内容"列的附3 模板)。可改用在线编辑手动建行。' });
         const c = sum(parsed.rows);
         const t = now();
         const ex = getDl();
         db.prepare('INSERT OR REPLACE INTO opp_delivery(opp_code,status,rows_json,source_file,owner_id,created_at,updated_at) VALUES(?,?,?,?,?,?,?)')
           .run(code, 'draft', JSON.stringify(c.rows), safe, user.id, ex ? ex.created_at : t, t);
-        return send(res, 200, { ok: true, status: 'draft', ...c, source_file: safe, total_row: parsed.total_row, audit: { row_sources: parsed.row_sources || [], grid: parsed.grid || [], meta: parsed.meta } });
+        const source = saveImportSource(db, { entity_type: 'delivery_opp', entity_key: code,
+          file_name: String(filename), file_path: 'delivery/' + safe, parsed, imported: c.rows, user, created_at: t });
+        return send(res, 200, { ok: true, status: 'draft', ...c, source_file: safe, total_row: parsed.total_row,
+          audit: { row_sources: parsed.row_sources || [], skipped_rows: parsed.skipped_rows || [], grid: parsed.grid || [], meta: parsed.meta, sheet: parsed.sheet },
+          source: sourceMeta(source) });
       }
       if (sub === '/confirm' && req.method === 'POST') { // G1: 空行集不得确认
         if (!canWriteOpp) return send(res, 403, { error: '仅建档人/项目经理/支持组可确认交付预算' });
@@ -2280,12 +2372,23 @@ const server = http.createServer(async (req, res) => {
       if (!review) return send(res, 404, { error: '单据不存在' });
       const sub = mReview[2];
 
+      if (sub === '/source' && req.method === 'GET') {
+        const source = latestImportSource(db, 'review', review.id);
+        if (!source) return send(res, 200, { source: null, sheet: null, comparison: null });
+        let audit = {}, imported = {}, current = {};
+        try { audit = JSON.parse(source.audit_json || '{}'); } catch (e) {}
+        try { imported = JSON.parse(source.imported_json || '{}'); } catch (e) {}
+        try { current = JSON.parse(review.form_json || '{}'); } catch (e) {}
+        return send(res, 200, { source: sourceMeta(source), sheet: audit.sheet || null,
+          comparison: formComparison(audit, imported, current, FIELD_LABELS, BID_WHITELIST) });
+      }
+
       if (!sub && req.method === 'GET') {
         const tasks = db.prepare('SELECT * FROM tasks WHERE review_id=? ORDER BY round DESC, id').all(review.id);
         const events = db.prepare('SELECT * FROM events WHERE review_id=? ORDER BY id').all(review.id);
         const atts = db.prepare('SELECT id,field,filename,filepath,uploaded_at FROM attachments WHERE review_id=?').all(review.id);
         const siblings = review.opp_code ? db.prepare('SELECT id,type,title,status,updated_at FROM reviews WHERE opp_code=? AND id!=? ORDER BY updated_at DESC, id DESC').all(review.opp_code, review.id) : [];
-        return send(res, 200, { review, tasks: annotateTasks(tasks), events, attachments: atts, budget: review.budget_json ? JSON.parse(review.budget_json) : null, siblings,
+        return send(res, 200, { review: { ...review, import_source: sourceMeta(latestImportSource(db, 'review', review.id)) }, tasks: annotateTasks(tasks), events, attachments: atts, budget: review.budget_json ? JSON.parse(review.budget_json) : null, siblings,
           coverage: review.judge_detail ? judgeCoverage(review) : null });
       }
 
@@ -2988,6 +3091,7 @@ const server = http.createServer(async (req, res) => {
 
 // V4.0-T1: 存量迁移与回填——必须在 num/now 定义之后执行(const TDZ), 故挂 listen 前
 try { const m4 = migrateV40(); console.log('[V4.0-T1] delivery moved=' + m4.moved + ' opps backfilled=' + m4.made); } catch (e) { console.log('[V4.0-T1] migrate failed: ' + e.message); }
+try { const pruned = pruneStoredDelivery(db); console.log('[Task4] delivery rows pruned=' + pruned); } catch (e) { console.log('[Task4] delivery prune failed: ' + e.message); }
 
 server.listen(PORT, () => {
   // keep-alive 加长: Excel 导入的 python 解析 2-3s+客户端生成文件期间, 默认 5s 会关连接

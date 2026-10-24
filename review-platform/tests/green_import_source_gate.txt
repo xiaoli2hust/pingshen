@@ -1,0 +1,363 @@
+
+==== F-01~15 财务引擎(纯函数) ====
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 372.8133
+
+==== A-05~07/13 agent 核心(纯函数) ====
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 328.9483
+
+==== RO-01~04 机器人编排纯函数 ====
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 300.7982
+
+==== API-01~20+S-01~06 预算 API(HTTP) ====
+PASS - S-06 重提 round=2
+PASS - S-06 一轮旧任务作废留痕
+PASS - S-06 二轮任务重新分发(bid 10 项指标)
+PASS - S-06 二轮复判转绿 judged
+
+29 passed, 0 failed -> ALL PASS
+
+==== A-01~04/A-08~18 对话流(HTTP+桩) ====
+PASS - A-17 预判返回灯色+路由+风险项
+PASS - A-17 reply 含灯色与风险项摘要
+PASS - A-18 小数格式自动×100 归一化
+
+43 passed, 0 failed -> ALL PASS
+config.json LLM_BASE_URL 已恢复
+
+==== RW-01~16 机器人工作台与外发箱(HTTP) ====
+PASS - RW-14 admin preview 重放同键返回同一 outbox_id 且行数不增；双推由 RB-07b 守护 | preview=200/200 ids=820/820 rows=1->1
+PASS - RW-13b webhook 不可用时入箱仍完整且不阻断提交 | 探活=200/false/请求失败:Failed to conne 真源=db:75 矩阵放行=1 submit=200/reviewing tasks=10 depts=6 outbox=6 pend合计=10
+CLEANUP - PL-RW-1792874697005 opps/budgets/reviews=0/0/0 robot_outbox 删除/残留=21/0 故障实例残留=0
+PASS - RW-13c 本轮夹具自清: robot_outbox 零残留且故障注入实例已摘除 | outbox 删除=21 残留=0 注入实例残留=0
+
+19 passed, 0 failed -> ALL PASS
+
+==== R-01~34 规则矩阵 preview-light + 闭环/SEC ====
+PASS - R-32 (yellow/1 项非绿)
+PASS - R-34 (yellow/1 项非绿)
+preview-light 批量 32 条耗时 6582ms (性能冒烟门槛 <10s, 不硬卡)
+
+45 passed, 0 failed -> ALL PASS
+红绿用例(★red): 20 PASS / 0 FAIL (绿证据: 旧代码已先行 FAIL 留档则红绿成立)
+
+==== API-21~23/R-33/J/N 通知与结论(HTTP+webhook 桩) ====
+PASS - R-33 reroute_xo 事件留痕
+PASS - N-02 webhook 失败主流程仍 200(不 throw, 不久等)
+PASS - N-03 同一周一两次仅发一次(幂等)
+
+21 passed, 0 failed -> ALL PASS
+config.json 通知键已恢复
+
+==== D-01~08 附3交付明细(上传解析+递进门禁) ====
+PASS - D-08 非 xlsx 文件解析失败提示(不崩, 提示可手编)
+PASS - D-09 附1上下文四金额字段进入预算草稿
+PASS - D-09 附1上下文字段都有原表值坐标
+PASS - D-09 G19/G21 金额未污染 dev_pd/prod_pd
+
+26 passed, 0 failed -> ALL PASS
+
+==== BI-01~12 归档库 BI(直查同源+对抗) ====
+PASS - BI-09 结构完整兜底(空库时同结构 0/[] 不崩)
+PASS - BI-10 恶意 query 参数被忽略(200 不注入不 500)
+PASS - BI-11 聚合只含归档单(非归档 41 单不混入)
+PASS - BI-12 聚合性能 < 300ms | 5ms
+
+13 passed, 0 failed -> ALL PASS(数据基线: 归档 10 单, 直查同源断言)
+
+==== T3 门禁口径 bid+presale ====
+PASS - T3-01 presale 无 budget_id 提交被拦 400 | status=400
+PASS - T3-02 presale 带 locked budget_id 提交 200 | status=200
+PASS - T3-03 change 无关联提交不受影响(200) | status=200
+
+3 passed, 0 failed -> ALL PASS
+
+==== EI-01~09 Excel 导入(六组锚定+安全+性能) ====
+PASS - EI-11b 评审 PUT 挂上同商机已锁定预算 | 216
+PASS - EI-11c 仅挂预算不清空 form_json | {"opp_code":"PL-EI11-1792874838287","opp_name":"EI-11 挂链测试","contract_amount":24,"sub_amount":0,"gross_margin":15,"cost_happened":0,"ops_years":1,"survey":"否","secret":"否","guarantee":"否","non_compete":"否","data_review":"否","opp_stage":"投标决策","region":"华北营销处","customer":"Excel导入测试客户","biz_line":"G1","sales":"测试销售","pm":"测试PM","sign_date":"2026-12-31","sign_path":"客户→丰图科技","province":"江西省","settle_method":"银行转账","payment_terms":"验收后付款","summary":"否"}
+PASS - EI-11d 不存在预算被唯一裁判拒绝 | 预算单不存在
+PASS - EI-11e 挂链后真实提交到 reviewing 并创建任务 | {"submit":200,"status":"reviewing","tasks":10}
+
+29 passed, 0 failed -> ALL PASS
+
+==== IS-* Excel 原表存证(解析器/纯函数+HTTP 来源契约) ====
+PASS - IS-HTTP-CROSS-OWNER-DOWNLOAD delivery_opp 下载按商机创建者/PM/支持组判权，不按关联预算 owner
+PASS - IS-HTTP-VERSION-LOCK 真实确认交付+完整预算锁定流程可派生版本
+PASS - IS-HTTP-VERSION-INHERITED 派生预算详情/source 继承父来源元信息并披露 inherited_from
+PASS - IS-HTTP-VERSION-CURRENT 派生预算编辑后仍以父导入快照对照子当前值
+
+178 passed, 0 failed -> ALL PASS
+
+==== HI-01~06 历史数据承接 ====
+PASS - HI-05b kpi.historyTotal>=1 + historyPassRate 命中 | historyTotal=2 passRate=100
+PASS - HI-05c kpi.greenRate 分母=在线单(不被历史污染)
+PASS - HI-05d years 年度分布含 2024 | [{"y":"2024","c":2},{"y":"2026","c":10}]
+PASS - HI-06 真实表 history 模式导入不炸(200+archived) | status=200 matched=34
+
+16 passed, 0 failed -> ALL PASS
+
+==== OC-01~06 商机代码贯穿 ====
+PASS - OC-05a type=bid 筛选只回 bid | rows=1
+PASS - OC-05b q=商机代码模糊命中 | hit=true
+PASS - OC-05c q=% 被转义为字面量不全表 | rows=0
+PASS - OC-06 预算列表 q=PL00008572 命中 opp_code | rows=3
+
+11 passed, 0 failed -> ALL PASS
+
+==== OP-01~14 商机档案 CRUD(HTTP) ====
+PASS - OP-12 title 继承评审标题(实 "OP12-评审标题-4977030")
+PASS - OP-13 既有档案 title 未被覆盖(before="T2测试商机-4977030-01" after="T2测试商机-4977030-01")
+PASS - OP-14 重复隐式建档后 GET 仍 200 无报错(实 200)
+PASS - OP-14 档案仍为单份且保留首档标题(opp_code 为主键, 实 "OP14-第一张-4977030")
+
+24 passed, 0 failed -> ALL PASS
+
+==== DL-01~23 商机级交付预算(G1 确认门+分流+派生列守护) ====
+PASS - DL-22 对话后仍走商机级分流(GET 200 且 rate_source 有值)
+PASS - DL-23 apply 刷新交付科目 200(实 200)
+PASS - DL-23 apply 后派生列未被洗(实 "PL-T2-4978896-dl23")
+PASS - DL-23 apply 后四科目按明细刷新(dev_pd=6)
+
+71 passed, 0 failed -> ALL PASS
+
+==== CH-01~16b 三步链门禁(G2/G3/G4 六态+D-23 反事实锚) ====
+PASS - CH-16b 同商机经 opp 锚定路径仍拦 400(实 400) | error=三步链未闭合:商机 PL-T3-mvh8iw7bd4-ch16 的交付预算未确认或缺失(① 交付预算 → ② 项目预算 → ③ 评审单),请先确认再提交
+PASS - CH-16b 400 文案指到三步链
+OWNED run=mvh8iw7bd4 prefix=PL-T3-mvh8iw7bd4- codes=["PL-T3-mvh8iw7bd4-ch11a"] reviews=[283,284] budgets=[247] (cleanup: parent guard restore, 本套无 SQL 清理)
+NOT EXECUTABLE CH-11b legacy-state G4 mutation coverage gap(不可计为PASS)
+
+45 passed, 0 failed, 1 NOT EXECUTABLE -> EXECUTED PASS + 1 COVERAGE GAP(不可计为全绿) [CH-11b legacy-state G4 mutation coverage gap(不可计为PASS)]
+NOT EXECUTABLE CH-11b legacy-state G4 mutation coverage gap(不可计为PASS) | 未归档 era=history 行无已授权 HTTP 产地(历史导入恒 archived; submit 仅接 draft/returned/红灯 judged; /judge 仅接 reviewing/judged; 无改 era 端点), SQL 造假已删除; 去掉 G4 era 谓词的变异在本套不再可见
+NOT EXECUTABLE CH-11b legacy-state G4 mutation coverage gap(不可计为PASS)
+
+==== RQ-01~10 必填单源注册表(meta/fields+提交门) ====
+PASS - RQ-09 开关只关必填校验(块内不含预算必带门/G3/opp_delivery) | 块内命中禁用关键词=[]
+PASS - RQ-09 POST /api/reviews 未重复加门(§C: submit:true 已被现网硬拦) | POST 块 1187 字符, 含开关=false
+PASS - RQ-10 解析仅用 fs + 正则(无第三方模块、不 require app.js) | require 集=["fs","path","../agent.js"]
+PASS - RQ-10 meta 响应为可 JSON 解析的纯数据(无函数/无 DOM) | bid 项数=38
+
+29 passed, 0 failed -> ALL PASS
+
+==== C2-01~11 360 聚合契约(delivery 八键/chain 五键/D-19 403 边界/rate 分支实执行) ====
+PASS - C3-11 重提后仍 1 条 + round=2 + 两轮 tasks 并存 | round=2 rounds=[2,1]
+PASS - C3-12 delivery 8 键 + chain 5 键 + opp 18 列(+code) + lights 四档(旧码即绿) | delivery=can_write,dev_dept,rate,rate_source,rows,status,total_cost,updated_at chain=budget_locked,delivery_confirmed,next_action,reviews_submitted,reviews_total
+OWNED(新 HTTP 夹具) run=mvhzl80239 codes=["PL-T5-mvhzl80239-c04b","PL-T5-mvhzl80239-c11h","PL-T5-mvhzl80239-c11o"] reviews=[292,293,294,295] budgets=[258,261,262] | 本轮自建码前缀 PL-T5-mvhzl80239-* / PL-C3-mvhzl80239* | 清理: 仅靠父级守护恢复演示库与 uploads, 本套无 SQL 清理
+NOT EXECUTABLE C2-11-identity same-row era flip identity coverage gap(不可计为PASS)
+
+49 passed, 0 failed, 1 NOT EXECUTABLE -> EXECUTED PASS + 1 COVERAGE GAP(不可计为全绿) [C2-11-identity same-row era flip identity coverage gap(不可计为PASS)] [DISCLOSURE: C2-11 unsupported identity coverage replaced by paired-code business comparison]
+NOT EXECUTABLE C2-11-identity same-row era flip identity coverage gap(不可计为PASS) | unsupported identity coverage replaced by paired-code business comparison; 同一行 history→online 改 era 无已授权 HTTP 产地(历史导入恒 era=history/archived, 无改 era 端点), 原 SQL UPDATE 已删除; 配对码只钉 era 过滤, 不证同一行身份/来源转换
+NOT EXECUTABLE C2-11-identity same-row era flip identity coverage gap(不可计为PASS)
+
+==== PA-* 解析器全字段对账(原表审计) ====
+PASS - PA-PL00008111-D 旧模板用数据跨境/红线问题兜底 data_review=否 | "否"
+PASS - PA-PL00008111-E 旧模板 data_review 溯源到 G23/I23 | {"label":"是否涉及数据跨境传输或红线禁止数据","lab_pos":[22,6],"val_pos":[22,8],"lab_positions":[[22,6]],"raw":"否","raw_d":"否","selected":true,"raw_pos":[22,8]}
+PASS - PA-PRESALE-PERIOD-A 售前日期区间按含首尾天数折算并向上取整为3个月 | 3
+PASS - PA-PRESALE-PERIOD-B 售前周期溯源到 G11/I11 | {"label":"预计售前实施周期","lab_pos":[10,6],"val_pos":[10,8],"lab_positions":[[10,6]],"raw":"2026/7/6-2026/9/30","raw_d":"2026/7/6-2026/9/30","selected":true,"raw_pos":[10,8]}
+
+15 passed, 0 failed -> ALL PASS
+
+==== PL-01~08 解析器实验室(admin 实测+调优) ====
+PASS - PL-05 GET 映射含已保存的 contract
+PASS - PL-06 非法段名 400 | status=400
+PASS - PL-07 未勾选时不应用调优(contract 仍 undefined)
+PASS - PL-08 清空调优 200
+
+12 passed, 0 failed -> ALL PASS
+
+==== LM-01~14 LLM 管理中心(profile/探针/用量/降级) ====
+PASS - LM-21 写顶层时 LLM_BASE_URL 空串 → 恰 200 且顶层值不动(仅 LLM_MODEL 变更) | status=200 top=http://127.0.0.1:9 err=
+PASS - LM-21 仅提交空串 base(无任何实际变更) → 400 且沿用「未提交任何要修改的键」文案且文件逐字节未变 | status=400 err=未提交任何要修改的键 unchanged=true
+PASS - LM-21 写 profile 时显式提交非 http(s) base → 400 且文案绑定 profile 名, 文件逐字节未变 | status=400 err={"error":"profile budget 的 base 不是 http(s):// 地址"} unchanged=true
+config.json 已按原始字节复位; 四键在场=true 字节相等=true
+
+58 passed, 0 failed -> ALL PASS
+
+==== RB-01~11 机器人管理中心(实例/矩阵/白名单/双轨不双推) ====
+PASS - RB-11 导入行默认停用(enabled=0, 不抢真源也不双推) | [{"name":"config:COMMITTEE_WEBHOOK_URL","enabled":0},{"name":"config:NOTIFY_WEBHOOK_URL","enabled":0}]
+PASS - RB-02 本轮 26 个管理端点响应体均不含任何 secret 明文
+PASS - RB-02 本轮管理端点响应体不含 webhook 的 access_token 明文
+PASS - POST config.json 按原始字节复位且四键完好
+
+62 passed, 0 failed -> ALL PASS
+
+==== OD-01~10 对话式建档 + 灯色聚合视图 ====
+[OD-04 降级实录] HTTP 200 {"reply":"大模型暂不可用,本轮未改动已填字段,请在下方表单点选/填写。\n建档还缺 4 项:业务线/商机阶段/销售/项目概述","draft":{"title":"OD-04 降级","customer":"江西省自然资源测绘与监测院","contract_amount":240},"missing":["biz_line","opp_stage","sales","summary"],"actions":[],"degraded":true}
+OWNED(新 HTTP 夹具) run=mvnr48f40c codes=["PL-T11-mvnr48f40c-07","PL-T11-mvnr48f40c-09h","PL-T11-mvnr48f40c-09o"] reviews=[339,340,341,342,343,344] budgets=[] | 本轮自建码前缀 PL-T11-mvnr48f40c-* | 清理: 仅靠父级守护恢复演示库与 uploads, 本套无 SQL 清理
+NOT EXECUTABLE OD-08-inflight history-draft inflight mutation witness gap(不可计为PASS)
+NOT EXECUTABLE OD-09-flip literal same-record era flip coverage gap(不可计为PASS)
+
+33 passed, 0 failed, 2 NOT EXECUTABLE -> EXECUTED PASS + 2 COVERAGE GAP(不可计为全绿) [OD-08-inflight history-draft inflight mutation witness gap(不可计为PASS); OD-09-flip literal same-record era flip coverage gap(不可计为PASS)] [DISCLOSURE: OD-09 literal same-record era flip has no HTTP interface, not retained; replaced by paired-code comparison]
+NOT EXECUTABLE OD-08-inflight history-draft inflight mutation witness gap(不可计为PASS) | era=history 且 status=draft 的行无已授权 HTTP 产地(历史导入恒 history/archived), 原 SQL INSERT 已删除; 去掉 era 过滤的变异对 inflight 不再可见(2−1 仍为 1), 仅 chain 1/0 见证保留
+NOT EXECUTABLE OD-09-flip literal same-record era flip coverage gap(不可计为PASS) | literal same-record era flip has no HTTP interface, not retained(历史导入恒 history/archived, 无改 era 端点), 原 SQL UPDATE 已删除; 配对 fresh code 对照只钉 era 归属, 不证同一行 history→online 转换
+NOT EXECUTABLE OD-08-inflight history-draft inflight mutation witness gap(不可计为PASS)
+NOT EXECUTABLE OD-09-flip literal same-record era flip coverage gap(不可计为PASS)
+
+==== HL-1~4 实验室浏览器层 ====
+            未匹配
+    | pick=impRvC_2_0
+PASS - HL-5 添加关键词生效(chips 新词+未保存标记)
+PASS - HL-6 保存调优反馈 | 已保存——勾选「应用调优映射」后点「解析并对照」验证
+
+8 passed, 0 failed -> ALL PASS
+
+==== NAV-* 商机中枢导航浏览器层 ====
+PASS - NAV-9 fde1 三项含相关商机 | 实得:首页,相关商机,待办打灯
+PASS - NAV-10 sales1 四项含我的预算单 | 实得:首页,我的商机,我的预算单,新建待评审商机
+PASS - NAV-11 sales1 不见待办打灯/研判台/归档库/解析器实验室
+PASS - NAV-12 财务BP 四项(含待办打灯) | 实得:首页,我的商机,新建待评审商机,待办打灯
+
+12 passed, 0 failed -> ALL PASS
+
+==== IA-1~26 商机中枢IA浏览器层 ====
+PASS - IA-6b fde1 首页含我的待办
+PASS - IA-4 sales1 导航四项含我的预算单 | 实得:首页,我的商机,我的预算单,新建待评审商机
+PASS - IA-6c sales1 首页含我的待办
+PASS - IA-5 财务BP 导航四项(含待办打灯) | 实得:首页,我的商机,新建待评审商机,待办打灯
+
+63 passed, 0 failed -> ALL PASS
+
+==== SC-* Excel 原表对照浏览器层 ====
+PASS - SC-29 无挂靠预算真实落 delivery_budget 来源 | /api/budget/297/delivery/source
+PASS - SC-20 malformed JSON 收敛为编辑器内错误且保留未保存文本
+PASS - SC-21 错误后的真实重载恢复且仍保留未保存文本
+PASS - SC-22 390px 单列无全局横溢出且双表内部滚动 | {"stacked":true,"pageFits":true,"leftInternalOverflow":true,"rightInternalOverflow":true}
+PASS - SC-23 console.error 与 pageerror 均为零
+46 passed, 0 failed -> ALL PASS
+
+==== AW-01~07 机器人统一工作台浏览器层 ====
+PASS - AW-05 页面显示交付/预算/评审真实状态及下一步深链 | delivery=true budget=true review=true
+PASS - AW-07 三个页签(逐个自证确实切过去)内商机标题/交付 content·note/评审标题的注入 HTML 一律转义呈现，img 元素为零且 onerror 未执行 | active=delivery/budget/review pane标记命中=1/1/1 literal=true/true/true escaped=true/true/true imgs=0/0/0 ran=false 自证可数到注入元素=1
+PASS - AW-06 工作台 console.error/pageerror 为零并捕获截图，非 RED 必须落盘 | console=0 pageerror=0 shot=79608B(文件)
+CLEANUP - PL-AW-1792875484036 + PL-AW-1792875484036-XSS opps/budgets/reviews=0/0/0 | 0/0/0
+
+8 passed, 0 failed -> ALL PASS
+
+==== AD-01~15 管理中心浏览器层(#/admin/llm + #/admin/robot) ====
+PASS - AD-09 两页导航渲染期 console.error 与 pageerror 均为空 | console=0 pageerror=0
+PASS - AD-15 两页新增交互阶段 console.error/pageerror 为零 | console=0 pageerror=0
+PASS - AD-09b 全流程(含登录/非 admin/夹具/探针阶段)pageerror 为零 | pageerror 总数=0
+CLEANUP - PL-AD-RB-1792875520906 opps/budgets/reviews=0/0/0
+
+24 passed, 0 failed -> ALL PASS
+
+==== EV/RD/IA/SM/NT 业务整改 HTTP 专项 ====
+PASS - NT-01 打完本部门后待办聚合移除本单
+PASS - NT-02 全量未投递积压不受分页截断
+PASS - PIN NT-02 provider.active=false 且 provider_send=false
+PASS - NT-02b 能力措辞明确待发送草稿和本地预演
+
+107 passed, 0 failed -> ALL PASS
+
+==== EV/RD/IA/SM/NT 业务整改浏览器专项 ====
+PASS - BP-03 本人已锁预算仍正常预选
+PASS - RD-02 必填未满显示N/M
+PASS - RD-02 填满后实时变绿不刷新
+PASS - PL-01 部门文案随META变异无需改前端
+PASS - PIN NT-02 仍无外部投递能力
+PASS - PIN 浏览器console/pageerror无非预期错误
+
+==== RG-01~06 全量汇总真实性(隔离子进程结果) ====
+PASS - RG-05 超时未完成不能算通过 | exit=1
+PASS - RG-06 非行首的 NOT EXECUTABLE 字样不得被误认成缺口 | exit=0
+PASS - RG-08 声明缺口消失(见证静默删除或能力恢复)必须红 | exit=1
+PASS - RG-09 全绿日志仍须逐条落声明缺口 id, 禁止读作零覆盖 | exit=0
+PASS - RG-07 自有树护栏接管超时，聚合器不得提前只杀测试Node
+9 passed, 0 failed -> ALL PASS
+
+==== BP-01~06 预算预选与当前关联保真 ====
+PASS - BP-02 新建列表外预算明确提示重新选择 | selected=empty, disabled=true
+PASS - BP-03 新建本人已锁预算仍自动选中 | selected=11, disabled=false
+PASS - BP-04 编辑列表外当前关联仍逐字保留 | selected=99, disabled=false
+PASS - BP-05 新建未锁预算不预选 | selected=empty, disabled=true
+PASS - BP-06 编辑当前未锁预算仍保留 | selected=12, disabled=false
+6 passed, 0 failed -> ALL PASS
+
+==== FS-01~12 前端状态与只读证据语义 ====
+PASS - FS-08 待办证据失败保留部门核实提示
+PASS - FS-09 保存成功刷新失败仍明确已保存
+PASS - FS-10 确认成功刷新失败仍明确已确认
+PASS - FS-11 写失败不报已保存
+PASS - FS-12 未知下拉原值显示标记且value逐字保留
+12 passed, 0 failed -> ALL PASS
+
+==== 回归 test_flow.js ====
+   黄灯指标: 贡献利润、签约转包次数
+   路径: 黄灯:部门级评审会(每周二)
+   与真实评审结论一致(黄灯-部门级,2项黄灯,无XO): PASS
+6) 正式报告 HTML 生成: PASS
+7) 归档: PASS
+ALL PASS
+
+==== 回归 test_p15_flow.js ====
+PASS - B1 退回后状态=returned
+PASS - B2 重新提交后轮次=2
+PASS - B3 二轮完成后自动研判(judged, 绿灯)
+PASS - B4 第一轮旧任务已作废留痕
+
+10 passed, 0 failed -> ALL PASS
+
+==== 数据可行性 data_feasibility_check.js ====
+======================================================================
+数据可行性实测汇总
+  C-02 PL00008068: 系统=yellow/判例=yellow → 一致
+  C-03 PL00008111: 系统=yellow/判例=yellow → 一致
+结论: 判例数据可完整驱动 建单→附件→提交→分派→打灯→研判→对比 全链路(2/2 跑通); 判灯偏差即规则修正项输入(1.6/1.7)
+ALL PASS
+
+======== 汇总 ========
+PASS  F-01~15 财务引擎(纯函数)
+PASS  A-05~07/13 agent 核心(纯函数)
+PASS  RO-01~04 机器人编排纯函数
+PASS  API-01~20+S-01~06 预算 API(HTTP)
+PASS  A-01~04/A-08~18 对话流(HTTP+桩)
+PASS  RW-01~16 机器人工作台与外发箱(HTTP)
+PASS  R-01~34 规则矩阵 preview-light + 闭环/SEC
+PASS  API-21~23/R-33/J/N 通知与结论(HTTP+webhook 桩)
+PASS  D-01~08 附3交付明细(上传解析+递进门禁)
+PASS  BI-01~12 归档库 BI(直查同源+对抗)
+PASS  T3 门禁口径 bid+presale
+PASS  EI-01~09 Excel 导入(六组锚定+安全+性能)
+PASS  IS-* Excel 原表存证(解析器/纯函数+HTTP 来源契约)
+PASS  HI-01~06 历史数据承接
+PASS  OC-01~06 商机代码贯穿
+PASS  OP-01~14 商机档案 CRUD(HTTP)
+PASS  DL-01~23 商机级交付预算(G1 确认门+分流+派生列守护)
+PASS  CH-01~16b 三步链门禁(G2/G3/G4 六态+D-23 反事实锚)
+PASS  RQ-01~10 必填单源注册表(meta/fields+提交门)
+PASS  C2-01~11 360 聚合契约(delivery 八键/chain 五键/D-19 403 边界/rate 分支实执行)
+PASS  PA-* 解析器全字段对账(原表审计)
+PASS  PL-01~08 解析器实验室(admin 实测+调优)
+PASS  LM-01~14 LLM 管理中心(profile/探针/用量/降级)
+PASS  RB-01~11 机器人管理中心(实例/矩阵/白名单/双轨不双推)
+PASS  OD-01~10 对话式建档 + 灯色聚合视图
+PASS  HL-1~4 实验室浏览器层
+PASS  NAV-* 商机中枢导航浏览器层
+PASS  IA-1~26 商机中枢IA浏览器层
+PASS  SC-* Excel 原表对照浏览器层
+PASS  AW-01~07 机器人统一工作台浏览器层
+PASS  AD-01~15 管理中心浏览器层(#/admin/llm + #/admin/robot)
+PASS  EV/RD/IA/SM/NT 业务整改 HTTP 专项
+PASS  EV/RD/IA/SM/NT 业务整改浏览器专项
+PASS  RG-01~06 全量汇总真实性(隔离子进程结果)
+PASS  BP-01~06 预算预选与当前关联保真
+PASS  FS-01~12 前端状态与只读证据语义
+PASS  回归 test_flow.js
+PASS  回归 test_p15_flow.js
+PASS  数据可行性 data_feasibility_check.js
+声明缺口(见证未运行, 不得读作已覆盖): CH-11b, C2-11-identity, OD-08-inflight, OD-09-flip
+
+39/39 套通过, 失败 0, 未登记覆盖缺口 0, 声明缺口 4/4, 缺口消失 0, 耗时 1025.1s -> ALL PASS

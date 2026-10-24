@@ -1,0 +1,125 @@
+PASS - IS-PL00008572-FILE 按商机码定位真实原件
+PASS - IS-PL00008572-DEL-RUN 真实 delivery 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PL00008572-DEL-ROWS 仅保留 2 行预算明细
+PASS - IS-PL00008572-DEL-SKIPPED skipped_rows 明确记录 10 行无预算数字
+PASS - IS-PL00008572-DEL-POSITIVE 每行五项预算数字有限非负且至少一项 >0（文字不能保留）
+PASS - IS-PL00008572-DEL-ALIGN row_sources 与 rows 严格等长同序且内容/人天坐标逐格相符
+PASS - IS-PL00008572-DEL-SHEET 新增 sheet 保留显示格、合并区域与真实维度
+PASS - IS-PL00008572-DEL-SKIPPED-SHEET 剔除内容仍在完整原表显示格，不从原表删除
+PASS - IS-PL00008572-DEL-TOTAL-SOURCE 合计行来源坐标与运维外包合计字段齐全
+PASS - IS-PL00008572-DEL-IMPL-ANCHOR 真实实施锚定 5/39/0/184/6000，内容为 POI数据
+PASS - IS-PL00008572-DEL-OPS-ANCHOR 真实运维锚定 2/0/0/0/0，内容为 POI数据
+PASS - IS-PL00008572-DEL-SUM-ANCHOR 原件合计与遗留解析合计 PM7/正编39/生产184/差旅6000 不漂移
+PASS - IS-PL00008572-REVIEW-RUN 真实 review 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PL00008572-REVIEW-SHEET 新增 sheet 保留显示格、合并区域与真实维度
+PASS - IS-PL00008572-REVIEW-SOURCES 已提取字段仍有标签格/值格来源
+PASS - IS-PL00008572-REVIEW-RAW 来源新增 raw/raw_d/selected，缺字段须显式 FAIL
+PASS - IS-PL00008572-REVIEW-UNPICKED 新增 unpicked 数组显式披露未采用来源格
+PASS - IS-PL00008572-REVIEW-RAW-ORIGIN 采用原值与每个实际来源格相符，多格合计无丢项
+PASS - IS-PL00008572-REVIEW-LEGACY-POS data_review 原值与既有来源坐标不漂移
+PASS - IS-PL00008572-BUDGET-RUN 真实 budget 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PL00008572-BUDGET-SHEET 新增 sheet 保留显示格、合并区域与真实维度
+PASS - IS-PL00008572-BUDGET-SOURCES 已提取字段仍有标签格/值格来源
+PASS - IS-PL00008572-BUDGET-RAW 来源新增 raw/raw_d/selected，缺字段须显式 FAIL
+PASS - IS-PL00008572-BUDGET-UNPICKED 新增 unpicked 数组显式披露未采用来源格
+PASS - IS-PL00008572-BUDGET-RAW-ORIGIN 采用原值与每个实际来源格相符，多格合计无丢项
+PASS - IS-PL00008068-FILE 按商机码定位真实原件
+PASS - IS-PL00008068-DEL-RUN 真实 delivery 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PL00008068-DEL-ROWS 仅保留 30 行预算明细
+PASS - IS-PL00008068-DEL-SKIPPED skipped_rows 明确记录 7 行无预算数字
+PASS - IS-PL00008068-DEL-POSITIVE 每行五项预算数字有限非负且至少一项 >0（文字不能保留）
+PASS - IS-PL00008068-DEL-ALIGN row_sources 与 rows 严格等长同序且内容/人天坐标逐格相符
+PASS - IS-PL00008068-DEL-SHEET 新增 sheet 保留显示格、合并区域与真实维度
+PASS - IS-PL00008068-DEL-SKIPPED-SHEET 剔除内容仍在完整原表显示格，不从原表删除
+PASS - IS-PL00008068-DEL-TOTAL-SOURCE 合计行来源坐标与运维外包合计字段齐全
+PASS - IS-PL00008068-DEL-GAP-ANCHOR 真实原件正编合计 17.5 与解析 11.5 的差异不被掩盖
+PASS - IS-PL00008068-REVIEW-RUN 真实 review 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PL00008068-REVIEW-SHEET 新增 sheet 保留显示格、合并区域与真实维度
+PASS - IS-PL00008068-REVIEW-SOURCES 已提取字段仍有标签格/值格来源
+PASS - IS-PL00008068-REVIEW-RAW 来源新增 raw/raw_d/selected，缺字段须显式 FAIL
+PASS - IS-PL00008068-REVIEW-UNPICKED 新增 unpicked 数组显式披露未采用来源格
+PASS - IS-PL00008068-REVIEW-RAW-ORIGIN 采用原值与每个实际来源格相符，多格合计无丢项
+PASS - IS-PL00008068-BUDGET-RUN 真实 budget 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PL00008068-BUDGET-SHEET 新增 sheet 保留显示格、合并区域与真实维度
+PASS - IS-PL00008068-BUDGET-SOURCES 已提取字段仍有标签格/值格来源
+PASS - IS-PL00008068-BUDGET-RAW 来源新增 raw/raw_d/selected，缺字段须显式 FAIL
+PASS - IS-PL00008068-BUDGET-UNPICKED 新增 unpicked 数组显式披露未采用来源格
+PASS - IS-PL00008068-BUDGET-RAW-ORIGIN 采用原值与每个实际来源格相符，多格合计无丢项
+PASS - IS-PL00008111-FILE 按商机码定位真实原件
+PASS - IS-PL00008111-DEL-RUN 真实 delivery 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PL00008111-DEL-ROWS 仅保留 2 行预算明细
+PASS - IS-PL00008111-DEL-SKIPPED skipped_rows 明确记录 1 行无预算数字
+PASS - IS-PL00008111-DEL-POSITIVE 每行五项预算数字有限非负且至少一项 >0（文字不能保留）
+PASS - IS-PL00008111-DEL-ALIGN row_sources 与 rows 严格等长同序且内容/人天坐标逐格相符
+PASS - IS-PL00008111-DEL-SHEET 新增 sheet 保留显示格、合并区域与真实维度
+PASS - IS-PL00008111-DEL-SKIPPED-SHEET 剔除内容仍在完整原表显示格，不从原表删除
+PASS - IS-PL00008111-DEL-TOTAL-SOURCE 合计行来源坐标与运维外包合计字段齐全
+PASS - IS-PL00008111-REVIEW-RUN 真实 review 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PL00008111-REVIEW-SHEET 新增 sheet 保留显示格、合并区域与真实维度
+PASS - IS-PL00008111-REVIEW-SOURCES 已提取字段仍有标签格/值格来源
+PASS - IS-PL00008111-REVIEW-RAW 来源新增 raw/raw_d/selected，缺字段须显式 FAIL
+PASS - IS-PL00008111-REVIEW-UNPICKED 新增 unpicked 数组显式披露未采用来源格
+PASS - IS-PL00008111-REVIEW-RAW-ORIGIN 采用原值与每个实际来源格相符，多格合计无丢项
+PASS - IS-PL00008111-REVIEW-LEGACY-POS data_review 原值与既有来源坐标不漂移
+PASS - IS-PL00008111-BUDGET-RUN 真实 budget 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PL00008111-BUDGET-SHEET 新增 sheet 保留显示格、合并区域与真实维度
+PASS - IS-PL00008111-BUDGET-SOURCES 已提取字段仍有标签格/值格来源
+PASS - IS-PL00008111-BUDGET-RAW 来源新增 raw/raw_d/selected，缺字段须显式 FAIL
+PASS - IS-PL00008111-BUDGET-UNPICKED 新增 unpicked 数组显式披露未采用来源格
+PASS - IS-PL00008111-BUDGET-RAW-ORIGIN 采用原值与每个实际来源格相符，多格合计无丢项
+PASS - IS-CLEANUP-MODULE 共享清理模块可加载（缺模块单独红，不遮蔽解析器红）
+PASS - IS-CLEANUP-NUMBERS 五键正数唯一保留依据，单位/负数/非法值正确处理
+PASS - IS-CLEANUP-STORED 两表行计数/部分与全空清理/状态时间/第二轮零修改
+PASS - IS-SYNTH-FIXTURE 独立字面值夹具生成成功
+PASS - IS-SYNTH-FORM-RUN 真实 budget 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-SHEET-PERCENT 百分号按显示值渲染且保留原始小数
+PASS - IS-SHEET-DATE 日期按 YYYY-MM-DD 显示
+PASS - IS-SHEET-FLOAT 浮点尾零去除而数值零不丢失
+PASS - IS-SHEET-MERGES 合并范围使用完整零基坐标
+PASS - IS-SHEET-TRUNCATION 300行/2000字符封顶而维度保持实际305×9
+PASS - IS-SOURCE-NORMALIZED raw描述采用的原值而不是规范化字段值或首个无效候选
+PASS - IS-SOURCE-CONFLICT 重复合同金额99未采用且原因与采用1234.50明确区分
+PASS - IS-SOURCE-MULTI 验收/办公/服务多项求和保留全部真实来源
+PASS - IS-SYNTH-DEL-RUN 真实 delivery 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-DEL-CLEAN-BEFORE-STAGE 负数/非法/舍入零先净化，两阶段只按正数生成
+PASS - IS-DEL-SYNTH-ALIGN 过滤阶段与来源同分支且剔除内容原表仍在
+PASS - IS-PRESALE-RUN 真实 review 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PRESALE-RAW-POS 售前日期范围规范化为3但原值与G11/I11坐标保留
+PASS - IS-SOURCE-MODULE 原件模块及锁定 API 可加载，缺实现不遮蔽既有解析器
+PASS - IS-FORM-SEVEN 七种诚实状态与计数；不能把无法解释的原值差异假称换算
+PASS - IS-FORM-TRANSFORMS 换算原因须实际产出导入值；单位、百分数、小数百分比、格式与关键字
+FAIL - IS-FORM-PERCENT-PRECISION 0.29小数百分比的浮点尾差不能把真实换算误报为差异 | Expected values to be strictly equal:
+
+'有差异' !== '已换算'
+
+PASS - IS-FORM-CURRENT-SEMANTICS 当前值只做语义相等，不去单位/匹配关键词以掩盖人工变化
+PASS - IS-FORM-REJECTION 拒绝来源保留原值、坐标和原因，在线补录与未采用区分
+PASS - IS-FORM-MULTI 多格计算保留 null/0 全部贡献格，修改优先级高于表内计算
+PASS - IS-FORM-SOURCELESS 无原格导入/补录含0，不制造坐标且不展示白名单外或三值全空字段
+PASS - IS-FORM-RAW-POS-HANDOFF 真实C5采用值高亮C5而非遗留B5，解析器legacy坐标保持
+PASS - IS-FORM-DATE-HANDOFF 真实售前日期区间折算月数披露，原始日期不能伪称一致
+PASS - IS-DEL-OCCURRENCE 重复内容/阶段队列保留两次，仅第二次改动，同内容运维不串实施
+PASS - IS-DEL-DELETE-NEW-SKIP 删除/新建/原表剔除互不混淆，无预算原行不伪装已保存行
+PASS - IS-DEL-FIVE-CHANGES 五预算键分别披露；缺失不等于0且当前单位字符串不掩盖变化
+PASS - IS-DEL-TRAVEL-NOTE 差旅单键变化可见，差旅分项坐标齐全，备注变化不污染预算合计
+PASS - IS-DEL-TOTALS 十项合计按阶段有限数求和并round2，原件缺合计显式不可用而非0
+FAIL - IS-DEL-RAW-TOTAL-PRECISION 只round2系统行合计，不舍入原件合计以隐藏差异 | Expected values to be strictly deep-equal:
++ actual - expected
+
+  [
+-   0.304,
+    0.3,
+    0.3,
++   0.3,
++   '一致'
+-   '有差异'
+  ]
+
+PASS - IS-DEL-8068-DISCLOSURE 真实8068原件17.5/导入11.5/当前11.5差异必须保留，绝不修正
+PASS - IS-DEL-8572-ANCHOR 真实8572十项合计与两条明细/十条剔除保持来源锚定
+PASS - IS-STORAGE-APPEND 内存SQLite追加历史/最新id/字符串实体键，audit仅存选定证据无重复字段
+PASS - IS-STORAGE-META 来源元信息仅公开锁定白名单，不泄漏路径/audit/导入值/导入者id
+PASS - IS-STORAGE-INHERIT 预算祖父来源继承、最近父来源、子自身覆盖；无源/未知预算返回null
+PASS - IS-BUDGET-LABEL-CONSUMER 预算白名单标签真实进入对照，含商机代码和销售人力成本
+
+107 passed, 2 failed -> SOME FAIL

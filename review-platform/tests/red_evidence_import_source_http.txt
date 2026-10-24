@@ -1,0 +1,246 @@
+PASS - IS-PL00008572-FILE 按商机码定位真实原件
+PASS - IS-PL00008572-DEL-RUN 真实 delivery 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PL00008572-DEL-ROWS 仅保留 2 行预算明细
+PASS - IS-PL00008572-DEL-SKIPPED skipped_rows 明确记录 10 行无预算数字
+PASS - IS-PL00008572-DEL-POSITIVE 每行五项预算数字有限非负且至少一项 >0（文字不能保留）
+PASS - IS-PL00008572-DEL-ALIGN row_sources 与 rows 严格等长同序且内容/人天坐标逐格相符
+PASS - IS-PL00008572-DEL-SHEET 新增 sheet 保留显示格、合并区域与真实维度
+PASS - IS-PL00008572-DEL-SKIPPED-SHEET 剔除内容仍在完整原表显示格，不从原表删除
+PASS - IS-PL00008572-DEL-TOTAL-SOURCE 合计行来源坐标与运维外包合计字段齐全
+PASS - IS-PL00008572-DEL-IMPL-ANCHOR 真实实施锚定 5/39/0/184/6000，内容为 POI数据
+PASS - IS-PL00008572-DEL-OPS-ANCHOR 真实运维锚定 2/0/0/0/0，内容为 POI数据
+PASS - IS-PL00008572-DEL-SUM-ANCHOR 原件合计与遗留解析合计 PM7/正编39/生产184/差旅6000 不漂移
+PASS - IS-PL00008572-REVIEW-RUN 真实 review 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PL00008572-REVIEW-SHEET 新增 sheet 保留显示格、合并区域与真实维度
+PASS - IS-PL00008572-REVIEW-SOURCES 已提取字段仍有标签格/值格来源
+PASS - IS-PL00008572-REVIEW-RAW 来源新增 raw/raw_d/selected，缺字段须显式 FAIL
+PASS - IS-PL00008572-REVIEW-UNPICKED 新增 unpicked 数组显式披露未采用来源格
+PASS - IS-PL00008572-REVIEW-RAW-ORIGIN 采用原值与每个实际来源格相符，多格合计无丢项
+PASS - IS-PL00008572-REVIEW-LEGACY-POS data_review 原值与既有来源坐标不漂移
+PASS - IS-PL00008572-BUDGET-RUN 真实 budget 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PL00008572-BUDGET-SHEET 新增 sheet 保留显示格、合并区域与真实维度
+PASS - IS-PL00008572-BUDGET-SOURCES 已提取字段仍有标签格/值格来源
+PASS - IS-PL00008572-BUDGET-RAW 来源新增 raw/raw_d/selected，缺字段须显式 FAIL
+PASS - IS-PL00008572-BUDGET-UNPICKED 新增 unpicked 数组显式披露未采用来源格
+PASS - IS-PL00008572-BUDGET-RAW-ORIGIN 采用原值与每个实际来源格相符，多格合计无丢项
+PASS - IS-PL00008068-FILE 按商机码定位真实原件
+PASS - IS-PL00008068-DEL-RUN 真实 delivery 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PL00008068-DEL-ROWS 仅保留 30 行预算明细
+PASS - IS-PL00008068-DEL-SKIPPED skipped_rows 明确记录 7 行无预算数字
+PASS - IS-PL00008068-DEL-POSITIVE 每行五项预算数字有限非负且至少一项 >0（文字不能保留）
+PASS - IS-PL00008068-DEL-ALIGN row_sources 与 rows 严格等长同序且内容/人天坐标逐格相符
+PASS - IS-PL00008068-DEL-SHEET 新增 sheet 保留显示格、合并区域与真实维度
+PASS - IS-PL00008068-DEL-SKIPPED-SHEET 剔除内容仍在完整原表显示格，不从原表删除
+PASS - IS-PL00008068-DEL-TOTAL-SOURCE 合计行来源坐标与运维外包合计字段齐全
+PASS - IS-PL00008068-DEL-GAP-ANCHOR 真实原件正编合计 17.5 与解析 11.5 的差异不被掩盖
+PASS - IS-PL00008068-REVIEW-RUN 真实 review 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PL00008068-REVIEW-SHEET 新增 sheet 保留显示格、合并区域与真实维度
+PASS - IS-PL00008068-REVIEW-SOURCES 已提取字段仍有标签格/值格来源
+PASS - IS-PL00008068-REVIEW-RAW 来源新增 raw/raw_d/selected，缺字段须显式 FAIL
+PASS - IS-PL00008068-REVIEW-UNPICKED 新增 unpicked 数组显式披露未采用来源格
+PASS - IS-PL00008068-REVIEW-RAW-ORIGIN 采用原值与每个实际来源格相符，多格合计无丢项
+PASS - IS-PL00008068-BUDGET-RUN 真实 budget 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PL00008068-BUDGET-SHEET 新增 sheet 保留显示格、合并区域与真实维度
+PASS - IS-PL00008068-BUDGET-SOURCES 已提取字段仍有标签格/值格来源
+PASS - IS-PL00008068-BUDGET-RAW 来源新增 raw/raw_d/selected，缺字段须显式 FAIL
+PASS - IS-PL00008068-BUDGET-UNPICKED 新增 unpicked 数组显式披露未采用来源格
+PASS - IS-PL00008068-BUDGET-RAW-ORIGIN 采用原值与每个实际来源格相符，多格合计无丢项
+PASS - IS-PL00008111-FILE 按商机码定位真实原件
+PASS - IS-PL00008111-DEL-RUN 真实 delivery 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PL00008111-DEL-ROWS 仅保留 2 行预算明细
+PASS - IS-PL00008111-DEL-SKIPPED skipped_rows 明确记录 1 行无预算数字
+PASS - IS-PL00008111-DEL-POSITIVE 每行五项预算数字有限非负且至少一项 >0（文字不能保留）
+PASS - IS-PL00008111-DEL-ALIGN row_sources 与 rows 严格等长同序且内容/人天坐标逐格相符
+PASS - IS-PL00008111-DEL-SHEET 新增 sheet 保留显示格、合并区域与真实维度
+PASS - IS-PL00008111-DEL-SKIPPED-SHEET 剔除内容仍在完整原表显示格，不从原表删除
+PASS - IS-PL00008111-DEL-TOTAL-SOURCE 合计行来源坐标与运维外包合计字段齐全
+PASS - IS-PL00008111-REVIEW-RUN 真实 review 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PL00008111-REVIEW-SHEET 新增 sheet 保留显示格、合并区域与真实维度
+PASS - IS-PL00008111-REVIEW-SOURCES 已提取字段仍有标签格/值格来源
+PASS - IS-PL00008111-REVIEW-RAW 来源新增 raw/raw_d/selected，缺字段须显式 FAIL
+PASS - IS-PL00008111-REVIEW-UNPICKED 新增 unpicked 数组显式披露未采用来源格
+PASS - IS-PL00008111-REVIEW-RAW-ORIGIN 采用原值与每个实际来源格相符，多格合计无丢项
+PASS - IS-PL00008111-REVIEW-LEGACY-POS data_review 原值与既有来源坐标不漂移
+PASS - IS-PL00008111-BUDGET-RUN 真实 budget 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PL00008111-BUDGET-SHEET 新增 sheet 保留显示格、合并区域与真实维度
+PASS - IS-PL00008111-BUDGET-SOURCES 已提取字段仍有标签格/值格来源
+PASS - IS-PL00008111-BUDGET-RAW 来源新增 raw/raw_d/selected，缺字段须显式 FAIL
+PASS - IS-PL00008111-BUDGET-UNPICKED 新增 unpicked 数组显式披露未采用来源格
+PASS - IS-PL00008111-BUDGET-RAW-ORIGIN 采用原值与每个实际来源格相符，多格合计无丢项
+PASS - IS-CLEANUP-MODULE 共享清理模块可加载（缺模块单独红，不遮蔽解析器红）
+PASS - IS-CLEANUP-NUMBERS 五键正数唯一保留依据，单位/负数/非法值正确处理
+PASS - IS-CLEANUP-STORED 两表行计数/部分与全空清理/状态时间/第二轮零修改
+PASS - IS-SYNTH-FIXTURE 独立字面值夹具生成成功
+PASS - IS-SYNTH-FORM-RUN 真实 budget 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-SHEET-PERCENT 百分号按显示值渲染且保留原始小数
+PASS - IS-SHEET-DATE 日期按 YYYY-MM-DD 显示
+PASS - IS-SHEET-FLOAT 浮点尾零去除而数值零不丢失
+PASS - IS-SHEET-MERGES 合并范围使用完整零基坐标
+PASS - IS-SHEET-TRUNCATION 300行/2000字符封顶而维度保持实际305×9
+PASS - IS-SOURCE-NORMALIZED raw描述采用的原值而不是规范化字段值或首个无效候选
+PASS - IS-SOURCE-CONFLICT 重复合同金额99未采用且原因与采用1234.50明确区分
+PASS - IS-SOURCE-MULTI 验收/办公/服务多项求和保留全部真实来源
+PASS - IS-SYNTH-DEL-RUN 真实 delivery 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-DEL-CLEAN-BEFORE-STAGE 负数/非法/舍入零先净化，两阶段只按正数生成
+PASS - IS-DEL-SYNTH-ALIGN 过滤阶段与来源同分支且剔除内容原表仍在
+PASS - IS-PRESALE-RUN 真实 review 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-PRESALE-RAW-POS 售前日期范围规范化为3但原值与G11/I11坐标保留
+PASS - IS-ADOPTED-FIXTURE 真实XLSX字面夹具生成，不使用解析器推导期望
+PASS - IS-ADOPTED-LATER-RUN 真实 budget 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-ADOPTED-LATER-VALUES 10/20/30合计60与首标签/legacy坐标不漂移
+PASS - IS-ADOPTED-LATER-TRACE producer显式记录实际采用的A14/A17/A20标签
+PASS - IS-ADOPTED-LATER-HIGHLIGHTS 真实后选/下邻值保留A17，invalid不是标签且audit不可变
+PASS - IS-ADOPTED-DOWNWARD-RUN 真实 budget 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-ADOPTED-DOWNWARD-VALUES 10/20/30合计60与首标签/legacy坐标不漂移
+PASS - IS-ADOPTED-DOWNWARD-TRACE producer显式记录实际采用的A14/A17/A20标签
+PASS - IS-ADOPTED-DOWNWARD-HIGHLIGHTS 真实后选/下邻值保留A17，invalid不是标签且audit不可变
+PASS - IS-ADOPTED-CONTEXT-RUN 真实 budget 解析器成功并输出 JSON（非依赖失败）
+PASS - IS-ADOPTED-CONTEXT-VALUES 上下文四项数值/标签/legacy坐标与null/0来源保持
+PASS - IS-ADOPTED-CONTEXT-TRACE 非A列全部标签部分显式保留，空值/零贡献不丢且全空行无标签
+PASS - IS-ADOPTED-CONTEXT-HIGHLIGHTS 所有真实标签部分与值格高亮，空白A列和全空贡献行不虚构标签
+PASS - IS-ADOPTED-LATER-NONAUDIT 真实非audit入口仍仅输出原业务结构和字面数值
+PASS - IS-ADOPTED-DOWNWARD-NONAUDIT 真实非audit入口仍仅输出原业务结构和字面数值
+PASS - IS-ADOPTED-CONTEXT-NONAUDIT 真实非audit入口仍仅输出原业务结构和字面数值
+PASS - IS-SOURCE-MODULE 原件模块及锁定 API 可加载，缺实现不遮蔽既有解析器
+FAIL - IS-PATH-RESOLVER 真实下载路径解析器拒绝穿越/兄弟前缀/绝对逃逸并接受根内相对路径 | 缺少 resolveImportSourcePath 导出
++ actual - expected
+
++ 'undefined'
+- 'function'
+
+PASS - IS-FORM-SEVEN 七种诚实状态与计数；不能把无法解释的原值差异假称换算
+PASS - IS-FORM-TRANSFORMS 换算原因须实际产出导入值；单位、百分数、小数百分比、格式与关键字
+PASS - IS-FORM-PERCENT-PRECISION 0.29小数百分比的浮点尾差不能把真实换算误报为差异
+PASS - IS-FORM-CURRENT-SEMANTICS 当前值只做语义相等，不去单位/匹配关键词以掩盖人工变化
+PASS - IS-FORM-REJECTION 拒绝来源保留原值、坐标和原因，在线补录与未采用区分
+PASS - IS-FORM-MULTI 三项标签/值格证据齐全且去重，null/0不丢、原行与修改优先级保持
+PASS - IS-FORM-MULTI-EVIDENCE 显式producer trace补齐贡献标签，pair/sheet有无不影响空贡献标签
+PASS - IS-FORM-MULTI-UNRELATED 相同标签/相同原值不足以采用无关或拒绝标签，须关联实际贡献格
+PASS - IS-FORM-MULTI-NO-EVIDENCE 只有值行号与合成标签不能凭空制造其余标签坐标
+PASS - IS-FORM-MULTI-LEGACY-EVIDENCE 没有显式trace时pair/sheet真实标签也不能猜出额外贡献标签
+PASS - IS-FORM-EXPLICIT-EMPTY 显式空trace或全无效trace不能回退到legacy标签或其他原表证据
+PASS - IS-FORM-SOURCELESS 无原格导入/补录含0，不制造坐标且不展示白名单外或三值全空字段
+PASS - IS-FORM-RAW-POS-HANDOFF 真实C5采用值高亮C5而非遗留B5，解析器legacy坐标保持
+PASS - IS-FORM-DATE-HANDOFF 真实售前日期区间折算月数披露，原始日期不能伪称一致
+PASS - IS-DEL-OCCURRENCE 重复内容/阶段队列保留两次，仅第二次改动，同内容运维不串实施
+PASS - IS-DEL-DELETE-NEW-SKIP 删除/新建/原表剔除互不混淆，无预算原行不伪装已保存行
+PASS - IS-DEL-FIVE-CHANGES 五预算键分别披露；缺失不等于0且当前单位字符串不掩盖变化
+PASS - IS-DEL-TRAVEL-NOTE 差旅单键变化可见，差旅分项坐标齐全，备注变化不污染预算合计
+PASS - IS-DEL-TOTALS 十项合计按阶段有限数求和并round2，原件缺合计显式不可用而非0
+PASS - IS-DEL-RAW-TOTAL-PRECISION 只round2系统行合计，不舍入原件合计以隐藏差异
+PASS - IS-DEL-8068-DISCLOSURE 真实8068原件17.5/导入11.5/当前11.5差异必须保留，绝不修正
+PASS - IS-DEL-8572-ANCHOR 真实8572十项合计与两条明细/十条剔除保持来源锚定
+PASS - IS-STORAGE-APPEND 内存SQLite追加历史/最新id/字符串实体键，audit仅存选定证据无重复字段
+PASS - IS-STORAGE-META 来源元信息仅公开锁定白名单，不泄漏路径/audit/导入值/导入者id
+PASS - IS-STORAGE-INHERIT 预算祖父来源继承、最近父来源、子自身覆盖；无源/未知预算返回null
+PASS - IS-BUDGET-LABEL-CONSUMER 预算白名单标签真实进入对照，含商机代码和销售人力成本
+PASS - IS-HTTP-SETUP-AUTH HTTP 前置登录 sales1/zhichizu/fin1/pm1 全部成功
+PASS - IS-HTTP-SETUP-XLSX Python 生成唯一受控预算/评审/全零/无表头 XLSX
+FAIL - IS-HTTP-BUDGET-IMPORT-1 预算导入返回来源并保留 legacy audit | 缺少 source metadata id
+FAIL - IS-HTTP-BUDGET-IMPORT-2 重复预算导入创建新预算与新来源而非更新旧实体 | 缺少 source metadata id
+FAIL - IS-HTTP-BUDGET-DETAIL-META 预算详情只嵌来源元信息且不泄漏路径/audit/sheet对象 | 缺少 source metadata id
+FAIL - IS-HTTP-BUDGET-SOURCE-ORIGINAL 预算 source 返回真实原表与 contract 原值/导入值/当前值 | /api/budget/192/source -> 404 接口不存在
+
+404 !== 200
+
+FAIL - IS-HTTP-BUDGET-SOURCE-MODIFIED 预算在线 PUT 只改变 current，导入快照保持并标记已修改 | /api/budget/192/source -> 404 接口不存在
+
+404 !== 200
+
+FAIL - IS-HTTP-BUDGET-FIRST-STABLE 第二次预算导入后第一预算仍解析自己的原来源 | /api/budget/192/source -> 404 接口不存在
+
+404 !== 200
+
+FAIL - IS-HTTP-REVIEW-IMPORT-1 普通评审导入返回 audit/source 并创建独立实体 | 缺少 source metadata id
+FAIL - IS-HTTP-REVIEW-IMPORT-2 重复评审导入创建新评审与新来源而非更新旧实体 | Cannot read properties of undefined (reading 'id')
+FAIL - IS-HTTP-REVIEW-DETAIL-META 评审详情保留原 opp/data_review 且只嵌来源元信息 | 缺少 source metadata id
+FAIL - IS-HTTP-REVIEW-SOURCE-MODIFIED 评审编辑后 source 显示当前修改且 opp_name 标签为商机名称 | /api/reviews/206/source -> 404 接口不存在
+
+404 !== 200
+
+FAIL - IS-HTTP-REVIEW-HISTORY history 导入存来源/audit、相对附件并保持 archived/none 与原字段 | 缺少 source metadata id
+FAIL - IS-HTTP-REVIEW-READ-ALL 评审 source 对所有登录角色可读且非 owner 看到同一来源 | Expected values to be strictly equal:
+
+404 !== 200
+
+FAIL - IS-HTTP-ONLINE-SOURCE-NULL 纯在线预算/评审 current 不伪造原件来源 | /api/budget/194/source -> 404 接口不存在
+
+404 !== 200
+
+FAIL - IS-HTTP-ONLINE-DELIVERY-NULL 纯在线交付有 current 行但 source:null，不虚构 original | /api/budget/194/delivery/source -> 404 接口不存在
+
+404 !== 200
+
+FAIL - IS-HTTP-DELIVERY-BUDGET 无挂靠预算导入8572落 delivery_budget，返回2行/10剔除/source | Expected values to be strictly equal:
+
+undefined !== 10
+
+FAIL - IS-HTTP-DELIVERY-LINKED-FIRST 挂靠预算导入实际落 delivery_opp 并返回来源 | Expected values to be strictly equal:
+
+undefined !== 10
+
+FAIL - IS-HTTP-DELIVERY-LINKED-REIMPORT 同一 delivery_opp 重导追加新来源 id 且 GET 回显最新元信息 | Cannot read properties of undefined (reading 'id')
+FAIL - IS-HTTP-DELIVERY-SHARED-OPP 同商机两预算与商机端点读取同一最新 delivery_opp 来源 | /api/budget/192/delivery/source -> 404 接口不存在
+
+404 !== 200
+
+FAIL - IS-HTTP-DELIVERY-OPP-DIRECT 独立商机直接导入8572落自己的 delivery_opp 来源 | Expected values to be strictly equal:
+
+undefined !== 10
+
+FAIL - IS-HTTP-PUT-BUDGET-DROPPED 预算 PUT 按五预算键丢5行并保持成本公式锚点 | Expected values to be strictly equal:
+
+undefined !== 5
+
+FAIL - IS-HTTP-PUT-OPP-DROPPED 商机 PUT 同样丢5行、仅差旅行保留且来源快照不被覆盖 | Expected values to be strictly equal:
+
+undefined !== 5
+
+FAIL - IS-HTTP-ZERO-BUDGET 预算交付全零有效模板按原表2行给精确400且不保存来源 | Expected values to be strictly equal:
++ actual - expected
+
++ '未解析到明细行(需为含"建设内容"列的附3 模板)。可改用在线编辑手动建行。'
+- '原表 2 行建设内容均无预算数字，未生成明细行。可改用在线编辑手动建行。'
+
+FAIL - IS-HTTP-ZERO-OPP 商机交付全零有效模板同样精确400且不保存来源 | Expected values to be strictly equal:
++ actual - expected
+
++ '未解析到明细行(需为含"建设内容"列的附3 模板)。可改用在线编辑手动建行。'
+- '原表 2 行建设内容均无预算数字，未生成明细行。可改用在线编辑手动建行。'
+
+FAIL - IS-HTTP-HEADERLESS-BUDGET 预算交付无表头模板保持旧400文案 | /api/budget/199/delivery/source -> 404 接口不存在
+
+404 !== 200
+
+FAIL - IS-HTTP-HEADERLESS-OPP 商机交付无表头模板保持旧400文案 | /api/opp/PL-IS-ZERO-mvmiqvflgs1ot/delivery/source -> 404 接口不存在
+
+404 !== 200
+
+FAIL - IS-HTTP-SOURCE-ANONYMOUS 四类 source 与原件下载均要求登录 | Cannot read properties of undefined (reading 'id')
+FAIL - IS-HTTP-SOURCE-BUDGET-PERMISSION 预算来源 owner/支持组200，非owner财务/PM403 | Expected values to be strictly equal:
+
+404 !== 200
+
+FAIL - IS-HTTP-SOURCE-OPP-PERMISSION 商机来源建档人/PM/支持组200，普通非建档财务403 | Expected values to be strictly equal:
+
+404 !== 200
+
+FAIL - IS-HTTP-DOWNLOAD-BUDGET-BYTES 预算原件以 Bearer 下载，中文 RFC5987 文件名与上传字节 SHA256 一致 | Cannot read properties of undefined (reading 'id')
+FAIL - IS-HTTP-DOWNLOAD-BUDGET-PERMISSION 预算下载 owner/支持组200、非owner财务403且未知id404 | Cannot read properties of undefined (reading 'id')
+FAIL - IS-HTTP-DOWNLOAD-REVIEW-PERMISSION 评审原件任意登录用户可下载且字节不变 | Cannot read properties of undefined (reading 'id')
+FAIL - IS-HTTP-BUDGET-OLD-BYTES 后续预算导入不覆盖第一份原件字节 | Cannot read properties of undefined (reading 'id')
+FAIL - IS-HTTP-DOWNLOAD-FILENAME-SAFE 下载回退文件名剔除引号/控制字符且 RFC5987 保留原中文名 | Cannot read properties of undefined (reading 'id')
+FAIL - IS-HTTP-CROSS-OWNER-SETUP 预算 owner 可经预算端点导入他人建档商机的 delivery_opp | 缺少 source metadata id
+FAIL - IS-HTTP-CROSS-OWNER-READ 关联预算 owner 可读 delivery source，但不能由预算所有权扩张商机直读 | Expected values to be strictly equal:
+
+404 !== 200
+
+FAIL - IS-HTTP-CROSS-OWNER-DOWNLOAD delivery_opp 下载按商机创建者/PM/支持组判权，不按关联预算 owner | Cannot read properties of undefined (reading 'id')
+PASS - IS-HTTP-VERSION-LOCK 真实确认交付+完整预算锁定流程可派生版本
+FAIL - IS-HTTP-VERSION-INHERITED 派生预算详情/source 继承父来源元信息并披露 inherited_from | Cannot read properties of undefined (reading 'id')
+FAIL - IS-HTTP-VERSION-CURRENT 派生预算编辑后仍以父导入快照对照子当前值 | /api/budget/201/source -> 404 接口不存在
+
+404 !== 200
+
+
+133 passed, 39 failed -> SOME FAIL

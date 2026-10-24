@@ -1,0 +1,271 @@
+TASK 1 EXPECTED RED - unchanged production at f2484e6
+No HTTP, shared service operations, config changes or database writes.
+
+COMMAND: "C:/Users/01386380/.workbuddy/binaries/node/versions/22.22.2-6/node.exe" "--check" "F:\\workbuddy\\9\\review-platform\\tests\\test_delivery.js"
+EXIT: 0
+STDOUT:
+
+STDERR:
+
+
+COMMAND: "C:/Users/01386380/.workbuddy/binaries/node/versions/22.22.2-6/node.exe" "--check" "F:\\workbuddy\\9\\review-platform\\tests\\test_delivery_opp.js"
+EXIT: 0
+STDOUT:
+
+STDERR:
+
+
+COMMAND: "C:/Users/01386380/.workbuddy/binaries/node/versions/22.22.2-6/node.exe" "--check" "F:\\workbuddy\\9\\review-platform\\tests\\test_robot_orchestrator.js"
+EXIT: 0
+STDOUT:
+
+STDERR:
+
+
+COMMAND: "C:/Users/01386380/.workbuddy/binaries/node/versions/22.22.2-6/node.exe" "--check" "F:\\workbuddy\\9\\review-platform\\tests\\test_import_source.js"
+EXIT: 0
+STDOUT:
+
+STDERR:
+
+
+COMMAND: "C:/Users/01386380/.workbuddy/binaries/node/versions/22.22.2-6/node.exe" "F:\\workbuddy\\9\\review-platform\\tests\\test_import_source.js" "--pure" "--log=F:\\workbuddy\\9\\review-platform\\tests\\red_evidence_import_source_pure.txt"
+EXIT: 1
+STDOUT:
+PASS - IS-PL00008572-FILE 按商机码定位真实原件
+PASS - IS-PL00008572-DEL-RUN 真实 delivery 解析器成功并输出 JSON（非依赖失败）
+FAIL - IS-PL00008572-DEL-ROWS 仅保留 2 行预算明细 | Expected values to be strictly equal:
+
+12 !== 2
+
+FAIL - IS-PL00008572-DEL-SKIPPED skipped_rows 明确记录 10 行无预算数字 | 缺少新增 skipped_rows 字段
+FAIL - IS-PL00008572-DEL-POSITIVE 每行五项预算数字有限非负且至少一项 >0（文字不能保留） | 无预算数字明细仍保留
++ actual - expected
+
++ [
++   '萍乡市POI数据',
++   '抚州市POI数据',
++   '赣州市POI数据',
++   '新余市POI数据',
++   '景德镇市POI数据',
++   '九江市POI数据',
++   '鹰潭市POI数据',
++   '吉安市POI数据',
++   '宜春市POI数据',
++   '上饶市POI数据'
++ ]
+- []
+
+PASS - IS-PL00008572-DEL-ALIGN row_sources 与 rows 严格等长同序且内容/人天坐标逐格相符
+FAIL - IS-PL00008572-DEL-SHEET 新增 sheet 保留显示格、合并区域与真实维度 | 缺少新增 sheet 字段
+FAIL - IS-PL00008572-DEL-SKIPPED-SHEET 剔除内容仍在完整原表显示格，不从原表删除 | 缺少新增 sheet.cells
+FAIL - IS-PL00008572-DEL-TOTAL-SOURCE 合计行来源坐标与运维外包合计字段齐全 | 缺少 meta.total_row_r
+PASS - IS-PL00008572-DEL-IMPL-ANCHOR 真实实施锚定 5/39/0/184/6000，内容为 POI数据
+PASS - IS-PL00008572-DEL-OPS-ANCHOR 真实运维锚定 2/0/0/0/0，内容为 POI数据
+PASS - IS-PL00008572-DEL-SUM-ANCHOR 原件合计与遗留解析合计 PM7/正编39/生产184/差旅6000 不漂移
+PASS - IS-PL00008572-REVIEW-RUN 真实 review 解析器成功并输出 JSON（非依赖失败）
+FAIL - IS-PL00008572-REVIEW-SHEET 新增 sheet 保留显示格、合并区域与真实维度 | 缺少新增 sheet 字段
+PASS - IS-PL00008572-REVIEW-SOURCES 已提取字段仍有标签格/值格来源
+FAIL - IS-PL00008572-REVIEW-RAW 来源新增 raw/raw_d/selected，缺字段须显式 FAIL | opp_name 缺少 raw
+FAIL - IS-PL00008572-REVIEW-UNPICKED 新增 unpicked 数组显式披露未采用来源格 | 缺少新增 unpicked 字段
+PASS - IS-PL00008572-REVIEW-LEGACY-POS data_review 原值与既有来源坐标不漂移
+PASS - IS-PL00008572-BUDGET-RUN 真实 budget 解析器成功并输出 JSON（非依赖失败）
+FAIL - IS-PL00008572-BUDGET-SHEET 新增 sheet 保留显示格、合并区域与真实维度 | 缺少新增 sheet 字段
+PASS - IS-PL00008572-BUDGET-SOURCES 已提取字段仍有标签格/值格来源
+FAIL - IS-PL00008572-BUDGET-RAW 来源新增 raw/raw_d/selected，缺字段须显式 FAIL | project_name 缺少 raw
+FAIL - IS-PL00008572-BUDGET-UNPICKED 新增 unpicked 数组显式披露未采用来源格 | 缺少新增 unpicked 字段
+PASS - IS-PL00008068-FILE 按商机码定位真实原件
+PASS - IS-PL00008068-DEL-RUN 真实 delivery 解析器成功并输出 JSON（非依赖失败）
+FAIL - IS-PL00008068-DEL-ROWS 仅保留 30 行预算明细 | Expected values to be strictly equal:
+
+37 !== 30
+
+FAIL - IS-PL00008068-DEL-SKIPPED skipped_rows 明确记录 7 行无预算数字 | 缺少新增 skipped_rows 字段
+FAIL - IS-PL00008068-DEL-POSITIVE 每行五项预算数字有限非负且至少一项 >0（文字不能保留） | 无预算数字明细仍保留
++ actual - expected
+
++ [
++   '角色管理',
++   '部门管理',
++   '字典管理',
++   '权限配置',
++   '权限字典',
++   '应用管理',
++   '管理日志'
++ ]
+- []
+
+PASS - IS-PL00008068-DEL-ALIGN row_sources 与 rows 严格等长同序且内容/人天坐标逐格相符
+FAIL - IS-PL00008068-DEL-SHEET 新增 sheet 保留显示格、合并区域与真实维度 | 缺少新增 sheet 字段
+FAIL - IS-PL00008068-DEL-SKIPPED-SHEET 剔除内容仍在完整原表显示格，不从原表删除 | 缺少新增 sheet.cells
+FAIL - IS-PL00008068-DEL-TOTAL-SOURCE 合计行来源坐标与运维外包合计字段齐全 | 缺少 meta.total_row_r
+PASS - IS-PL00008068-DEL-GAP-ANCHOR 真实原件正编合计 17.5 与解析 11.5 的差异不被掩盖
+PASS - IS-PL00008068-REVIEW-RUN 真实 review 解析器成功并输出 JSON（非依赖失败）
+FAIL - IS-PL00008068-REVIEW-SHEET 新增 sheet 保留显示格、合并区域与真实维度 | 缺少新增 sheet 字段
+PASS - IS-PL00008068-REVIEW-SOURCES 已提取字段仍有标签格/值格来源
+FAIL - IS-PL00008068-REVIEW-RAW 来源新增 raw/raw_d/selected，缺字段须显式 FAIL | opp_name 缺少 raw
+FAIL - IS-PL00008068-REVIEW-UNPICKED 新增 unpicked 数组显式披露未采用来源格 | 缺少新增 unpicked 字段
+PASS - IS-PL00008068-BUDGET-RUN 真实 budget 解析器成功并输出 JSON（非依赖失败）
+FAIL - IS-PL00008068-BUDGET-SHEET 新增 sheet 保留显示格、合并区域与真实维度 | 缺少新增 sheet 字段
+PASS - IS-PL00008068-BUDGET-SOURCES 已提取字段仍有标签格/值格来源
+FAIL - IS-PL00008068-BUDGET-RAW 来源新增 raw/raw_d/selected，缺字段须显式 FAIL | project_name 缺少 raw
+FAIL - IS-PL00008068-BUDGET-UNPICKED 新增 unpicked 数组显式披露未采用来源格 | 缺少新增 unpicked 字段
+PASS - IS-PL00008111-FILE 按商机码定位真实原件
+PASS - IS-PL00008111-DEL-RUN 真实 delivery 解析器成功并输出 JSON（非依赖失败）
+FAIL - IS-PL00008111-DEL-ROWS 仅保留 2 行预算明细 | Expected values to be strictly equal:
+
+3 !== 2
+
+FAIL - IS-PL00008111-DEL-SKIPPED skipped_rows 明确记录 1 行无预算数字 | 缺少新增 skipped_rows 字段
+FAIL - IS-PL00008111-DEL-POSITIVE 每行五项预算数字有限非负且至少一项 >0（文字不能保留） | 无预算数字明细仍保留
++ actual - expected
+
++ [
++   '地图错误修复'
++ ]
+- []
+
+PASS - IS-PL00008111-DEL-ALIGN row_sources 与 rows 严格等长同序且内容/人天坐标逐格相符
+FAIL - IS-PL00008111-DEL-SHEET 新增 sheet 保留显示格、合并区域与真实维度 | 缺少新增 sheet 字段
+FAIL - IS-PL00008111-DEL-SKIPPED-SHEET 剔除内容仍在完整原表显示格，不从原表删除 | 缺少新增 sheet.cells
+FAIL - IS-PL00008111-DEL-TOTAL-SOURCE 合计行来源坐标与运维外包合计字段齐全 | 缺少 meta.total_row_r
+PASS - IS-PL00008111-REVIEW-RUN 真实 review 解析器成功并输出 JSON（非依赖失败）
+FAIL - IS-PL00008111-REVIEW-SHEET 新增 sheet 保留显示格、合并区域与真实维度 | 缺少新增 sheet 字段
+PASS - IS-PL00008111-REVIEW-SOURCES 已提取字段仍有标签格/值格来源
+FAIL - IS-PL00008111-REVIEW-RAW 来源新增 raw/raw_d/selected，缺字段须显式 FAIL | opp_name 缺少 raw
+FAIL - IS-PL00008111-REVIEW-UNPICKED 新增 unpicked 数组显式披露未采用来源格 | 缺少新增 unpicked 字段
+PASS - IS-PL00008111-REVIEW-LEGACY-POS data_review 原值与既有来源坐标不漂移
+PASS - IS-PL00008111-BUDGET-RUN 真实 budget 解析器成功并输出 JSON（非依赖失败）
+FAIL - IS-PL00008111-BUDGET-SHEET 新增 sheet 保留显示格、合并区域与真实维度 | 缺少新增 sheet 字段
+PASS - IS-PL00008111-BUDGET-SOURCES 已提取字段仍有标签格/值格来源
+FAIL - IS-PL00008111-BUDGET-RAW 来源新增 raw/raw_d/selected，缺字段须显式 FAIL | project_name 缺少 raw
+FAIL - IS-PL00008111-BUDGET-UNPICKED 新增 unpicked 数组显式披露未采用来源格 | 缺少新增 unpicked 字段
+
+27 passed, 36 failed -> SOME FAIL
+
+STDERR:
+
+
+COMMAND: "C:/Users/01386380/.workbuddy/binaries/node/versions/22.22.2-6/node.exe" "--test" "--test-reporter=tap" "F:\\workbuddy\\9\\review-platform\\tests\\test_robot_orchestrator.js"
+EXIT: 1
+STDOUT:
+TAP version 13
+# Subtest: RO-01 delivery 只保留八个字段并丢弃 cost/sum/status/action
+ok 1 - RO-01 delivery 只保留八个字段并丢弃 cost/sum/status/action
+  ---
+  duration_ms: 2.0149
+  type: 'test'
+  ...
+# Subtest: RO-02 delivery 提示词禁止成本合计和确认动作
+ok 2 - RO-02 delivery 提示词禁止成本合计和确认动作
+  ---
+  duration_ms: 0.3695
+  type: 'test'
+  ...
+# Subtest: RO-03 部门任务按 review+round+dept 汇总并生成稳定幂等键
+ok 3 - RO-03 部门任务按 review+round+dept 汇总并生成稳定幂等键
+  ---
+  duration_ms: 0.366
+  type: 'test'
+  ...
+# Subtest: RO-04 local provider 永远预演，dingtalk provider 明确未激活
+ok 4 - RO-04 local provider 永远预演，dingtalk provider 明确未激活
+  ---
+  duration_ms: 0.704
+  type: 'test'
+  ...
+# Subtest: RO-05 dingtalk provider 五方法逐个抛未激活
+ok 5 - RO-05 dingtalk provider 五方法逐个抛未激活
+  ---
+  duration_ms: 1.3534
+  type: 'test'
+  ...
+# Subtest: RO-06 local provider 五方法全为预演且无真实结果
+ok 6 - RO-06 local provider 五方法全为预演且无真实结果
+  ---
+  duration_ms: 0.5295
+  type: 'test'
+  ...
+# Subtest: RO-07 编排器唯一出口是注入的 enqueue 且必须拿到整数 outbox_id
+ok 7 - RO-07 编排器唯一出口是注入的 enqueue 且必须拿到整数 outbox_id
+  ---
+  duration_ms: 1.0642
+  type: 'test'
+  ...
+# Subtest: RO-08 已存四行净化为三行预算明细且剔净 cost(纯文字行不得保留)
+not ok 8 - RO-08 已存四行净化为三行预算明细且剔净 cost(纯文字行不得保留)
+  ---
+  duration_ms: 1.1482
+  type: 'test'
+  location: 'F:\\workbuddy\\9\\review-platform\\tests\\test_robot_orchestrator.js:118:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    四条存行应剔除无预算数字的功能回归测试，仅留三条
+    
+    4 !== 3
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 3
+  actual: 4
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (F:\workbuddy\9\review-platform\tests\test_robot_orchestrator.js:137:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: RO-09 部门任务消息含非空截止提示且不含编造日期(spec §5.4.4)
+ok 9 - RO-09 部门任务消息含非空截止提示且不含编造日期(spec §5.4.4)
+  ---
+  duration_ms: 0.8965
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 8
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 287.3978
+
+STDERR:
+
+
+COMMAND: "git" "-C" "F:/workbuddy/9/review-platform" "diff" "--check"
+EXIT: 0
+STDOUT:
+
+STDERR:
+warning: in the working copy of 'review-platform/tests/test_delivery_opp.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'review-platform/tests/test_robot_orchestrator.js', LF will be replaced by CRLF the next time Git touches it
+
+
+COMMAND: "git" "-C" "F:/workbuddy/9/review-platform" "diff" "--exit-code" "f2484e6" "--" "server.js" "robot-orchestrator.js" "tools/parse_form_xlsx.py" "tools/parse_delivery_xlsx.py"
+EXIT: 0
+STDOUT:
+
+STDERR:
+
+
+COMMAND: "git" "-C" "F:/workbuddy/9/review-platform" "diff" "--name-only"
+EXIT: 0
+STDOUT:
+review-platform/tests/test_delivery.js
+review-platform/tests/test_delivery_opp.js
+review-platform/tests/test_robot_orchestrator.js
+
+STDERR:
+warning: in the working copy of 'review-platform/tests/test_delivery_opp.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'review-platform/tests/test_robot_orchestrator.js', LF will be replaced by CRLF the next time Git touches it
+
+
+PURE: 27 passed, 36 failed, exit 1
+RO: 8 passed, 1 failed, exit 1
+Parser subprocess successes: 9/9
+RED EVIDENCE CHECK: PASS (expected failures; existing anchors remain PASS)

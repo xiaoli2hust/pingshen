@@ -8,7 +8,11 @@
 #   pm_pd(项目经理人天,×部门单价归"项目管理费") / own_pd(产研正编人天,×部门单价)
 #   rd_pd(产研外包人天) / prod_pd(生产外包人天,×320)
 # 校准锚定(PL00008572 原件): 实施段 pm=5,own=39,prod=184; 运维段 pm=2 -> own=39 与 prod=184 同原件合计行
-import sys, json
+import sys, json, math
+from pathlib import Path
+# 本机 Python isolated/safe_path 不自动加入脚本目录；仅为此进程加载同目录模块。
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from sheet_audit import audit_sheet
 
 AUDIT = '--audit' in sys.argv
 
@@ -81,10 +85,16 @@ def main(path):
 
     def numv(row, idx):
         if idx is None or idx >= len(row) or row[idx] is None: return 0.0
-        try: return float(row[idx])
+        try:
+            value = float(row[idx])
+            return value if math.isfinite(value) else 0.0
         except (TypeError, ValueError): return 0.0
 
+    def clean_number(value):
+        return round(max(0.0, value), 2) if math.isfinite(value) else 0.0
+
     rows = []
+    skipped_rows = []
     row_sources = []  # 每解析行的原表溯源: content 取值格 + 四类人天列坐标(0-based, 与 grid 同体系)
     for ri in range(h2 + 1, len(grid)):
         row = grid[ri]
@@ -96,25 +106,28 @@ def main(path):
                 content = str(row[c]).strip(); c_content = c; break
         if not content or content.startswith(('填写说明', '制表人', '合计', '序号', '项目名称')):
             continue
-        impl = (numv(row, c_pm), numv(row, c_own), numv(row, c_rd), numv(row, c_prod))
-        ops = (numv(row, c_pm_ops), numv(row, c_own_ops), numv(row, c_rd_ops), numv(row, c_prod_ops))
+        impl = tuple(clean_number(numv(row, c)) for c in (c_pm, c_own, c_rd, c_prod))
+        ops = tuple(clean_number(numv(row, c)) for c in (c_pm_ops, c_own_ops, c_rd_ops, c_prod_ops))
 
         def travel_value(total_col, part_cols):
             parts = [numv(row, c) for c in part_cols]
             part_sum = round(sum(parts), 2)
-            return part_sum if part_sum else round(numv(row, total_col), 2)
+            # 保留原分项求和/合计回退公式，仅净化最终五键中的 travel_cost。
+            return clean_number(part_sum if part_sum else numv(row, total_col))
 
         impl_travel = travel_value(c_impl_travel, impl_travel_parts)
         ops_travel = travel_value(c_ops_travel, ops_travel_parts)
-        impl_has = any(impl) or bool(impl_travel)
-        ops_has = any(ops) or bool(ops_travel)
+        impl_has = any(v > 0 for v in (*impl, impl_travel))
+        ops_has = any(v > 0 for v in (*ops, ops_travel))
+        if not impl_has and not ops_has:
+            skipped_rows.append({'r': ri, 'content': content, 'content_pos': [ri, c_content], 'reason': '无预算数字'})
         # 溯源坐标: 实施行记实施列区, 运维行记运维列区(同 r 行横跨两列区)
         def _src(cols_def):
             return {"content": content[:200], "content_pos": [ri, c_content] if c_content is not None else None,
                     "cols": {k: [ri, cv] for k, cv in cols_def if cv is not None}}
         src_impl = _src((('pm_pd', c_pm), ('own_pd', c_own), ('rd_pd', c_rd), ('prod_pd', c_prod)))
         src_ops = _src((('pm_pd', c_pm_ops), ('own_pd', c_own_ops), ('rd_pd', c_rd_ops), ('prod_pd', c_prod_ops)))
-        if impl_has or not ops_has:
+        if impl_has:  # IS-DEL-CLEAN-BEFORE-STAGE: 回退时恢复 impl_has or not ops_has。
             rows.append({"content": content[:200], "stage": "实施", "pm_pd": round(impl[0], 2),
                          "own_pd": round(impl[1], 2), "rd_pd": round(impl[2], 2), "prod_pd": round(impl[3], 2),
                          "travel_cost": impl_travel, "note": ""})
@@ -134,21 +147,26 @@ def main(path):
         return {k: round(sum(r[k] for r in rs), 2) for k in ('pm_pd', 'own_pd', 'rd_pd', 'prod_pd', 'travel_cost')}
     # 原件合计行(第一行含"合计"的行)对照锚定
     total_row = None
+    total_row_r = None
     for ri in range(min(4, len(grid))):
         if _txt(grid[ri][0]).startswith('合计'):
+            total_row_r = ri
             total_row = {
                 "impl_pm": numv(grid[ri], c_pm), "impl_own": numv(grid[ri], c_own),
                 "impl_rd": numv(grid[ri], c_rd), "impl_prod": numv(grid[ri], c_prod),
                 "impl_travel": numv(grid[ri], c_impl_travel),
                 "ops_pm": numv(grid[ri], c_pm_ops), "ops_own": numv(grid[ri], c_own_ops),
+                "ops_rd": numv(grid[ri], c_rd_ops), "ops_prod": numv(grid[ri], c_prod_ops),
                 "ops_travel": numv(grid[ri], c_ops_travel)
             }
             break
     out = {
         "rows": rows,
+        "skipped_rows": skipped_rows,
         "sum": {**agg(None), "impl": agg("实施"), "ops": agg("运维")},
         "total_row": total_row,
         "meta": {"sheet": ws.title, "rows_parsed": len(rows),
+                 "rows_skipped": len(skipped_rows), "total_row_r": total_row_r,
                  "cols": {"main": c_main, "sub": c_sub, "item": c_item, "impl": [c_pm, c_own, c_rd, c_prod],
                           "ops": [c_pm_ops, c_own_ops, c_rd_ops, c_prod_ops],
                           "travel": {"impl_total": c_impl_travel, "impl_parts": impl_travel_parts,
@@ -156,6 +174,7 @@ def main(path):
     }
     if AUDIT:
         # 审计模式: 行溯源坐标 + 稀疏网格(全行, 0-based 与 row_sources 同体系)供导入核对视图逐格对账
+        out["sheet"] = audit_sheet(ws)
         out["row_sources"] = row_sources
         grid_cells = []
         for ri, row in enumerate(grid):

@@ -1,0 +1,23 @@
+# 来源: fullgate1 子进程日志 gate-child-1792872998614-36.txt（Task5 在 opdlvSave 中新增 SRCV.load 未隔离）
+COMMAND ["C:\\Users\\01386380\\.workbuddy\\binaries\\node\\versions\\22.22.2-6\\node.exe","tests/test_frontend_semantics.js"]
+START 2026-10-24T20:34:47.584Z
+EXIT 1
+STDOUT
+PASS - FS-01 已归档但交付回草稿时优先确认交付
+PASS - FS-02 已归档但预算未锁定时优先锁定预算
+PASS - FS-03 链就绪且全归档时仍提示归档
+PASS - FS-04 往轮只读证据披露不是当时快照
+PASS - FS-05 已处理任务披露实时证据
+PASS - FS-06 当前待办保留打灯且不冒称历史快照
+PASS - FS-07 只读证据失败不指示打灯
+PASS - FS-08 待办证据失败保留部门核实提示
+FAIL - FS-09 保存成功刷新失败仍明确已保存
+PASS - FS-10 确认成功刷新失败仍明确已确认
+PASS - FS-11 写失败不报已保存
+PASS - FS-12 未知下拉原值显示标记且value逐字保留
+11 passed, 1 failed -> SOME FAIL
+
+STDERR
+
+ERROR
+

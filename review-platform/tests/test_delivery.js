@@ -50,8 +50,10 @@ const check = (id, name, ok) => {
     check('D-01', '解析锚定: 正编39/生产184/PM合计7', s.own_pd === 39 && s.prod_pd === 184 && s.pm_pd === 7);
     check('D-01', '与原件合计行一致(total_row 对照)', near(d.total_row && d.total_row.impl_own, 39, 0.01) && near(d.total_row && d.total_row.impl_prod, 184, 0.01));
     const rows = d.rows || [];
-    check('D-01', '12 行(含零人天建设内容底稿)且内容来自建设内容回退链',
-      rows.length === 12 && rows.every(x => /POI数据/.test(x.content)));
+    check('D-01', '2 行预算明细且内容来自建设内容回退链',
+      rows.length === 2 && rows.every(x => /POI数据/.test(x.content)));
+    check('D-01', 'audit.skipped_rows 记录 10 行无预算数字建设内容',
+      Array.isArray(d.audit && d.audit.skipped_rows) && d.audit.skipped_rows.length === 10);
     check('D-01', '附3差旅字段存在且进入 sum',
       rows.every(x => typeof x.travel_cost === 'number') && typeof s.travel_cost === 'number');
     check('D-01', '实施行成本=139504(=(5+39)×1696+184×320+6000差旅)',
@@ -93,7 +95,7 @@ const check = (id, name, ok) => {
   // D-02: GET 回显(含行成本与源文件)
   {
     const d = await api(sales, `/api/budget/${bg}/delivery`);
-    check('D-02', '回显 12 行+sum+源文件名', (d.rows || []).length === 12 && !!d.sum && /PL00008572/.test(d.source_file || ''));
+    check('D-02', '回显 2 行+sum+源文件名', (d.rows || []).length === 2 && !!d.sum && /PL00008572/.test(d.source_file || ''));
   }
 
   // D-03: 在线编辑(建设内容基础上修改): 改一行 + 加一行

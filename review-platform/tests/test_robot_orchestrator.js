@@ -112,14 +112,14 @@ test('RO-07 编排器唯一出口是注入的 enqueue 且必须拿到整数 outb
     .outbox_ids, [42]);
 });
 
-// Fix round 1/5 追加(I1+I2): 服务侧降级轮 rows = cleanDeliveryDraft(prior) 的八键不吞行不变式,
+// Fix round 1/5 追加(I1+I2): 服务侧降级轮 rows = cleanDeliveryDraft(prior) 的八键预算行保真不变式,
 // 必须是纯函数断言——RW-10 走真网关, 断网/换机时那条绿会假红, 净化契约不能挂在外网可达性上。
-// 夹具四行全取库内真实存行形状(deliverySumFor 落库的九键形式), 禁止写成永真断言。
-test('RO-08 已存行重过净化不吞行且剔净 cost(净化不变式与网络解耦的永久载体)', () => {
+// 夹具四行全取库内真实存行形状(deliverySumFor 落库的九键形式), 无预算数字行按新口径剔除。
+test('RO-08 已存四行净化为三行预算明细且剔净 cost(纯文字行不得保留)', () => {
   const stored = [
     // ① PL00008210《长沙智慧消防一张图及辅助决策信创改造》附3 首行: 人天+差旅齐, cost 为服务端算出的第九键
     { content: '长沙消防一张图信创改造', stage: '实施', pm_pd: 20, own_pd: 37, rd_pd: 10, prod_pd: 0, travel_cost: 14400, note: '', cost: 24350 },
-    // ② 同单零值行: 只有 content 是存活凭据(任何按数字筛的写法都会把这行静默吞掉)
+    // ② 同单零值行: content 不能单独保留明细，功能回归测试须被剔除
     { content: '功能回归测试', stage: '实施', pm_pd: 0, own_pd: 0, rd_pd: 0, prod_pd: 0, travel_cost: 0, note: '', cost: 0 },
     // ③ PL00008572《南昌市POI数据》真实运维行: 存行根本没有 travel_cost 键(旧路径落库), 净化须补 0 而非漏键
     { content: '南昌市POI数据', stage: '运维', pm_pd: 2, own_pd: 0, rd_pd: 0, prod_pd: 0, note: '', cost: 0 },
@@ -133,8 +133,9 @@ test('RO-08 已存行重过净化不吞行且剔净 cost(净化不变式与网�
   const once = cleanDeliveryDraft(stored);
   const twice = cleanDeliveryDraft(once);
 
-  // (a) 不吞行: 两条边界类(只有 content / 只有数字)都必须存活
-  assert.strictEqual(once.length, stored.length, '降级轮不得静默丢行');
+  // (a) 只保留三条预算数字行: 纯文字剔除，只有差旅仍保留
+  assert.strictEqual(once.length, 3, '四条存行应剔除无预算数字的功能回归测试，仅留三条');
+  assert.ok(!once.some(r => r.content === '功能回归测试'), '功能回归测试不得作为纯文字明细保留');
   // (b) 每行严格八键, cost/sum/status/action 一律不存在
   once.forEach((r, i) => {
     assert.deepStrictEqual(Object.keys(r), DELIVERY_FIELDS, '第' + i + '行键序须恰为八键');
@@ -145,13 +146,12 @@ test('RO-08 已存行重过净化不吞行且剔净 cost(净化不变式与网�
   // 值保真: 数字与文本原样, 缺键补 0, stage 归一不把运维洗成实施
   assert.deepStrictEqual(once[0], { content: '长沙消防一张图信创改造', stage: '实施', pm_pd: 20, own_pd: 37,
     rd_pd: 10, prod_pd: 0, travel_cost: 14400, note: '' });
-  assert.deepStrictEqual(once[1], { content: '功能回归测试', stage: '实施', pm_pd: 0, own_pd: 0,
+  assert.deepStrictEqual(once[1], { content: '南昌市POI数据', stage: '运维', pm_pd: 2, own_pd: 0,
     rd_pd: 0, prod_pd: 0, travel_cost: 0, note: '' });
-  assert.deepStrictEqual(once[2], { content: '南昌市POI数据', stage: '运维', pm_pd: 2, own_pd: 0,
-    rd_pd: 0, prod_pd: 0, travel_cost: 0, note: '' });
-  assert.deepStrictEqual(once[3], { content: '', stage: '实施', pm_pd: 0, own_pd: 0,
+  assert.deepStrictEqual(once[2], { content: '', stage: '实施', pm_pd: 0, own_pd: 0,
     rd_pd: 0, prod_pd: 0, travel_cost: 1200, note: '' });
-  // 存活凭据的反面: 无内容且无任何数字的行按既定 filter 丢弃(与 cleanDeliveryRows 同口径, 故存行不可能长成这样)
+  // 内容或备注均不能单独保留无预算数字行
+  assert.deepStrictEqual(cleanDeliveryDraft([{ content: '纯文字', note: '备注' }]), []);
   assert.deepStrictEqual(cleanDeliveryDraft([{ content: '', stage: '实施', pm_pd: 0, own_pd: 0,
     rd_pd: 0, prod_pd: 0, travel_cost: 0, note: '只有备注', cost: 0 }]), []);
 });
